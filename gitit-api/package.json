@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "@prisma/client": "^6.11.1",
+    "axios": "^1.10.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10",
+    "pg": "^8.16.3",
+    "prisma": "^6.11.1"
+  },
+  "name": "gitit-api",
+  "version": "1.0.0",
+  "description": "Capstone project api / server",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nathan Kenmognie, Taliyah Harvey, Jackie Jurado",
+  "license": "ISC"
+}
