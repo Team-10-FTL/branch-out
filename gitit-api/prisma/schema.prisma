@@ -35,6 +35,8 @@ model Repo{
     feedBack FeedBack[]
 }
 
+
+// Feedback will be a later sprint feature
 model FeedBack{
     id Int @id @default(autoincrement())
     user User @relation(fields: [userId], references: [id])
