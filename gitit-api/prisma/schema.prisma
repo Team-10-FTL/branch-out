@@ -18,7 +18,7 @@ model User{
     savedRepos Repo[] @relation("savedRepos")
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    FeedBack FeedBack[]
+    feedBack FeedBack[]
 }
 
 model Repo{
@@ -26,13 +26,13 @@ model Repo{
     owner String
     name String
     stars Int
-    Languages String[]
+    languages String[]
     tags String[]
     topics String[]
     summary String?
     savedBy User[] @relation("savedRepos")
     githubId String @unique
-    FeedBack FeedBack[]
+    feedBack FeedBack[]
 }
 
 model FeedBack{
