@@ -8,3 +8,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User{
+    id Int @id @default(autoincrement())
+    userName String @unique
+    password String 
+    email String @unique
+    skillLevel String?
+    preferences String[]
+    savedRepos Repo[] @relation("savedRepos")
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    feedBack FeedBack[]
+}
+
+model Repo{
+    id Int @id @default(autoincrement())
+    owner String
+    name String
+    stars Int
+    languages String[]
+    tags String[]
+    topics String[]
+    summary String?
+    savedBy User[] @relation("savedRepos")
+    githubId String @unique
+    feedBack FeedBack[]
+}
+
+model FeedBack{
+    id Int @id @default(autoincrement())
+    user User @relation(fields: [userId], references: [id])
+    userId Int
+    repo Repo @relation(fields: [repoId], references: [id])
+    repoId Int
+    swipeDirection String
+    feedbackReason String?
+}
