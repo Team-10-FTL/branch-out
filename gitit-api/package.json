@@ -14,6 +14,7 @@
   "description": "Capstone project api / server",
   "main": "server.js",
   "scripts": {
+    "start": "nodemon src/server.js",
     "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
