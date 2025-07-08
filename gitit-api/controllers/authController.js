@@ -71,7 +71,7 @@ exports.createAdmin = async(req,res)=>{
             email,  
             password: hashedPassword,
             provider: "local",
-            role: "admin" 
+            role: "ADMIN" 
         } 
     });
 
@@ -102,7 +102,6 @@ exports.signup = async(req,res)=>{
             email,  
             password: hashedPassword,
             provider: "local",
-            role: "member"
         } 
     });
     console.log(user)
