@@ -12,7 +12,7 @@ model User{
     id Int @id @default(autoincrement())
     clerkId String? // unused if bcrypt user
     provider Provider // local or clerk
-    role Role // checks if user is admin or member
+    role Role @default(USER) // checks if user is admin or member
     userName String @unique
     password String? //unused if clerk user
     email String @unique
