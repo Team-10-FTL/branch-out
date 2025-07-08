@@ -1,7 +1,13 @@
-const express = require("express");
-const app = express();
+import app from "../models/app"
 const cors = require("cors")
 require("dotenv").config();
+
+const authRoutes = require("../routes/authRoute");
+const protectedRoutes = require("../routes/protected");
+
+app.use("/auth", authRoutes); 
+app.use("/api", protectedRoutes);  
+
 
 app.use(cors())
 const PORT = process.env.PORT || 3000;

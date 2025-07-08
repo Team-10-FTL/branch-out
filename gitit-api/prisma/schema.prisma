@@ -10,8 +10,10 @@ datasource db {
 
 model User{
     id Int @id @default(autoincrement())
+    clerkId String? // unused if bcrypt user
+    provider String // local or clerk
     userName String @unique
-    password String 
+    password String? //unused if clerk user
     email String @unique
     skillLevel String?
     preferences String[]
