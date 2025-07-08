@@ -40,3 +40,10 @@
 .read-the-docs {
   color: #888;
 }
+.auth {
+    border: 2px solid #007bff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    background-color: black;
+}

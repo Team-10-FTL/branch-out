@@ -9,19 +9,18 @@ datasource db {
 }
 
 model User{
-    id Int @id @default(autoincrement())
-    clerkId String? // unused if bcrypt user
-    provider Provider // local or clerk
-    role Role @default(USER)// checks if user is admin or member
-    userName String @unique
-    password String? //unused if clerk user
-    email String @unique
-    skillLevel String?
-    preferences String[]
-    savedRepos Repo[] @relation("savedRepos")
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id          Int      @id @default(autoincrement())
+    userName    String   @unique
+    email       String   @unique
+    password    String?  // Make optional for Clerk users
+    clerkId     String?  @unique // Add this field
+    provider    Provider @default(local) // "local" or "clerk"
+    role        Role     @default(USER)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
     feedBack FeedBack[]
+    savedRepos Repo[] @relation("savedRepos")
+
 }
 
 enum Provider{
