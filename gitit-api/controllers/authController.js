@@ -2,13 +2,16 @@ const bcrypt = require("bcrypt")
 const prisma = require("../models/prismaClient")
 const jwt = require("jsonwebtoken")
 
-exports.hashPasswords = async(plainTextPassword) =>{
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
+console.log("NODE_ENV:", process.env.NODE_ENV);
+
+const hashPasswords = async(plainTextPassword) =>{
     const saltRounds = 10;
     const hash = await bcrypt.hash(plainTextPassword, saltRounds)
     return hash
 }
 
-exports.comparePasswords = async(plainTextPassword, hashedPassword) =>{
+const comparePasswords = async(plainTextPassword, hashedPassword) =>{
     return bcrypt.compare(plainTextPassword, hashedPassword)
 }
 
@@ -17,7 +20,9 @@ exports.login = async(req,res)=>{
         
         const {username, password} = req.body;
 
-        if (!username) return res.status(401).send("User not found!")
+        if (!username) return res.status(401).send("Username required!")
+        if (!password) return res.status(401).send("Password required!")
+
 
         const user = await prisma.User.findFirst({
             where: {userName: username}
@@ -31,7 +36,8 @@ exports.login = async(req,res)=>{
             const token = jwt.sign(
                 { 
                     userId: user.id, 
-                    userName: user.userName 
+                    userName: user.userName,
+                    role: user.role 
                 }, 
                 process.env.JWT_SECRET,
                 { expiresIn: '24h' }
@@ -42,7 +48,8 @@ exports.login = async(req,res)=>{
                 user: { 
                     id: user.id, 
                     userName: user.userName, 
-                    email: user.email 
+                    email: user.email ,
+                    role: user.role
                 }
             });        
         }
@@ -58,6 +65,10 @@ exports.login = async(req,res)=>{
 
 exports.createAdmin = async(req,res)=>{
   const { username, email, password, adminSecret } = req.body;
+  
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(404).send("Endpoint not available");
+  }
 
   if (adminSecret !== process.env.ADMIN_SECRET) {
     return res.status(403).send("Invalid admin secret");
@@ -113,6 +124,5 @@ exports.signup = async(req,res)=>{
     res.status(500).send("Error creating user")
   }
 }
-
 
 

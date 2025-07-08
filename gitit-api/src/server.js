@@ -1,7 +1,7 @@
-import app from "../models/app"
+require("dotenv").config();
+const app = require("../models/app")
 const express = require("express")
 const cors = require("cors")
-require("dotenv").config();
 
 app.use(cors())
 app.use(express.json())
