@@ -1,10 +1,13 @@
 {
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^4.13.23",
     "@prisma/client": "^6.11.1",
     "axios": "^1.10.0",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.10",
     "pg": "^8.16.3",
     "prisma": "^6.11.1"
@@ -14,7 +17,7 @@
   "description": "Capstone project api / server",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon src/index.js",
+    "start": "nodemon src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nathan Kenmognie, Taliyah Harvey, Jackie Jurado",

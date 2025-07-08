@@ -12,7 +12,9 @@ dist
 dist-ssr
 *.local
 generated
+prisma/migrations
 package-lock.json
+.env
 
 # Editor directories and files
 .vscode/*
