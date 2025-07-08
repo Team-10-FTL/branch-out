@@ -1,6 +1,10 @@
 import app from "../models/app"
+const express = require("express")
 const cors = require("cors")
 require("dotenv").config();
+
+app.use(cors())
+app.use(express.json())
 
 const authRoutes = require("../routes/authRoute");
 const protectedRoutes = require("../routes/protected");
@@ -9,7 +13,6 @@ app.use("/auth", authRoutes);
 app.use("/api", protectedRoutes);  
 
 
-app.use(cors())
 const PORT = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {

@@ -56,6 +56,40 @@ exports.login = async(req,res)=>{
 
 }
 
+exports.createAdmin = async(req,res)=>{
+  const { username, email, password, adminSecret } = req.body;
+
+  if (adminSecret !== process.env.ADMIN_SECRET) {
+    return res.status(403).send("Invalid admin secret");
+  }
+
+  try {
+    const hashedPassword = await hashPasswords(password)
+    const user = await prisma.User.create({ 
+        data: {
+            userName: username, 
+            email,  
+            password: hashedPassword,
+            provider: "local",
+            role: "admin" 
+        } 
+    });
+
+    res.status(201).json({
+      message: "Admin user successfully created",
+      user: { 
+        id: user.id, 
+        userName: user.userName, 
+        email: user.email, 
+        role: user.role }
+    })
+
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).send("Error creating admin user")
+  }
+}
+
 exports.signup = async(req,res)=>{
   const { username, email, password } = req.body;
 
@@ -67,7 +101,8 @@ exports.signup = async(req,res)=>{
             userName: username, 
             email,  
             password: hashedPassword,
-            provider: "local"
+            provider: "local",
+            role: "member"
         } 
     });
     console.log(user)

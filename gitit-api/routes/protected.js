@@ -3,13 +3,16 @@ const hybridAuth = require('../middleware/hybridAuth');
 const router = express.Router();
 
 router.get('/protected', hybridAuth, (req, res) => {
-  if (req.auth?.userId) {
-    res.send(`Hello Clerk user: ${req.auth.userId}`);
-  } else if (req.user?.userId) {
-    res.send(`Hello local user: ${req.user.userId}`);
-  } else {
-    res.status(401).send('Unauthorized');
-  }
+    const userId = req.auth?.userId || req.user?.userId;
+
+    if (!userId) return res.status(401).send('Unauthorized');
+
+    if (req.user?.role !== 'admin') {
+        return res.status(403).send('Forbidden - Admin access required');
+    }
+
+    res.send(`Hello admin user: ${userId}`);
+  
 });
 
 module.exports = router;
