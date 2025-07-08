@@ -11,8 +11,8 @@ datasource db {
 model User{
     id Int @id @default(autoincrement())
     clerkId String? // unused if bcrypt user
-    provider String // local or clerk
-    role String // checks if user is admin or member
+    provider Provider // local or clerk
+    role Role // checks if user is admin or member
     userName String @unique
     password String? //unused if clerk user
     email String @unique
@@ -22,6 +22,16 @@ model User{
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     feedBack FeedBack[]
+}
+
+enum Provider{
+    local
+    clerk
+}
+
+enum Role{
+    USER
+    ADMIN
 }
 
 model Repo{
