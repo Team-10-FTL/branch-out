@@ -1,3 +1,6 @@
 const { clerkExpressWithAuth } = require('@clerk/clerk-sdk-node');
 
-module.exports = clerkExpressWithAuth();
+module.exports = (req, res, next) =>{
+    // clerk not setup yet in front end
+    next();
+}
