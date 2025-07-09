@@ -1,0 +1,123 @@
+---
+config:
+  layout: elk
+  theme: mc
+  look: neo
+---
+flowchart TD
+ subgraph subGraph0["Frontend Structure"]
+        FE1["gitit-ui/"]
+        FE2["src/components/App/App.jsx"]
+        FE3["src/components/Auth/Auth.jsx"]
+        FE4["src/main.jsx - ClerkProvider"]
+        FE5["Vite + React Setup"]
+  end
+ subgraph subGraph1["Auth Flow"]
+        AF1["Client Request"]
+        AF2["hybridAuth Middleware"]
+        AF3["clerkAuth (Clerk Token)"]
+        AF4["requireLocalAuth (JWT)"]
+        AF5["Protected Route Access"]
+        AF6["Auth Mode Toggle"]
+  end
+ subgraph subGraph2["Database Schema"]
+        DB1["User"]
+        DB1a["id, userName, email, password?, clerkId?, provider, role"]
+        DB2["Repo"]
+        DB2a["id, name, owner, stars, languages, githubId"]
+        DB3["FeedBack"]
+        DB3a["id, userId, repoId, swipeDirection, feedbackReason"]
+        DB4["Provider Enum: local, clerk"]
+        DB5["Role Enum: USER, ADMIN"]
+  end
+ subgraph subGraph3["API Endpoints"]
+        API1["/auth/signup - Local Account"]
+        API2["/auth/login - Local Account"]
+        API3["/auth/createAdmin"]
+        API4["/auth/clerkSync - OAuth Account"]
+        API5["/api/protected - Admin Only"]
+        C1a["signup (local)"]
+        C1b["login (local)"]
+        C1c["createAdmin"]
+        C1d["clerkSync (OAuth)"]
+  end
+ subgraph subGraph4["Clerk Integration"]
+        CL1["Clerk OAuth Providers"]
+        CL2["Google, GitHub, etc."]
+        CL3["Clerk Dashboard"]
+        CL4["Email Verification"]
+        CL5["Session Management"]
+  end
+    A["gitit-api Backend"] --> B["src/"] & C["controllers/"] & D["middleware/"] & E["models/"] & F["routes/"] & G["prisma/"] & H["data/"] & I["generated/"] & J["Configuration Files"]
+    B --> B1["server.js - Main Entry Point"] & B2["db/db.js - Empty"]
+    C --> C1["authController.js"]
+    C1 --> C1a & C1b & C1c & C1d & C1e["hashPasswords"] & C1f["comparePasswords"]
+    D --> D1["hybridAuth.js - Auth Router"] & D2["requireLocalAuth.js - JWT Verification"] & D3["clerkAuth.js - Clerk SDK"]
+    E --> E1["app.js - Express App"] & E2["prismaClient.js - Database Client"]
+    F --> F1["authRoute.js"] & F2["protected.js"]
+    F1 --> F1a["POST /signup"] & F1b["POST /login"] & F1c["POST /createAdmin"] & F1d["POST /clerkSync"]
+    F2 --> F2a["GET /protected - Admin Only"]
+    G --> G1["schema.prisma"] & G2["migrations/"]
+    G1 --> G1a["User Model (with clerkId)"] & G1b["Repo Model"] & G1c["FeedBack Model"] & G1d["Provider Enum"] & G1e["Role Enum"]
+    I --> I1["prisma/ - Generated Client"]
+    J --> J1[".env - Environment Variables"] & J2["package.json - Dependencies"] & J3[".gitignore"] & J4["seed.js"]
+    K["gitit-ui Frontend"] --> FE1
+    FE1 --> FE2 & FE3 & FE4 & FE5
+    FE3 --> AF6
+    AF6 --> L["Local Auth Form"] & M["OAuth Buttons"]
+    L --> API1 & API2
+    M --> CL1
+    CL1 --> CL2
+    CL2 --> API4
+    AF1 --> AF2
+    AF2 --> AF3 & AF4
+    AF3 --> AF5
+    AF4 --> AF5
+    DB1 --> DB1a
+    DB2 --> DB2a
+    DB3 --> DB3a
+    API1 --> C1a
+    API2 --> C1b
+    API3 --> C1c
+    API4 --> C1d
+    API5 --> F2a
+    CL3 --> CL4 & CL5
+    DB1 -.-> DB3
+    DB2 -.-> DB3
+    C1 --> n1["Untitled Node"]
+     FE2:::frontend
+     FE3:::frontend
+     FE4:::frontend
+     C1a:::controller
+     C1b:::controller
+     C1c:::controller
+     C1d:::controller
+     CL1:::clerk
+     CL2:::clerk
+     CL3:::clerk
+     C1:::controller
+     C1e:::controller
+     C1f:::controller
+     D1:::middleware
+     D2:::middleware
+     D3:::middleware
+     E1:::model
+     E2:::model
+     F1:::route
+     F2:::route
+     F1a:::route
+     F1b:::route
+     F1c:::route
+     F1d:::route
+     F2a:::route
+     J1:::config
+     J2:::config
+     J3:::config
+     J4:::config
+    classDef controller fill:#e1f5fe
+    classDef middleware fill:#f3e5f5
+    classDef model fill:#e8f5e8
+    classDef route fill:#fff3e0
+    classDef config fill:#fce4ec
+    classDef frontend fill:#e8f5e8
+    classDef clerk fill:#f0f4ff

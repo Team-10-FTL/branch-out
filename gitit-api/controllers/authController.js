@@ -126,3 +126,52 @@ exports.signup = async(req,res)=>{
 }
 
 
+exports.clerkSync = async (req, res) => {
+  const { clerkId, email, username } = req.body;
+
+  console.log('🔄 Received clerkSync request:', { clerkId, email, username });
+
+
+  try {
+    // Check if user already exists
+    const existingUser = await prisma.User.findFirst({
+      where: { clerkId: clerkId }
+    });
+    
+    if (existingUser) {
+      console.log('✅ User already exists in database:', existingUser.id);
+      return res.status(200).json({ 
+        message: "User already exists",
+        user: existingUser 
+      });
+    }
+    
+    // Create new user with Clerk data
+    const user = await prisma.User.create({
+      data: {
+        clerkId: clerkId,
+        userName: username,
+        email: email,
+        provider: "clerk",
+        role: "USER"
+      }
+    });
+    
+    console.log('✅ New user created in database:', user.id);
+    
+    res.status(201).json({
+      message: "User synced successfully",
+      user: { 
+        id: user.id, 
+        userName: user.userName, 
+        email: user.email,
+        role: user.role,
+        clerkId: user.clerkId
+      }
+    });
+    
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Error syncing user");
+  }
+};
