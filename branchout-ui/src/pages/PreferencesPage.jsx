@@ -36,20 +36,10 @@ function PreferencesPage() {
                     color={selectedLevels.includes(level) ? 'primary' : 'default'}
                     variant={selectedLevels.includes(level) ? 'filled' : 'outlined'}
                     clickable
-                    sx={({ marginRight: 1, marginBottom: 1})}
-
+                    sx={({ marginRight: 1, margin: 1})}
                 />
-
-
-
             ))}
             
-
-
-            
-
-
-
             <Divider />
             <p>Set any languages you know (or want to know) here </p>
 
