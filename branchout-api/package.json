@@ -12,7 +12,7 @@
     "pg": "^8.16.3",
     "prisma": "^6.11.1"
   },
-  "name": "gitit-api",
+  "name": "branchout-api",
   "version": "1.0.0",
   "description": "Capstone project api / server",
   "main": "server.js",
