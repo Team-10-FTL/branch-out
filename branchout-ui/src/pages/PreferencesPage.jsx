@@ -3,7 +3,7 @@ import { Container, Divider, Chip } from '@mui/material';
 import './PreferencesPage.css';
 
 const LEVELS = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
-const LANGUAGES = ['JavaScript', 'Python', 'Java', 'C++']; 
+const LANGUAGES = ['JavaScript', 'Python', 'Java', 'C++', 'Ruby', 'Go', 'Rust', 'Swift', 'Kotlin', 'PHP', 'TypeScript', 'C#', 'C', 'HTML/CSS', 'SQL']; 
 const TAGS = ['Web', 'AI', 'Mobile', 'Data Science'];
 
 
@@ -26,6 +26,7 @@ function PreferencesPage() {
             <h1>Preferences Page</h1>
             <p>Click tags on each section that align with your preferred level, languages, and tags! </p>
             <Divider />
+            <h2>Level</h2>
             <p>Set your school level - think of 1st as freshman and 4th as senior! This will correlate to the level repositories you get in your feed.</p>
             {LEVELS.map (level => (
                 <Chip
@@ -41,9 +42,23 @@ function PreferencesPage() {
             ))}
             
             <Divider />
+            <h2>Languages</h2>
             <p>Set any languages you know (or want to know) here </p>
 
+            {LANGUAGES.map (lang => (
+                <Chip
+                    key={lang}
+                    label={lang}
+                    onClick={() => {
+                        handleToggle(lang, selectedLanguages, setSelectedLanguages)}}
+                    color={selectedLanguages.includes(lang) ? 'primary' : 'default'}
+                    variant={selectedLanguages.includes(lang) ? 'filled' : 'outlined'}
+                    clickable
+                    sx={({ marginRight: 1, margin: 1})}
+                />
+            ))}
             <Divider />
+            <h2>Tags</h2>
             <p>Set any tags of topics that you know or want to know here</p>
 
             <Divider />
