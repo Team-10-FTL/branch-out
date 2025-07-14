@@ -10,7 +10,7 @@ datasource db {
 
 model User{
     id          Int      @id @default(autoincrement())
-    userName    String   @unique
+    username    String   @unique
     email       String   @unique
     password    String?  // Make optional for Clerk users
     clerkId     String?  @unique // Add this field
@@ -18,9 +18,20 @@ model User{
     role        Role     @default(USER)
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
-    feedBack FeedBack[]
+    feedback FeedBack[]
     savedRepos Repo[] @relation("savedRepos")
+    languages String[]
+    skill SkillLevel[]
+    preferenceTags  String[]
 
+
+}
+
+enum SkillLevel{
+    FIRSTYEAR
+    SECONDYEAR
+    THIRDYEAR
+    FOURTHYEAR
 }
 
 enum Provider{
@@ -33,6 +44,13 @@ enum Role{
     ADMIN
 }
 
+enum Critique{
+    NOTINTERESTED
+    MISLEADING
+    TOOCOMPLEX
+    TOOEASY
+}
+
 model Repo{
     id Int @id @default(autoincrement())
     owner String
@@ -42,19 +60,21 @@ model Repo{
     tags String[]
     topics String[]
     summary String?
+    description String
     savedBy User[] @relation("savedRepos")
     githubId String @unique
     feedBack FeedBack[]
+    repoLink String
 }
 
 
 // Feedback will be a later sprint feature
 model FeedBack{
     id Int @id @default(autoincrement())
-    user User @relation(fields: [userId], references: [id])
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId Int
-    repo Repo @relation(fields: [repoId], references: [id])
+    repo Repo @relation(fields: [repoId], references: [id], onDelete: Cascade)
     repoId Int
     swipeDirection String
-    feedbackReason String?
+    feedbackReason Critique?
 }
