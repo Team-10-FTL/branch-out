@@ -4,7 +4,8 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
-import { Box } from '@mui/material';
+import { Box, Chip } from '@mui/material'; // Add Chip here
+import './RepoCard.css'; // Add this import
 
 export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   const [startX, setStartX] = useState(0);
@@ -152,6 +153,24 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             alt="green iguana"
           />
           <CardContent>
+            <div className='repo-card-labels'>
+                <div className='repo-card-tags'>
+                    {repo.tags?.map((tag, index) => (
+                        <Chip 
+                        key={index} 
+                        label={tag} 
+                        variant="outlined" 
+                        sx={{ margin: '2px' }} 
+                        />
+                    ))}
+                </div>
+                <div className = "repo-card-rating">
+                <Typography variant="body2" color="text.secondary">
+                    Rating: {repo.rating || 'N/A'}
+                </Typography>
+                </div>
+            </div>
+
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               {repo.description || "No description available"}
             </Typography>

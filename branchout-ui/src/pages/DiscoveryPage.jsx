@@ -4,9 +4,9 @@ import RepoCard from '../components/RepoCard/RepoCard';
 
 const DiscoveryPage = () => {
   const [repos, setRepos] = useState([
-    { id: 1, name: 'Repo 1', description: 'First repository' },
-    { id: 2, name: 'Repo 2', description: 'Second repository' },
-    { id: 3, name: 'Repo 3', description: 'Third repository' },
+    { id: 1, name: 'Repo 1', description: 'First repository', tags: ['Machine Learning', 'React'], rating: 4.5 },
+    { id: 2, name: 'Repo 2', description: 'Second repository', tags: ['MCP', "Android Development", 'Java'] , rating: 2000},
+    { id: 3, name: 'Repo 3', description: 'Third repository', tags: ['Web Development', 'Node.js'], rating: 4600 },
   ]);
   
   const [currentIndex, setCurrentIndex] = useState(0);
