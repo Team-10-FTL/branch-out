@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import RepoCard from '../components/RepoCard/RepoCard';
 
-export function DiscoveryPage() {
+const DiscoveryPage = () => {
   const [repos, setRepos] = useState([
     { id: 1, name: 'Repo 1', description: 'First repository' },
     { id: 2, name: 'Repo 2', description: 'Second repository' },
@@ -24,14 +24,21 @@ export function DiscoveryPage() {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
-      {repos.length > 0 && (
-        <RepoCard
-          repo={repos[currentIndex]}
-          onSwipeLeft={handleSwipeLeft}
-          onSwipeRight={handleSwipeRight}
-        />
-      )}
+    <div >
+      
+      <div style={{ 
+       
+      }}>
+        {repos.length > 0 && (
+          <RepoCard
+            repo={repos[currentIndex]}
+            onSwipeLeft={handleSwipeLeft}
+            onSwipeRight={handleSwipeRight}
+          />
+        )}
+      </div>
     </div>
   );
 }
+
+export default DiscoveryPage;

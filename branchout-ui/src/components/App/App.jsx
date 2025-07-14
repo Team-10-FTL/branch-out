@@ -4,8 +4,7 @@ import AuthComponent from '../Auth/Auth'
 import { useTheme } from '../UISwitch/ThemeContext.jsx';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import PreferencesPage from '/src/pages/PreferencesPage';
-import DiscoveryPage from '/src/pages/DiscoveryPage';
-import './App.css'
+import DiscoveryPage from '../../pages/DiscoveryPage';import './App.css'
 
 
 
