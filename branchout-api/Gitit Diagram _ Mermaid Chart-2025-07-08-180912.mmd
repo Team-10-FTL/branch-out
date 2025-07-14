@@ -30,7 +30,7 @@ flowchart TD
         F2a["GET /protected - Admin Only"]
         API4["/api/protected"]
   end
-    A["gitit-api"] --> B["src/"] & C["controllers/"] & D["middleware/"] & E["models/"] & F["routes/"] & G["prisma/"] & H["data/"] & I["generated/"] & J["Configuration Files"]
+    A["branchout-api"] --> B["src/"] & C["controllers/"] & D["middleware/"] & E["models/"] & F["routes/"] & G["prisma/"] & H["data/"] & I["generated/"] & J["Configuration Files"]
     B --> B1["server.js - Main Entry Point"] & B2["db/db.js - Empty"]
     C --> C1["authController.js"]
     C1 --> C1a & C1b & C1c & C1d["hashPasswords"] & C1e["comparePasswords"]
