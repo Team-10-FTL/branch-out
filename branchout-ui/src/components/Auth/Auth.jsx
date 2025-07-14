@@ -90,7 +90,7 @@ if (isLoading) {
       
       const requestBody = isSignUp 
         ? { 
-            userName: username, 
+            username: username, 
             email: email,      // Include email only for signup
             password: password
           }
@@ -114,7 +114,7 @@ if (isLoading) {
         // Store user info locally (you might want to use proper state management)
         setLocalUser({
           id: result.user?.id,
-          username: result.user?.userName,
+          username: result.user?.username,
           email: result.user?.email,
           role:  result.user?.role
         })
@@ -124,7 +124,7 @@ if (isLoading) {
         localStorage.setItem('authToken', result.token)
         localStorage.setItem('userData', JSON.stringify({
           id: result.user?.id,
-          username: result.user?.userName,
+          username: result.user?.username,
           email: result.user?.email,
           role: result.user?.role // Store the role for admin checks
         }))
