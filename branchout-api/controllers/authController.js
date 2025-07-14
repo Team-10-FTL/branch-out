@@ -106,8 +106,8 @@ exports.signup = async(req,res)=>{
     const hashedPassword = await hashPasswords(password)
     const user = await prisma.User.create({ 
         data: {
-            username: username, 
-            email: email,  
+            username, 
+            email,  
             password: hashedPassword,
             provider: "local",
         } 
