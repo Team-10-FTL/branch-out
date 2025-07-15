@@ -27,7 +27,6 @@ const DiscoveryPage = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <SideBar />
       
       <Box
         component="main"
