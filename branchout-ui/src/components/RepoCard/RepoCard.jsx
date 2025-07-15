@@ -148,7 +148,6 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         className='repo-card'
-        onClick={handleCardClick}
       >
         <CardActionArea>
           <Typography gutterBottom variant="h5" component="div">
@@ -159,6 +158,8 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             height="140"
             image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
             alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
+            onClick={handleCardClick}
+
           />
           <CardContent>
             <div className='repo-card-labels'>
