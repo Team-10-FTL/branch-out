@@ -6,13 +6,22 @@ import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import { Box, Chip } from '@mui/material'; // Add Chip here
 import './RepoCard.css'; // Add this import
+import RepoCardModal from '../RepoCardModal/RepoCardModal';
 
 export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   const [startX, setStartX] = useState(0);
   const [currentX, setCurrentX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [open, setOpen] = useState(false);
   const cardRef = useRef(null);
+  const handleClose = () => setOpen(false);
+  const handleCardClick = () => {
+    setOpen(true);
+  };
+
+
+
 
   const handleTouchStart = (e) => {
     setStartX(e.touches[0].clientX);
@@ -126,6 +135,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+        <RepoCardModal open={open} handleClose={handleClose} repo={repo}/>
       <Card 
         ref={cardRef}
         sx={{ 
@@ -141,6 +151,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         className='repo-card'
+        onClick={handleCardClick}  // Add click handler to open modal
       >
         <CardActionArea>
           <Typography gutterBottom variant="h5" component="div">
@@ -172,7 +183,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             </div>
 
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {repo.description || "No description available"}
+              {repo.summary || "No summary available"}
             </Typography>
           </CardContent>
         </CardActionArea>
