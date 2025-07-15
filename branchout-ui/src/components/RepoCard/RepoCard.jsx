@@ -7,9 +7,7 @@ import CardActionArea from '@mui/material/CardActionArea';
 import { Box, Chip } from '@mui/material';
 import './RepoCard.css';
 import RepoCardModal from '../RepoCardModal/RepoCardModal';
-import { Box, Chip } from '@mui/material';
-import './RepoCard.css';
-import RepoCardModal from '../RepoCardModal/RepoCardModal';
+
 
 export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   const [startX, setStartX] = useState(0);

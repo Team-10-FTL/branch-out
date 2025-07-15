@@ -11,7 +11,8 @@ import {
   Avatar,
   Collapse,
   ListItemButton,
-  Toolbar
+  Toolbar,
+  Button
 } from '@mui/material';
 import {
   Home as HomeIcon,
@@ -22,15 +23,55 @@ import {
   Chat as ChatIcon,
   CalendarMonth as CalendarIcon,
   ExpandLess,
-  ExpandMore
+  ExpandMore,
+  Logout as LogoutIcon,
+  AdminPanelSettings as AdminIcon
 } from '@mui/icons-material';
+import { useUser, useClerk } from '@clerk/clerk-react';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 270;
 
 export default function SideBar() {
   const [submenuOpen, setSubmenuOpen] = useState(false);
+  const { user: clerkUser } = useUser();
+  const { signOut } = useClerk();
+  const navigate = useNavigate();
+
+  // Check for local user
+  const getLocalUser = () => {
+    try {
+      const userData = localStorage.getItem('userData');
+      return userData ? JSON.parse(userData) : null;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const localUser = getLocalUser();
+  const currentUser = clerkUser || localUser;
 
   const handleSubmenuToggle = () => setSubmenuOpen(!submenuOpen);
+
+  const handleLogout = async () => {
+    try {
+      // Sign out from Clerk if using OAuth
+      if (clerkUser) {
+        await signOut();
+      }
+      
+      // Clear local storage
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userData');
+      
+      // Redirect to login
+      navigate('/login');
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Force redirect even if there's an error
+      navigate('/login');
+    }
+  };
 
   return (
     <Drawer
@@ -41,7 +82,9 @@ export default function SideBar() {
         [`& .MuiDrawer-paper`]: {
           width: drawerWidth,
           boxSizing: 'border-box',
-          backgroundColor: 'black'
+          backgroundColor: 'black',
+          display: 'flex',
+          flexDirection: 'column',
         },
       }}
     >
@@ -49,37 +92,66 @@ export default function SideBar() {
         {/* Logo */}
         <Box sx={{ p: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="h6">Branch Out</Typography>
+            <Typography variant="h6" sx={{ color: 'white' }}>Branch Out</Typography>
           </Box>
         </Box>
       </Toolbar>
       
       <Divider />
 
+      {/* User Info */}
+      <Box sx={{ p: 2, color: 'white' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+          <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
+            {(currentUser?.username || currentUser?.email || 'U').charAt(0).toUpperCase()}
+          </Avatar>
+          <Box>
+            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+              {currentUser?.username || currentUser?.email || 'User'}
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'grey.400' }}>
+              {currentUser?.role || 'USER'}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+
+      <Divider />
+
       {/* NAVIGATION Section */}
-      <Box sx={{ p: 1 }}>
+      <Box sx={{ p: 1, flexGrow: 1 }}>
         <Typography variant="caption" sx={{ px: 2, color: 'text.secondary', fontWeight: 'bold' }}>
           NAVIGATION
         </Typography>
         <List>
           <ListItem disablePadding>
-            <ListItemButton href="/">
-              <ListItemIcon><HomeIcon /></ListItemIcon>
+            <ListItemButton href="/discovery" sx={{ color: 'white' }}>
+              <ListItemIcon><HomeIcon sx={{ color: 'white' }} /></ListItemIcon>
               <ListItemText primary="Discovery" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton href="/preferences">
-              <ListItemIcon><SettingsIcon /></ListItemIcon>
+            <ListItemButton href="/preferences" sx={{ color: 'white' }}>
+              <ListItemIcon><SettingsIcon sx={{ color: 'white' }} /></ListItemIcon>
               <ListItemText primary="Preferences" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton href="/profile">
-              <ListItemIcon><PersonIcon /></ListItemIcon>
+            <ListItemButton href="/profile" sx={{ color: 'white' }}>
+              <ListItemIcon><PersonIcon sx={{ color: 'white' }} /></ListItemIcon>
               <ListItemText primary="Profile" />
             </ListItemButton>
           </ListItem>
+          
+          {/* Admin Dashboard - only show if user is admin */}
+          {currentUser?.role === 'ADMIN' && (
+            <ListItem disablePadding>
+              <ListItemButton href="/admin" sx={{ color: 'white' }}>
+                <ListItemIcon><AdminIcon sx={{ color: 'white' }} /></ListItemIcon>
+                <ListItemText primary="Admin Dashboard" />
+              </ListItemButton>
+            </ListItem>
+          )}
         </List>
       </Box>
 
@@ -90,27 +162,45 @@ export default function SideBar() {
         </Typography>
         <List>
           <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon><ChatIcon /></ListItemIcon>
+            <ListItemButton sx={{ color: 'white' }}>
+              <ListItemIcon><ChatIcon sx={{ color: 'white' }} /></ListItemIcon>
               <ListItemText primary="Saved Repos" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon><CalendarIcon /></ListItemIcon>
+            <ListItemButton sx={{ color: 'white' }}>
+              <ListItemIcon><CalendarIcon sx={{ color: 'white' }} /></ListItemIcon>
               <ListItemText primary="History" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon><SettingsIcon /></ListItemIcon>
+            <ListItemButton sx={{ color: 'white' }}>
+              <ListItemIcon><SettingsIcon sx={{ color: 'white' }} /></ListItemIcon>
               <ListItemText primary="Settings" />
             </ListItemButton>
           </ListItem>
         </List>
       </Box>
 
-      
+      {/* Logout Button - Bottom Left */}
+      <Box sx={{ p: 2, mt: 'auto' }}>
+        <Button
+          fullWidth
+          variant="outlined"
+          startIcon={<LogoutIcon />}
+          onClick={handleLogout}
+          sx={{
+            color: 'white',
+            borderColor: 'rgba(255, 255, 255, 0.3)',
+            '&:hover': {
+              borderColor: 'rgba(255, 255, 255, 0.5)',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            },
+          }}
+        >
+          Logout
+        </Button>
+      </Box>
     </Drawer>
   );
 }
