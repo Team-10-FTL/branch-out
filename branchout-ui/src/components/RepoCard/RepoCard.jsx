@@ -4,8 +4,8 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
-import { Box, Chip } from '@mui/material'; // Add Chip here
-import './RepoCard.css'; // Add this import
+import { Box, Chip } from '@mui/material';
+import './RepoCard.css';
 import RepoCardModal from '../RepoCardModal/RepoCardModal';
 
 export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
@@ -20,9 +20,6 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
     setOpen(true);
   };
 
-
-
-
   const handleTouchStart = (e) => {
     setStartX(e.touches[0].clientX);
     setIsDragging(true);
@@ -35,9 +32,9 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
     const deltaX = currentX - startX;
     setCurrentX(deltaX);
     
-    // Apply transform to card for visual feedback
+    // Apply transform to card for visual feedback - ONLY slide, no rotation
     if (cardRef.current) {
-      cardRef.current.style.transform = `translateX(${deltaX}px) rotate(${deltaX * 0.1}deg)`;
+      cardRef.current.style.transform = `translateX(${deltaX}px)`;
       cardRef.current.style.opacity = Math.max(0.5, 1 - Math.abs(deltaX) / 300);
     }
   };
@@ -45,21 +42,19 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   const handleTouchEnd = () => {
     if (!isDragging) return;
     
-    const threshold = 100; // Minimum distance for swipe
+    const threshold = 100;
     
     if (Math.abs(currentX) > threshold) {
       if (currentX > 0) {
-        // Swipe right
         onSwipeRight?.(repo);
       } else {
-        // Swipe left
         onSwipeLeft?.(repo);
       }
     }
     
-    // Reset card position
+    // Reset card position - ONLY reset translation, no rotation
     if (cardRef.current) {
-      cardRef.current.style.transform = 'translateX(0) rotate(0deg)';
+      cardRef.current.style.transform = 'translateX(0)';
       cardRef.current.style.opacity = '1';
     }
     
@@ -81,8 +76,9 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
     const deltaX = currentX - startX;
     setCurrentX(deltaX);
     
+    // Apply transform to card for visual feedback - ONLY slide, no rotation
     if (cardRef.current) {
-      cardRef.current.style.transform = `translateX(${deltaX}px) rotate(${deltaX * 0.1}deg)`;
+      cardRef.current.style.transform = `translateX(${deltaX}px)`;
       cardRef.current.style.opacity = Math.max(0.5, 1 - Math.abs(deltaX) / 300);
     }
   };
@@ -100,8 +96,9 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
       }
     }
     
+    // Reset card position - ONLY reset translation, no rotation
     if (cardRef.current) {
-      cardRef.current.style.transform = 'translateX(0) rotate(0deg)';
+      cardRef.current.style.transform = 'translateX(0)';
       cardRef.current.style.opacity = '1';
     }
     
@@ -151,7 +148,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         className='repo-card'
-        onClick={handleCardClick}  // Add click handler to open modal
+        onClick={handleCardClick}
       >
         <CardActionArea>
           <Typography gutterBottom variant="h5" component="div">
@@ -161,14 +158,14 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             component="img"
             height="140"
             image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-            alt="green iguana"
+            alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
           />
           <CardContent>
             <div className='repo-card-labels'>
                 <div className='repo-card-tags'>
-                    {repo.tags?.map((tag, index) => (
+                    {repo.tags?.map((tag) => (
                         <Chip 
-                        key={index} 
+                        key={tag} 
                         label={tag} 
                         variant="outlined" 
                         sx={{ margin: '2px' }} 

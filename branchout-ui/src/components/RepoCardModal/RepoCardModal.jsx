@@ -21,7 +21,6 @@ const style = {
 export default function RepoCardModal({ open, handleClose , repo}) {
 
   return (
-    <div>
       <Modal
         open={open}
         onClose={handleClose}
@@ -36,37 +35,37 @@ export default function RepoCardModal({ open, handleClose , repo}) {
                 component="img"
                 height="140"
                 image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-                alt="green iguana"
+                alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
         />
-        <Typography id="repo-modal-rating" sx={{ mt: 2 }}>
+        <Box id="repo-modal-rating" sx={{ mt: 2 }}>
             Rating: {repo.rating || "N/A"}
-        </Typography>
-        <Typography id="repo-modal-tags" sx={{ mt: 2 }}>
-            Tags: {repo.tags?.map((tag, index) => (
+        </Box>
+        <Box id="repo-modal-tags" sx={{ mt: 2 }}>
+            Tags: {repo.tags?.map((tag) => (
                         <Chip 
-                        key={index} 
+                        key={tag} 
                         label={tag} 
                         variant="outlined" 
                         sx={{ margin: '2px' }} 
                         />
                     ))}
-        </Typography>
-        <Typography id="repo-modal-langyages" sx={{ mt: 2 }}>
-            Languages: {repo.languages?.map((language, index) => (
+        </Box>
+        <Box id="repo-modal-languages" sx={{ mt: 2 }}>
+            Languages: {repo.languages?.map((language) => (
                         <Chip 
-                        key={index} 
+                        key={language} 
                         label={language} 
                         variant="outlined" 
                         sx={{ margin: '2px' }} 
                         />
                     ))}
-        </Typography>
+        </Box>
 
         <Typography id="repo-modal-description" sx={{ mt: 2 }}>
             Description: {repo.description || "No description available"}
         </Typography>
         </Box>
       </Modal>
-    </div>
+
   );
 }
