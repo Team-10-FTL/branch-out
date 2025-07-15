@@ -12,7 +12,7 @@ export const useTheme = () => {
 };
 
 export const CustomThemeProvider = ({ children }) => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(true);
 
     // Load theme from localStorage on mount
     useEffect(() => {
