@@ -59,6 +59,7 @@ model Repo{
     languages String[]
     tags String[]
     topics String[]
+    skill SkillLevel[] // AI assigned level
     summary String?
     description String
     savedBy User[] @relation("savedRepos")
