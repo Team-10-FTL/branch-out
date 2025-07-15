@@ -12,12 +12,19 @@ function PreferencesPage() {
     const [selectedLanguages, setSelectedLanguages] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
 
-    // Log arrays when they change
+    // load the specific users preferences from the api with a useEffect to prevent block the ui
     useEffect(() => {
-        console.log('Selected Levels:', selectedLevels);
-        console.log('Selected Languages:', selectedLanguages);
-        console.log('Selected Tags:', selectedTags);
-    }, [selectedLevels, selectedLanguages, selectedTags]);
+        fetch('/user/preferences') // endpoint still needs to be created (and handle GET/POST)
+            .then(res => res.json())
+            .then(data => {
+                setSelectedLevels(data.skill || []);
+                setSelectedLanguages(data.languages || []);
+                setSelectedTags(data.preferenceTags || []);
+            })
+            .catch(err => {
+                // handle error if needed
+            });
+    }, []);
 
     const handleToggle = (item, selectedArray, setSelectedArray) => {
         setSelectedArray(prev =>
@@ -27,10 +34,23 @@ function PreferencesPage() {
         );
     };
 
+    const handleSave = () => {
+        // API call should go here to save user details/preferences
+        const preferences = {
+            levels: selectedLevels,
+            languages: selectedLanguages,
+            tags: selectedTags,
+        };
+        // example saving using stringify: { method: 'POST', body: JSON.stringify(preferences) })
+        // code rn just logs the preferences
+        console.log('Saving preferences as follows:', preferences);
+    };
+
     return (
 
         <Container maxWidth="xl">
             <h1>Preferences Page</h1>
+            <button onClick={handleSave}>Save Preferences</button>
             <p>Click tags on each section that align with your preferred level, languages, and tags! </p>
             <Divider />
             <h2>Level</h2>
