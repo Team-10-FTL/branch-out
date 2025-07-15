@@ -7,6 +7,9 @@ import CardActionArea from '@mui/material/CardActionArea';
 import { Box, Chip } from '@mui/material';
 import './RepoCard.css';
 import RepoCardModal from '../RepoCardModal/RepoCardModal';
+import { Box, Chip } from '@mui/material';
+import './RepoCard.css';
+import RepoCardModal from '../RepoCardModal/RepoCardModal';
 
 export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   const [startX, setStartX] = useState(0);
@@ -33,6 +36,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
     setCurrentX(deltaX);
     
     // Apply transform to card for visual feedback - ONLY slide, no rotation
+    // Apply transform to card for visual feedback - ONLY slide, no rotation
     if (cardRef.current) {
       cardRef.current.style.transform = `translateX(${deltaX}px)`;
       cardRef.current.style.opacity = Math.max(0.5, 1 - Math.abs(deltaX) / 300);
@@ -52,6 +56,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
       }
     }
     
+    // Reset card position - ONLY reset translation, no rotation
     // Reset card position - ONLY reset translation, no rotation
     if (cardRef.current) {
       cardRef.current.style.transform = 'translateX(0)';
@@ -76,6 +81,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
     const deltaX = currentX - startX;
     setCurrentX(deltaX);
     
+    // Apply transform to card for visual feedback - ONLY slide, no rotation
     // Apply transform to card for visual feedback - ONLY slide, no rotation
     if (cardRef.current) {
       cardRef.current.style.transform = `translateX(${deltaX}px)`;
@@ -144,11 +150,9 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         className='repo-card'
-        onClick={handleCardClick}
       >
         <CardActionArea>
           <Typography gutterBottom variant="h5" component="div">
@@ -159,6 +163,8 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             height="140"
             image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
             alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
+            onClick={handleCardClick}
+
           />
           <CardContent>
             <div className='repo-card-labels'>
