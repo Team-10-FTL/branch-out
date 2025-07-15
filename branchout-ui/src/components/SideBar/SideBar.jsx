@@ -35,7 +35,7 @@ const drawerWidth = 270;
 export default function SideBar() {
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const { user: clerkUser } = useUser();
-  const { signOut } = useClerk();
+  const  signOut  = useClerk();
   const navigate = useNavigate();
 
   // Check for local user
@@ -57,7 +57,7 @@ export default function SideBar() {
     try {
       // Sign out from Clerk if using OAuth
       if (clerkUser) {
-        await signOut();
+        await clerk.signOut();
       }
       
       // Clear local storage

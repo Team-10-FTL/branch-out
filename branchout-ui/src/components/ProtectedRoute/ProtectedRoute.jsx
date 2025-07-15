@@ -125,8 +125,10 @@ export const AdminRoute = ({ children }) => {
             Go Back
           </button>
           <button 
-            onClick={() => window.location.href = '/discovery'}
-            style={{
+            onClick={() => {
+              const navigate = useNavigate();
+              navigate('/discovery');
+            }}            style={{
               padding: '10px 20px',
               backgroundColor: '#28a745',
               color: 'white',
