@@ -134,6 +134,8 @@ function AuthComponent() {
             })
           );
         }
+        // redirect to directory once signup up or logged in
+        navigate("/");
       } else {
         const errorText = await response.text();
         console.error("❌ Local auth failed:", errorText);

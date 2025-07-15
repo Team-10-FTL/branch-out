@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import AuthComponent from "../Auth/Auth";
 import { useTheme } from "../UISwitch/ThemeContext.jsx";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import PreferencesPage from "/src/pages/PreferencesPage";
-import DiscoveryPage from "/src/pages/DiscoveryPage";
-import LoginPage from "/src/pages/Login/LoginPage";
-import SignupPage from "/src/pages/Signup/SignupPage";
-import AuthComponent from "../../components/Auth/Auth";
+import DiscoveryPage from "../../pages/DiscoveryPage";
 import "./App.css";
 
 function AppContent() {
@@ -38,8 +36,8 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<DiscoveryPage />} />
         <Route path="/preferences" element={<PreferencesPage />} />
-        <Route path="/login" element={<AuthComponent isSignUp={false} />} />
-        <Route path="/signup" element={<AuthComponent isSignUp={true} />} />
+        <Route path="/signup" element={<AuthComponent />} />
+        <Route path="/login" element={<AuthComponent />} />
       </Routes>
     </ThemeProvider>
   );
