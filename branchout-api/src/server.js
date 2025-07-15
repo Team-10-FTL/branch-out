@@ -8,11 +8,13 @@ app.use(express.json());
 
 const authRoutes = require("../routes/authRoute");
 const userRoutes = require("../routes/userRouter");
+const repoRoutes = require ("../routes/repoRoutes");
 
 // const protectedRoutes = require("../routes/protected");
 
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+app.use("/repo", repoRoutes);
 // app.use("/api", protectedRoutes);
 
 const PORT = process.env.PORT || 3000;
