@@ -17,12 +17,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   const [isDragging, setIsDragging] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [open, setOpen] = useState(false);
-  const [open, setOpen] = useState(false);
   const cardRef = useRef(null);
-  const handleClose = () => setOpen(false);
-  const handleCardClick = () => {
-    setOpen(true);
-  };
   const handleClose = () => setOpen(false);
   const handleCardClick = () => {
     setOpen(true);
@@ -44,7 +39,6 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
     // Apply transform to card for visual feedback - ONLY slide, no rotation
     if (cardRef.current) {
       cardRef.current.style.transform = `translateX(${deltaX}px)`;
-      cardRef.current.style.transform = `translateX(${deltaX}px)`;
       cardRef.current.style.opacity = Math.max(0.5, 1 - Math.abs(deltaX) / 300);
     }
   };
@@ -52,7 +46,6 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   const handleTouchEnd = () => {
     if (!isDragging) return;
     
-    const threshold = 100;
     const threshold = 100;
     
     if (Math.abs(currentX) > threshold) {
@@ -66,7 +59,6 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
     // Reset card position - ONLY reset translation, no rotation
     // Reset card position - ONLY reset translation, no rotation
     if (cardRef.current) {
-      cardRef.current.style.transform = 'translateX(0)';
       cardRef.current.style.transform = 'translateX(0)';
       cardRef.current.style.opacity = '1';
     }
@@ -93,7 +85,6 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
     // Apply transform to card for visual feedback - ONLY slide, no rotation
     if (cardRef.current) {
       cardRef.current.style.transform = `translateX(${deltaX}px)`;
-      cardRef.current.style.transform = `translateX(${deltaX}px)`;
       cardRef.current.style.opacity = Math.max(0.5, 1 - Math.abs(deltaX) / 300);
     }
   };
@@ -112,9 +103,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
     }
     
     // Reset card position - ONLY reset translation, no rotation
-    // Reset card position - ONLY reset translation, no rotation
     if (cardRef.current) {
-      cardRef.current.style.transform = 'translateX(0)';
       cardRef.current.style.transform = 'translateX(0)';
       cardRef.current.style.opacity = '1';
     }
@@ -150,7 +139,6 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
       onMouseLeave={() => setIsHovered(false)}
     >
         <RepoCardModal open={open} handleClose={handleClose} repo={repo}/>
-        <RepoCardModal open={open} handleClose={handleClose} repo={repo}/>
       <Card 
         ref={cardRef}
         sx={{ 
@@ -162,7 +150,6 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         className='repo-card'
@@ -183,9 +170,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             <div className='repo-card-labels'>
                 <div className='repo-card-tags'>
                     {repo.tags?.map((tag) => (
-                    {repo.tags?.map((tag) => (
                         <Chip 
-                        key={tag} 
                         key={tag} 
                         label={tag} 
                         variant="outlined" 
