@@ -2,10 +2,11 @@ import { useUser, useClerk } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Auth.css";
+
 function AuthComponent() {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const { openSignIn, openSignUp } = useClerk();
-  const [authMode, setAuthMode] = useState("local"); // 'local' or 'oauth'
+  const [authMode, setAuthMode] = useState("local");
   const location = useLocation();
   const navigate = useNavigate();
   const isSignUp = location.pathname === "/signup";
@@ -17,7 +18,7 @@ function AuthComponent() {
   const [localUser, setLocalUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const from = location.state?.from?.pathname || "/discovery";
 
   useEffect(() => {
     const restoreSession = () => {
@@ -29,7 +30,6 @@ function AuthComponent() {
           const user = JSON.parse(userData);
           setLocalUser(user);
         } catch (e) {
-          // Handle invalid stored data
           localStorage.removeItem("authToken");
           localStorage.removeItem("userData");
         }
@@ -40,10 +40,19 @@ function AuthComponent() {
     restoreSession();
   }, []);
 
+  // Handle OAuth redirect after successful authentication
+  useEffect(() => {
+    if (isLoaded && user) {
+      // User is authenticated via OAuth, redirect to intended page
+      navigate(from, { replace: true });
+    }
+  }, [isLoaded, user, navigate, from]);
+
   // Show loading state while checking for session
-  if (isLoading) {
+  if (isLoading || !isLoaded) {
     return <div>Loading session...</div>;
   }
+
   // Check if user is logged in (either locally or via Clerk)
   if (user || localUser) {
     const displayUser = user || localUser;
@@ -57,12 +66,12 @@ function AuthComponent() {
         <button
           onClick={async () => {
             if (user) {
-              await user.delete();
+              await signOut();
             }
             localStorage.removeItem("authToken");
             localStorage.removeItem("userData");
             setLocalUser(null);
-            window.location.reload();
+            navigate('/login');
           }}
           style={{
             padding: "10px 20px",
@@ -86,20 +95,10 @@ function AuthComponent() {
 
     try {
       const endpoint = isSignUp ? "/auth/signup" : "/auth/login";
-      console.log(
-        `🔄 ${isSignUp ? "Creating" : "Logging in"} local account...`
-      );
-
+      
       const requestBody = isSignUp
-        ? {
-            username: username,
-            email: email, // Include email only for signup
-            password: password,
-          }
-        : {
-            username: username, // Only username and password for login
-            password: password,
-          };
+        ? { username, email, password }
+        : { username, password };
 
       const response = await fetch(`http://localhost:5000${endpoint}`, {
         method: "POST",
@@ -113,15 +112,15 @@ function AuthComponent() {
         const result = await response.json();
         console.log("✅ Local auth successful!", result);
 
-        // Store user info locally (you might want to use proper state management)
-        setLocalUser({
+        const userData = {
           id: result.user?.id,
           username: result.user?.username,
           email: result.user?.email,
           role: result.user?.role,
-        });
+        };
 
-        // Store JWT token if provided
+        setLocalUser(userData);
+
         if (result.token) {
           localStorage.setItem("authToken", result.token);
           localStorage.setItem(
@@ -310,10 +309,7 @@ function AuthComponent() {
           </h2>
 
           <button
-            onClick={() => {
-              openSignUp();
-              navigate(isSignUp ? "/login" : "/signup");
-            }}
+            onClick={() => openSignUp()}
             style={{
               width: "100%",
               padding: "12px",
@@ -330,10 +326,7 @@ function AuthComponent() {
           </button>
 
           <button
-            onClick={() => {
-              openSignIn();
-              navigate(isSignUp ? "/login" : "/signup");
-            }}
+            onClick={() => openSignIn()}
             style={{
               width: "100%",
               padding: "12px",
