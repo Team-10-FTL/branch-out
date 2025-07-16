@@ -47,10 +47,6 @@ function AppContent() {
       },
       secondary: {
         main: '#dc004e',
-        main: '#1976d2',
-      },
-      secondary: {
-        main: '#dc004e',
       },
       background: {
         default: isDarkMode ? '#121212' : '#ffffff',
