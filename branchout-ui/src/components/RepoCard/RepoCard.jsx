@@ -31,8 +31,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
     const currentX = e.touches[0].clientX;
     const deltaX = currentX - startX;
     setCurrentX(deltaX);
-
-    // Apply transform to card for visual feedback - ONLY slide, no rotation
+    
     // Apply transform to card for visual feedback - ONLY slide, no rotation
     if (cardRef.current) {
       cardRef.current.style.transform = `translateX(${deltaX}px)`;
@@ -52,8 +51,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         onSwipeLeft?.(repo);
       }
     }
-
-    // Reset card position - ONLY reset translation, no rotation
+    
     // Reset card position - ONLY reset translation, no rotation
     if (cardRef.current) {
       cardRef.current.style.transform = "translateX(0)";
@@ -77,8 +75,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
     const currentX = e.clientX;
     const deltaX = currentX - startX;
     setCurrentX(deltaX);
-
-    // Apply transform to card for visual feedback - ONLY slide, no rotation
+    
     // Apply transform to card for visual feedback - ONLY slide, no rotation
     if (cardRef.current) {
       cardRef.current.style.transform = `translateX(${deltaX}px)`;
@@ -149,6 +146,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         className="repo-card"
@@ -158,11 +156,11 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             {repo.name}
           </Typography>
           <CardMedia
+            onClick={handleCardClick}
             component="img"
             height="140"
             image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
             alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
-            onClick={handleCardClick}
           />
           <CardContent>
             <div className="repo-card-labels">

@@ -35,7 +35,7 @@ const drawerWidth = 270;
 export default function SideBar() {
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const { user: clerkUser } = useUser();
-  const  signOut  = useClerk();
+  const  {signOut}  = useClerk();
   const navigate = useNavigate();
 
   // Check for local user
@@ -57,7 +57,7 @@ export default function SideBar() {
     try {
       // Sign out from Clerk if using OAuth
       if (clerkUser) {
-        await clerk.signOut();
+        await signOut();
       }
       
       // Clear local storage
@@ -85,6 +85,9 @@ export default function SideBar() {
           backgroundColor: 'black',
           display: 'flex',
           flexDirection: 'column',
+          backgroundColor: 'black',
+          display: 'flex',
+          flexDirection: 'column',
         },
       }}
     >
@@ -100,21 +103,36 @@ export default function SideBar() {
       <Divider />
 
       {/* User Info */}
-      <Box sx={{ p: 2, color: 'white' }}>
+        <Box
+        sx={{
+            p: 2,
+            color: 'white',
+            cursor: 'pointer', // Show pointer on hover
+            '&:hover': { backgroundColor: 'rgba(255,255,255,0.05)' }
+        }}
+        onClick={() => navigate('/profile')}
+        >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-          <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
-            {(currentUser?.username || currentUser?.email || 'U').charAt(0).toUpperCase()}
-          </Avatar>
-          <Box>
+            <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
+            {(clerkUser?.firstName?.charAt(0) ||
+                currentUser?.username?.charAt(0) ||
+                currentUser?.email?.charAt(0) ||
+                'U').toUpperCase()}
+            </Avatar>
+            <Box>
             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-              {currentUser?.username || currentUser?.email || 'User'}
+                {clerkUser
+                ? `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim()
+                : currentUser?.username ||
+                    currentUser?.email ||
+                    'User'}
             </Typography>
             <Typography variant="caption" sx={{ color: 'grey.400' }}>
-              {currentUser?.role || 'USER'}
+                {currentUser?.role || 'USER'}
             </Typography>
-          </Box>
+            </Box>
         </Box>
-      </Box>
+        </Box>
 
       <Divider />
 
@@ -136,12 +154,7 @@ export default function SideBar() {
               <ListItemText primary="Preferences" />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton href="/profile" sx={{ color: 'white' }}>
-              <ListItemIcon><PersonIcon sx={{ color: 'white' }} /></ListItemIcon>
-              <ListItemText primary="Profile" />
-            </ListItemButton>
-          </ListItem>
+
           
           {/* Admin Dashboard - only show if user is admin */}
           {currentUser?.role === 'ADMIN' && (
