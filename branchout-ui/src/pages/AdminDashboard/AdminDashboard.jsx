@@ -3,7 +3,7 @@ import { Typography, Container, Paper, Box, Grid, Card, CardContent } from '@mui
 
 const AdminDashboard = () => {
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4, p: 3 }}>
       <Typography variant="h4" component="h1" gutterBottom>
         🔧 Admin Dashboard
       </Typography>
@@ -50,7 +50,7 @@ const AdminDashboard = () => {
       </Grid>
       
       <Box sx={{ mt: 4 }}>
-        <Paper sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
+        <Paper sx={{ p: 2, backgroundColor: 'black' }}>
           <Typography variant="body2" color="text.secondary">
             📊 This is the admin dashboard. Only users with ADMIN role can access this page.
           </Typography>

@@ -48,6 +48,28 @@ function AuthComponent() {
     }
   }, [isLoaded, user, navigate, from]);
 
+  useEffect(() => {
+    // Only sync if user is signed in with Clerk
+    if (isLoaded && user) {
+      // Send Clerk info to backend
+      fetch("http://localhost:5000/auth/clerkSync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          clerkId: user.id,
+          email: user.primaryEmailAddress?.emailAddress,
+          username: user.username || user.firstName || user.id,
+        }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        // Optionally store user data in localStorage or state
+        localStorage.setItem("userData", JSON.stringify(data.user));
+      })
+      .catch(console.error);
+    }
+  }, [isLoaded, user]);
+
   // Show loading state while checking for session
   if (isLoading || !isLoaded) {
     return <div>Loading session...</div>;
@@ -123,11 +145,18 @@ function AuthComponent() {
 
         if (result.token) {
           localStorage.setItem("authToken", result.token);
-          localStorage.setItem("userData", JSON.stringify(userData));
+          localStorage.setItem(
+            "userData",
+            JSON.stringify({
+              id: result.user?.id,
+              username: result.user?.username,
+              email: result.user?.email,
+              role: result.user?.role, // Store the role for admin checks
+            })
+          );
         }
-
-        // Redirect to the intended page
-        navigate(from, { replace: true });
+        // redirect to directory once signup up or logged in
+        navigate("/");
       } else {
         const errorText = await response.text();
         console.error("❌ Local auth failed:", errorText);
