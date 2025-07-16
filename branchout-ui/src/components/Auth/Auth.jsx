@@ -3,9 +3,12 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Auth.css";
 
+
 function AuthComponent() {
   const { user, isLoaded } = useUser();
+  const { user, isLoaded } = useUser();
   const { openSignIn, openSignUp } = useClerk();
+  const [authMode, setAuthMode] = useState("local");
   const [authMode, setAuthMode] = useState("local");
   const location = useLocation();
   const navigate = useNavigate();
@@ -18,6 +21,7 @@ function AuthComponent() {
   const [localUser, setLocalUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const from = location.state?.from?.pathname || "/discovery";
   const from = location.state?.from?.pathname || "/discovery";
 
   useEffect(() => {
@@ -48,10 +52,20 @@ function AuthComponent() {
     }
   }, [isLoaded, user, navigate, from]);
 
+  // Handle OAuth redirect after successful authentication
+  useEffect(() => {
+    if (isLoaded && user) {
+      // User is authenticated via OAuth, redirect to intended page
+      navigate(from, { replace: true });
+    }
+  }, [isLoaded, user, navigate, from]);
+
   // Show loading state while checking for session
+  if (isLoading || !isLoaded) {
   if (isLoading || !isLoaded) {
     return <div>Loading session...</div>;
   }
+
 
   // Check if user is logged in (either locally or via Clerk)
   if (user || localUser) {
@@ -67,10 +81,12 @@ function AuthComponent() {
           onClick={async () => {
             if (user) {
               await signOut();
+              await signOut();
             }
             localStorage.removeItem("authToken");
             localStorage.removeItem("userData");
             setLocalUser(null);
+            navigate('/login');
             navigate('/login');
           }}
           style={{
@@ -96,7 +112,10 @@ function AuthComponent() {
     try {
       const endpoint = isSignUp ? "/auth/signup" : "/auth/login";
       
+      
       const requestBody = isSignUp
+        ? { username, email, password }
+        : { username, password };
         ? { username, email, password }
         : { username, password };
 
@@ -113,10 +132,14 @@ function AuthComponent() {
         console.log("✅ Local auth successful!", result);
 
         const userData = {
+        const userData = {
           id: result.user?.id,
           username: result.user?.username,
           email: result.user?.email,
           role: result.user?.role,
+        };
+
+        setLocalUser(userData);
         };
 
         setLocalUser(userData);
@@ -310,6 +333,7 @@ function AuthComponent() {
 
           <button
             onClick={() => openSignUp()}
+            onClick={() => openSignUp()}
             style={{
               width: "100%",
               padding: "12px",
@@ -326,6 +350,7 @@ function AuthComponent() {
           </button>
 
           <button
+            onClick={() => openSignIn()}
             onClick={() => openSignIn()}
             style={{
               width: "100%",
