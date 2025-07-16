@@ -1,6 +1,7 @@
 // Example usage in your parent component
 import { useState } from 'react';
 import RepoCard from '../components/RepoCard/RepoCard';
+import { Box, CssBaseline } from '@mui/material';
 
 const DiscoveryPage = () => {
   const [repos, setRepos] = useState([
@@ -22,6 +23,8 @@ const DiscoveryPage = () => {
     // Move to next card
     setCurrentIndex(prev => (prev + 1) % repos.length);
   };
+
+  const drawerWidth = 270;
 
   return (
     <Box sx={{ display: 'flex' }}>

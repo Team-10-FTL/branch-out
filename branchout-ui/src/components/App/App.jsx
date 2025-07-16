@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useTheme } from "../UISwitch/ThemeContext.jsx";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Box, CssBaseline } from "@mui/material";
@@ -35,9 +34,6 @@ const ProtectedLayout = ({ children }) => {
     </Box>
   );
 };
-import { ProtectedRoute, AdminRoute } from '../ProtectedRoute/ProtectedRoute';
-import SideBar from "../../components/SideBar/SideBar"; // Fixed import path
-
 function AppContent() {
   const { isDarkMode } = useTheme();
 
