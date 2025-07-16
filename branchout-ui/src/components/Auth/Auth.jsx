@@ -123,11 +123,18 @@ function AuthComponent() {
 
         if (result.token) {
           localStorage.setItem("authToken", result.token);
-          localStorage.setItem("userData", JSON.stringify(userData));
+          localStorage.setItem(
+            "userData",
+            JSON.stringify({
+              id: result.user?.id,
+              username: result.user?.username,
+              email: result.user?.email,
+              role: result.user?.role, // Store the role for admin checks
+            })
+          );
         }
-
-        // Redirect to the intended page
-        navigate(from, { replace: true });
+        // redirect to directory once signup up or logged in
+        navigate("/");
       } else {
         const errorText = await response.text();
         console.error("❌ Local auth failed:", errorText);

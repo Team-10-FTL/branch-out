@@ -55,10 +55,11 @@ exports.getUserProfile = async (req, res) => {
 };
 
 exports.getUser = async (req, res) => {
+  const userId = req.user?.userId || req.auth?.userId;
+
   try {
-    const id = Number(req.params.id); // i think i need another function to get a user that uses clerk?
     const newUser = await prisma.user.findUnique({
-      where: { id },
+      where: { id: userId },
       select: {
         id: true,
         username: true,
@@ -82,16 +83,34 @@ exports.getUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
+  const userId = req.user?.userId || req.auth?.userId;
   try {
-    const id = Number(req.params.id);
     const updatedUser = await prisma.user.update({
-      where: { id },
+      where: { id: userId },
       data: req.body,
     });
     res.json(updatedUser);
   } catch (error) {
     console.log(error.message);
     return res.status(400).json({ error: "Error updating user information" });
+  }
+};
+
+exports.getPreferences = async (req, res) => {
+  const userId = req.user?.userId || req.auth?.userId;
+  try {
+    const userPreferences = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        skill: true,
+        languages: true,
+        preferenceTags: true,
+      },
+    });
+    res.json(userPreferences);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(400).json({ error: "Error finding user preferences" });
   }
 };
 
