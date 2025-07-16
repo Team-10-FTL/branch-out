@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
 import { useState, useEffect } from 'react';
+import SideBar from '../SideBar/SideBar';
 
 // Check if user is authenticated (either Clerk or local)
 const useAuth = () => {
@@ -101,6 +102,7 @@ export const AdminRoute = ({ children }) => {
         borderRadius: '8px',
         boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
       }}>
+        <SideBar />
         <h2 style={{ color: '#dc3545', marginBottom: '20px' }}>
           ❌ Access Denied
         </h2>

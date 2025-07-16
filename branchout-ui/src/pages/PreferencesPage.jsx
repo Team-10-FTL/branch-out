@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Container, Divider, Chip } from "@mui/material";
-import "./PreferencesPage.css";
+import React, {useState, useEffect} from 'react';
+import { Container, Divider, Chip, Box } from '@mui/material';
+import './PreferencesPage.css';
 
 const LEVELS = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
 // displays different levels on frontend
@@ -172,17 +172,17 @@ function PreferencesPage() {
       <h2>Tags</h2>
       <p>Set any tags of topics that you know or want to know here</p>
 
-      {TAGS.map((tag) => (
-        <Chip
-          key={tag}
-          label={tag}
-          onClick={() => handleToggle(tag, selectedTags, setSelectedTags)}
-          color={selectedTags.includes(tag) ? "primary" : "default"}
-          variant={selectedTags.includes(tag) ? "filled" : "outlined"}
-          clickable
-          sx={{ marginRight: 1, marginBottom: 2 }}
-        />
-      ))}
+            {TAGS.map(tag => (
+                <Chip
+                    key={tag}
+                    label={tag}
+                    onClick={() => handleToggle(tag, selectedTags, setSelectedTags)}
+                    color={selectedTags.includes(tag) ? 'primary' : 'default'}
+                    variant={selectedTags.includes(tag) ? 'filled' : 'outlined'}
+                    clickable
+                    sx={{ marginRight: 1, marginBottom: 2 }}
+                />
+            ))}
 
       <Divider />
     </Container>
