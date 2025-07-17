@@ -9,6 +9,7 @@ import LoginPage from "/src/pages/Login/LoginPage";
 import SignupPage from "/src/pages/Signup/SignupPage";
 import AuthComponent from "../../components/Auth/Auth";
 import AdminDashboard from "../../pages/AdminDashboard/AdminDashboard"; // Fixed import path
+import ProfilePage  from "../../pages/ProfilePage/ProfilePage";
 import "./App.css";
 import { ProtectedRoute, AdminRoute } from '../ProtectedRoute/ProtectedRoute';
 import SideBar from "../../components/SideBar/SideBar";
@@ -16,24 +17,17 @@ import SideBar from "../../components/SideBar/SideBar";
 const drawerWidth = 270;
 
 // Layout wrapper for protected pages
-const ProtectedLayout = ({ children }) => {
-  return (
+const ProtectedLayout = ({ children }) => (
+  <ProtectedRoute>
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <SideBar />
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          width: `calc(100% - ${drawerWidth}px)`,
-          minHeight: '100vh',
-        }}
-      >
+      <Box component="main" sx={{ flexGrow: 1 }}>
         {children}
       </Box>
     </Box>
-  );
-};
+  </ProtectedRoute>
+);
 function AppContent() {
   const { isDarkMode } = useTheme();
 
@@ -57,7 +51,6 @@ function AppContent() {
 
   return (
     <ThemeProvider theme={theme}>
-      <SideBar />
       <Routes>
         {/* Public routes - no sidebar */}
         <Route path="/login" element={<AuthComponent />} />
@@ -94,6 +87,16 @@ function AppContent() {
                 <AdminDashboard />
               </ProtectedLayout>
             </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/profile" 
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <ProfilePage />
+              </ProtectedLayout>
+            </ProtectedRoute>
           } 
         />
         
