@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "@clerk/clerk-sdk-node": "^4.13.23",
-    "@prisma/client": "^6.12.0",
+    "@google/genai": "^1.9.0",
+    "@prisma/client": "^6.11.1",
     "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",

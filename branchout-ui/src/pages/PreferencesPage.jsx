@@ -33,6 +33,7 @@ const LANGUAGES = [
   "HTML/CSS",
   "SQL",
 ];
+// only 19 tags?
 const TAGS = [
   "Web Development",
   "Operating Systems",
