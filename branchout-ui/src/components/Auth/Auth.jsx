@@ -85,7 +85,7 @@ function AuthComponent() {
         <p>Account Role: {displayUser?.role || "USER"}</p>
         {user && <p>Clerk ID: {user.id}</p>}
         {localUser && <p>Local ID: {localUser.id}</p>}
-        <button
+        <butt
           onClick={async () => {
             if (user) {
               await signOut();
