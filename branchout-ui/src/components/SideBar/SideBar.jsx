@@ -50,6 +50,7 @@ export default function SideBar() {
       return null;
     }
   };
+  
 
   const localUser = getLocalUser();
   const currentUser = clerkUser || localUser;
@@ -107,13 +108,17 @@ export default function SideBar() {
         sx={{
           p: 2,
           color: 'white',
-          cursor: 'pointer',
+          cursor: currentUser ? 'pointer' : 'not-allowed',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          '&:hover': { backgroundColor: 'rgba(255,255,255,0.05)' }
+          '&:hover': { backgroundColor: currentUser ? 'rgba(255,255,255,0.05)' : 'inherit' }
         }}
-        onClick={() => navigate('/profile')}
+        onClick={() => {
+          if (currentUser) {
+            navigate('/profile');
+          }
+        }}
       >
         <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
           {(clerkUser?.firstName?.charAt(0) ||

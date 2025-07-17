@@ -40,6 +40,9 @@ exports.getUserProfile = async (req, res) => {
         provider: true,
         createdAt: true,
         updatedAt: true,
+        languages: true,
+        skill: true,
+        preferenceTags: true
       },
     });
 
