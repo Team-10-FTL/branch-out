@@ -69,9 +69,6 @@ const ProfilePage = () => {
     SECONDYEAR: "2nd Year",
     THIRDYEAR: "3rd Year",
     FOURTHYEAR: "4th Year",
-    FIFTHYEAR: "5th Year",
-    GRADUATE: "Graduate",
-    OTHER: "Other"
   };
   return mapping[level] || level;
 }
