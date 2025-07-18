@@ -1,12 +1,12 @@
-const axios = require('axios'); // import axios for making HTTP requests to the GitHub API
+import axios from 'axios';
+import 'dotenv/config';
 
-
-async function fetchReposWithFilters({ startDate, endDate }) {
+export async function fetchReposWithFilters({ startDate, endDate }) {
     // Filters: Must have a MIT license, must have at least one good first issue, and must be created between a startDate and endDate
     const query = `license:mit good-first-issues:>0 created:${startDate}..${endDate}`;
 
     // actual full search API URL - encoded component hides the full url
-    const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=10`;
+    const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=3`;
 
     const response = await axios.get(url, {
         headers: {
@@ -18,5 +18,4 @@ async function fetchReposWithFilters({ startDate, endDate }) {
     return response.data.items; // returns a promise array of matching objects
 }
 
-module.exports = { fetchReposWithFilters }; // Export the function so it can be used in other parts of the project (cron job)
 

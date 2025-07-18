@@ -2,7 +2,7 @@ import axios from "axios";
 
 // parses raw GitHub repository data into a structured format, useful for storing or displaying only the relevant details.
 
-async function parseRepoForGemini(repo) {
+export async function parseRepoForGemini(repo) {
   // takes in a single repo from the api
   let readme = "";
 
@@ -34,5 +34,3 @@ async function parseRepoForGemini(repo) {
     github_id: repo.id,
   };
 }
-
-module.exports = { parseRepoForGemini }; // returns a simplified repository object with selected fields
