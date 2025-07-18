@@ -7,6 +7,8 @@ import CardActionArea from "@mui/material/CardActionArea";
 import { Box, Chip } from "@mui/material";
 import "./RepoCard.css";
 import RepoCardModal from "../RepoCardModal/RepoCardModal";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   const [startX, setStartX] = useState(0);
@@ -137,10 +139,21 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         ref={cardRef}
         sx={{
           maxWidth: 345,
+          borderRadius: 3, // Rounded corners
+          boxShadow: 6,    // Elevation/shadow
+          overflow: "hidden",
           transition: isDragging
             ? "none"
-            : "transform 0.3s ease, opacity 0.3s ease",
+            : "transform 0.3s cubic-bezier(.4,2,.6,1), opacity 0.3s",
           touchAction: "none",
+          background: "#111", // Soft gradient
+          color: "#fff",
+          "&:hover": {
+            background: "#111", // <-- keep background black on hover
+            boxShadow: "0 0 24px 4px rgba(232,63,37,0.10)", // optional: subtle glow
+            transform: "scale(1.015)",          
+          },
+          cursor: "grab",
         }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -152,7 +165,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         className="repo-card"
       >
         <CardActionArea>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 700, letterSpacing: 1 }}>
             {repo.name}
           </Typography>
           <CardMedia
@@ -161,8 +174,16 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             height="140"
             image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
             alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
+            sx={{
+              borderRadius: 2,
+              boxShadow: 2,
+              objectFit: "cover",
+              marginBottom: 1,
+              cursor: "pointer",
+              transition: "transform 0.2s",
+            }}
           />
-          <CardContent>
+          <CardContent  sx={{ padding: 3 }}>
             <div className="repo-card-labels">
               <div className="repo-card-tags">
                 {repo.tags?.map((tag) => (
@@ -170,7 +191,10 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
                     key={tag}
                     label={tag}
                     variant="outlined"
-                    sx={{ margin: "2px" }}
+                    sx={{ 
+                      margin: "2px",
+                      borderRadius: "10px", // <-- Change this value as you like
+                    }}
                   />
                 ))}
               </div>
@@ -211,7 +235,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             onClick={handleLeftClick}
             onMouseDown={(e) => e.stopPropagation()}
           >
-            ←
+            <ArrowBackIosNewIcon fontSize="large" />
           </Box>
           <Box
             sx={{
@@ -233,7 +257,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             onClick={handleRightClick}
             onMouseDown={(e) => e.stopPropagation()}
           >
-            →
+             <ArrowForwardIosIcon fontSize="large" />
           </Box>
         </>
       )}

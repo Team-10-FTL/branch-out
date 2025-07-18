@@ -1,0 +1,48 @@
+.profile-container {
+  max-width: 500px;
+  margin: 64px auto 0 auto;
+  padding: 32px;
+  border-radius: 24px;
+}
+
+.profile-divider {
+  margin-bottom: 16px;
+}
+
+.profile-alert {
+  margin-bottom: 16px;
+}
+
+.profile-edit-section {
+  position: relative;
+  margin-bottom: 24px;
+  padding: 16px;
+  border-radius: 16px;
+  text-align: left;
+  align-items: flex-start;
+}
+
+.profile-edit-btn {
+  min-width: 20px;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  font-size: 1rem;      /* Set height */
+}
+
+.profile-edit-btn .MuiSvgIcon-root {
+  font-size: 1rem; /* Adjust this value as needed */
+}
+
+.profile-section {
+  margin-bottom: 8px;
+}
+
+.profile-stack {
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.profile-skill-chip {
+  /* Add custom chip styling if needed */
+}

@@ -1,10 +1,5 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import CardMedia from '@mui/material/CardMedia';
-import { Chip } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import { Modal, Box, Typography, CardMedia, Chip } from "@mui/material";
 
 const style = {
   position: 'absolute',
@@ -12,10 +7,14 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
+  bgcolor: '#111',
+  color: '#fff',
+  border: '2px solid #E83F25',
+  borderRadius: '20px',
+  boxShadow: '0 0 32px 8px rgba(232,63,37,0.18)',
   p: 4,
+  marginLeft: '130px', // <-- set to your sidebar width
+
 };
 
 export default function RepoCardModal({ open, handleClose , repo}) {
@@ -26,46 +25,73 @@ export default function RepoCardModal({ open, handleClose , repo}) {
         onClose={handleClose}
         aria-labelledby="repo-modal-title"
         aria-describedby="repo-modal-description"
+        sx={{ backdropFilter: 'blur(5px)' }}
       >
         <Box sx={style}>
-          <Typography id="repo-modal-title" variant="h6" component="h2">
+          <Typography
+            id="repo-modal-title"
+            variant="h6"
+            component="h2"
+            sx={{ color: "#E83F25", fontWeight: 700, mb: 2 }}
+          >
             {repo.name}
           </Typography>
-            <CardMedia
-                component="img"
-                height="140"
-                image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-                alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
-        />
-        <Box id="repo-modal-rating" sx={{ mt: 2 }}>
-            Rating: {repo.rating || "N/A"}
-        </Box>
-        <Box id="repo-modal-tags" sx={{ mt: 2 }}>
-            Tags: {repo.tags?.map((tag) => (
-                        <Chip 
-                        key={tag} 
-                        label={tag} 
-                        variant="outlined" 
-                        sx={{ margin: '2px' }} 
-                        />
-                    ))}
-        </Box>
-        <Box id="repo-modal-languages" sx={{ mt: 2 }}>
-            Languages: {repo.languages?.map((language) => (
-                        <Chip 
-                        key={language} 
-                        label={language} 
-                        variant="outlined" 
-                        sx={{ margin: '2px' }} 
-                        />
-                    ))}
-        </Box>
+          <CardMedia
+            component="img"
+            height="140"
+            image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
+            alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
+            sx={{
+              borderRadius: "12px",
+              border: "1px solid #222",
+              mb: 2,
+            }}
+          />
+          <Box id="repo-modal-rating" sx={{ mt: 2 }}>
+            <span style={{ color: "#E83F25", fontWeight: 600 }}>Rating:</span> {repo.rating || "N/A"}
+          </Box>
+          <Box id="repo-modal-tags" sx={{ mt: 2 }}>
+            <span style={{ color: "#E83F25", fontWeight: 600 }}>Tags:</span>{" "}
+            {repo.tags?.map((tag) => (
+              <Chip
+                key={tag}
+                label={tag}
+                variant="outlined"
+                sx={{
+                  margin: '2px',
+                  color: "#fff",
+                  border: "1.5px solid #E83F25",
+                  fontWeight: 500,
+                  background: "transparent",
+                  borderRadius: "10px", // <-- Change this value as you like
 
-        <Typography id="repo-modal-description" sx={{ mt: 2 }}>
-            Description: {repo.description || "No description available"}
-        </Typography>
+                }}
+              />
+            ))}
+          </Box>
+          <Box id="repo-modal-languages" sx={{ mt: 2 }}>
+            <span style={{ color: "#E83F25", fontWeight: 600 }}>Languages:</span>{" "}
+            {repo.languages?.map((language) => (
+              <Chip
+                key={language}
+                label={language}
+                variant="outlined"
+                sx={{
+                  margin: '2px',
+                  color: "#fff",
+                  border: "1.5px solid #E83F25",
+                  fontWeight: 500,
+                  background: "transparent",
+                  borderRadius: "10px", // <-- Change this value as you like
+                }}
+              />
+            ))}
+          </Box>
+
+          <Typography id="repo-modal-description" sx={{ mt: 2, color: "#fff" }}>
+            <span style={{ color: "#E83F25", fontWeight: 600 }}>Description:</span> {repo.description || "No description available"}
+          </Typography>
         </Box>
       </Modal>
-
   );
 }

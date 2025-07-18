@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import { Container, Divider, Chip, Box } from '@mui/material';
+import { Container, Divider, Chip, Box, Paper, Typography, Stack } from '@mui/material';
 import './PreferencesPage.css';
+import ToolTip from '../components/ToolTip/ToolTip';
 
 const LEVELS = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
-// displays different levels on frontend
 const LEVEL_TO_ENUM = {
   "1st Year": "FIRSTYEAR",
   "2nd Year": "SECONDYEAR",
@@ -17,43 +17,10 @@ const ENUM_TO_LEVEL = {
   FOURTHYEAR: "4th Year",
 };
 const LANGUAGES = [
-  "JavaScript",
-  "Python",
-  "Java",
-  "C++",
-  "Ruby",
-  "Go",
-  "Rust",
-  "Swift",
-  "Kotlin",
-  "PHP",
-  "TypeScript",
-  "C#",
-  "C",
-  "HTML/CSS",
-  "SQL",
+  "JavaScript", "Python", "Java", "C++", "Ruby", "Go", "Rust", "Swift", "Kotlin", "PHP", "TypeScript", "C#", "C", "HTML/CSS", "SQL",
 ];
-// only 19 tags?
 const TAGS = [
-  "Web Development",
-  "Operating Systems",
-  "Hardware",
-  "Compiler Design",
-  "AI",
-  "Mobile",
-  "Data Science",
-  "Game Development",
-  "Blockchain",
-  "DevOps",
-  "Cybersecurity",
-  "Cloud Computing",
-  "Machine Learning",
-  "AR/VR",
-  "IoT",
-  "Mobile Development: Swift",
-  "Mobile Development: Kotlin",
-  "APIs",
-  "Microservices",
+  "Web Development", "Operating Systems", "Hardware", "Compiler Design", "AI", "Mobile", "Data Science", "Game Development", "Blockchain", "DevOps", "Cybersecurity", "Cloud Computing", "Machine Learning", "AR/VR", "IoT", "Mobile Development: Swift", "Mobile Development: Kotlin", "APIs", "Microservices",
 ];
 
 function PreferencesPage() {
@@ -61,19 +28,14 @@ function PreferencesPage() {
   const [selectedLanguages, setSelectedLanguages] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
 
-  // load the specific users preferences from the api with a useEffect to prevent block the ui
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-
     fetch(`http://localhost:5000/user/preferences`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }) // endpoint still needs to be created (and handle GET/POST)
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then((res) => res.json())
       .then((data) => {
         if (data) {
-          // allows different frontend values from enum values for levels/skills
           setSelectedLevels(
             (data.skill || [])
               .map((levelEnum) => ENUM_TO_LEVEL[levelEnum])
@@ -84,7 +46,6 @@ function PreferencesPage() {
         }
       })
       .catch((error) => {
-        // handle error if needed
         console.log("Failed to load user preferences", error);
       });
   }, []);
@@ -96,13 +57,11 @@ function PreferencesPage() {
   };
 
   const handleSave = async () => {
-    // API call should go here to save user details/preferences
     const preferences = {
       skill: selectedLevels.map((label) => LEVEL_TO_ENUM[label]),
       languages: selectedLanguages,
       preferenceTags: selectedTags,
     };
-    console.log("Saving preferences as follows:", preferences);
     const token = localStorage.getItem("authToken");
     try {
       const res = await fetch(`http://localhost:5000/user/preferences`, {
@@ -113,9 +72,6 @@ function PreferencesPage() {
         },
         body: JSON.stringify(preferences),
       });
-      // example saving using stringify: { method: 'POST', body: JSON.stringify(preferences) })
-      // code rn just logs the preferences
-
       if (res.ok) {
         console.log("Preferences saved successfully");
       }
@@ -125,68 +81,142 @@ function PreferencesPage() {
   };
 
   return (
-    <Container maxWidth="xl">
-      <h1>Preferences Page</h1>
-      <button onClick={handleSave}>Save Preferences</button>
-      <p>
-        Click tags on each section that align with your preferred level,
-        languages, and tags!{" "}
-      </p>
-      <Divider />
-      <h2>Level</h2>
-      <p>
-        Set your school level - think of 1st as freshman and 4th as senior! This
-        will correlate to the level repositories you get in your feed.
-      </p>
-      {LEVELS.map((level) => (
-        <Chip
-          key={level}
-          label={level}
-          onClick={() => {
-            handleToggle(level, selectedLevels, setSelectedLevels);
-          }}
-          color={selectedLevels.includes(level) ? "primary" : "default"}
-          variant={selectedLevels.includes(level) ? "filled" : "outlined"}
-          clickable
-          sx={{ marginRight: 1, margin: 1 }}
-        />
-      ))}
+    <Box sx={{ position: "relative", maxWidth: 500, mx: "auto", mt: 6 }}>
+      <Paper
+        className="preferences-container"
+        sx={{
+          background: "#111",
+          color: "#fff",
+          borderRadius: 4,
+          boxShadow: "0 0 24px 4px rgba(232,63,37,0.10)",
+          p: 4,
+          position: "relative",
+          transition: "box-shadow 0.3s, background 0.3s",
+          "&:hover": {
+            boxShadow: "0 0 32px 8px rgba(232,63,37,0.18)",
+            background: "#111",
+          },
+        }}
+      >
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, letterSpacing: 1 }}>
+          Preferences Page
+        </Typography>
+        <Divider className="preferences-divider" sx={{ borderColor: "#222", mb: 2 }} />
 
-      <Divider />
-      <h2>Languages</h2>
-      <p>Set any languages you know (or want to know) here </p>
+        <Typography variant="h6" sx={{ color: "#0ff", mt: 2 }}>
+          Level <ToolTip className="ToolTip" information={"Set your school level - think of 1st as freshman and 4th as senior! This will correlate to the level repositories you get in your feed."} />
+        </Typography>
+          <Stack
+            direction="row"
+            spacing={1}
+            rowGap={1}
+            flexWrap="wrap"
+            className="preferences-stack"
+            justifyContent="center"
+            alignItems="center"
+          >
+            {LEVELS.map((level) => (
+            <Chip
+              key={level}
+              label={level}
+              onClick={() => handleToggle(level, selectedLevels, setSelectedLevels)}
+              color={selectedLevels.includes(level) ? "secondary" : "default"}
+              variant={selectedLevels.includes(level) ? "filled" : "outlined"}
+              clickable
+              sx={{
+                background: selectedLevels.includes(level) ? "#222" : "#111",
+                color: "#fff",
+                border: "1px solid #0ff",
+                fontWeight: 500,
+                marginRight: 1,
+                marginBottom: 1,
+                borderRadius: "10px", // <-- Change this value as you like
+              }}
+            />
+          ))}
+        </Stack>
 
-      {LANGUAGES.map((lang) => (
-        <Chip
-          key={lang}
-          label={lang}
-          onClick={() => {
-            handleToggle(lang, selectedLanguages, setSelectedLanguages);
-          }}
-          color={selectedLanguages.includes(lang) ? "primary" : "default"}
-          variant={selectedLanguages.includes(lang) ? "filled" : "outlined"}
-          clickable
-          sx={{ marginRight: 1, margin: 1 }}
-        />
-      ))}
-      <Divider />
-      <h2>Tags</h2>
-      <p>Set any tags of topics that you know or want to know here</p>
+        <Divider sx={{ borderColor: "#222", my: 2 }} />
 
-            {TAGS.map(tag => (
-                <Chip
-                    key={tag}
-                    label={tag}
-                    onClick={() => handleToggle(tag, selectedTags, setSelectedTags)}
-                    color={selectedTags.includes(tag) ? 'primary' : 'default'}
-                    variant={selectedTags.includes(tag) ? 'filled' : 'outlined'}
-                    clickable
-                    sx={{ marginRight: 1, marginBottom: 2 }}
-                />
-            ))}
+        <Typography variant="h6" sx={{ color: "#0ff", mt: 2 }}>
+          Languages <ToolTip className="ToolTip" information={"Set any languages you know (or want to know) here"} />
+        </Typography>
+            <Stack
+              direction="row"
+              spacing={1}
+              rowGap={1}
+              flexWrap="wrap"
+              className="preferences-stack"
+              justifyContent="center"
+              alignItems="center"
+            >         
+          {LANGUAGES.map((lang) => (
+            <Chip
+              key={lang}
+              label={lang}
+              onClick={() => handleToggle(lang, selectedLanguages, setSelectedLanguages)}
+              color={selectedLanguages.includes(lang) ? "primary" : "default"}
+              variant={selectedLanguages.includes(lang) ? "filled" : "outlined"}
+              clickable
+              sx={{
+                background: selectedLanguages.includes(lang) ? "#222" : "#111",
+                color: "#fff",
+                border: "1px solid #0ff",
+                fontWeight: 500,
+                marginRight: 1,
+                marginBottom: 1,
+                borderRadius: "10px", // <-- Change this value as you like
+              }}
+            />
+          ))}
+        </Stack>
 
-      <Divider />
-    </Container>
+        <Divider sx={{ borderColor: "#222", my: 2 }} />
+
+        <Typography variant="h6" sx={{ color: "#0ff", mt: 2 }}>
+          Tags <ToolTip className="ToolTip" information={"Set any tags of topics that you know or want to know here"} />
+        </Typography>
+          <Stack
+            direction="row"
+            spacing={1}
+            rowGap={1}
+            flexWrap="wrap"
+            className="preferences-stack"
+            justifyContent="center"
+            alignItems="center"
+          > 
+         {TAGS.map(tag => (
+            <Chip
+              key={tag}
+              label={tag}
+              onClick={() => handleToggle(tag, selectedTags, setSelectedTags)}
+              color={selectedTags.includes(tag) ? "success" : "default"}
+              variant={selectedTags.includes(tag) ? "filled" : "outlined"}
+              clickable
+              sx={{
+                background: selectedTags.includes(tag) ? "#222" : "#111",
+                color: "#fff",
+                border: "1px solid #0ff",
+                fontWeight: 500,
+                marginRight: 1,
+                marginBottom: 1,
+                borderRadius: "10px", // <-- Change this value as you like
+              }}
+            />
+          ))}
+        </Stack>
+
+        <Divider sx={{ borderColor: "#222", my: 2 }} />
+
+        <button
+          onClick={handleSave}
+          className="preferences-save-btn"
+        >
+          <div className='preferences-save-btn-content'>Save Preferences</div>
+        </button>
+        <ToolTip className="ToolTip" information="Select your preferences below. Click to toggle selection." />
+      </Paper>
+    </Box>
   );
 }
 
