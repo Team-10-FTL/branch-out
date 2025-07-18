@@ -1,5 +1,6 @@
-import { GoogleGenAI } from "@google/genai";
-import { parseRepoForGemini } from "../../helpers/repoParseHelper";
+import { GoogleGenAI, Type } from "@google/genai";
+import { parseRepoForGemini } from "../../helpers/repoParseHelper.js";
+import 'dotenv/config'; // This loads .env variables into process.env
 
 // skill level enum adjusted for UI
 const DIFFICULTY_ENUM = {
@@ -32,122 +33,73 @@ const AVAILABLE_TAGS = [
   "Compiler Design",
   "DevOps, CI/CD",
 ];
-
-// must input VITE_GEMINI_API_KEY into local .env file
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-
-const ai = new GoogleGenAI({ apiKey });
-const model = ai.getGenerativeModel({
-  model: "gemini-1.5-pro",
-  systemInstruction:
-    "You are a computer science professor, helping students interested in exploring open source GitHub projects.",
-});
+const apiKey = process.env.GEMINI_API_KEY;
+const ai = new GoogleGenAI(apiKey);
 
 // wrapper that processes single repo -> calling Gemini!
-export async function analyzeRepoWithGemini(
-  repo,
-  AVAILABLE_TAGS,
-  DIFFICULTY_ENUM
-) {
+export async function analyzeRepoWithGemini(repo, AVAILABLE_TAGS, DIFFICULTY_ENUM) {
   const parsedRepo = await parseRepoForGemini(repo);
-  const tags = await repoTags(parsedRepo, AVAILABLE_TAGS);
-  const difficulty = await repoDifficulty(parsedRepo, DIFFICULTY_ENUM);
-  const summary = await repoSummary(parsedRepo, tags, difficulty);
 
-  return { summary, tags, difficulty };
-}
+  const prompt = `
+  You are a computer science propfessor helping students find open source GitHub repositories to work on. Please analyze the following repository and respond in a **strict JSON format** with the following fields:
+  - summary (a 150-200 word project description)
+  - tags (an array of 1-5 tags selected from the provided list)
+  - difficulty (one of: Beginner, Intermediate, Advanced, Professional)
+  
+  Repo Info:
+  Name: ${parsedRepo.name}
+  Owner: ${parsedRepo.owner}
+  Stars: ${parsedRepo.stars}
+  Description: ${parsedRepo.description}
+  Topics: ${parsedRepo.topics.join(", ")}
+  README (truncated): ${parsedRepo.readme?.slice(0, 3000) || "No README available"}
 
-export async function repoTags(repo, AVAILABLE_TAGS) {
+  Allowed Tags: ${AVAILABLE_TAGS.join(", ")}
+  `
+
+  let aiJSON;
   try {
-    const { name, owner, stars, description, topics, readme } = repo;
-    const prompt = `Based on the repo information, assign between 1-5 of the provided tags:
-    
-    Name: ${name}
-    Owner: ${owner}
-    Stars: ${stars}
-    Description: ${description}
-    Topics: ${Array.isArray(topics) ? topics.join(", ") : "None"}
-    README: ${readme?.slice(0, 3000) || "No README available"}
-
-    Provided Tags: ${AVAILABLE_TAGS}
-    `;
-    const result = await model.generateContent({
-      contents: [{ parts: [{ text: prompt }] }],
+    const result = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            summary: { type: Type.STRING },
+            tags: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.STRING,
+                enum: AVAILABLE_TAGS,
+              },
+            },
+            difficulty: {
+              type: Type.STRING,
+              enum: Object.keys(DIFFICULTY_ENUM),
+            },
+          },
+        },
+      },
     });
-    const tagString = await result.response.text();
-    console.log(tagString);
-    const parseTagString = (tagString) => {
-      // split for commas, remove spaces
-      return tagString.split(",").map((tag) => tag.trim());
-    };
-
-    const tags = parseTagString(tagString);
-    return tags;
+  
+    aiJSON = JSON.parse(result.text);
   } catch (error) {
-    console.log("Error with creating repo tags: ", error);
+    console.error("Error parsing Gemini response:", error);
+    throw new Error("AI parsing failed");
+  }
+
+
+  const difficultyFromDB = DIFFICULTY_ENUM[aiJSON.difficulty.trim().replace(/[^a-zA-Z]/g, "")] || null; // maps whatever difficulty gemini gave the repo to the ENUM we have in the schema (intermediate  ==> INTERMEDIATE)
+
+  // return regular repo data + { summary, tags, difficulty };
+  return {
+    ...parsedRepo, // includes name, owner, stars, repoLink, license, description, topics, readme, created_at, github_id
+    summary: aiJSON.summary,
+    tags: aiJSON.tags,
+    skill: difficultyFromDB ? [difficultyFromDB] : [],
+    githubId: parsedRepo.github_id,
+    repoLink: parsedRepo.repoLink,
   }
 }
-
-export async function repoDifficulty(repo, DIFFICULTY_ENUM) {
-  try {
-    const { name, owner, stars, description, topics, readme } = repo;
-    const prompt = `Categorize the repo into one of the 4 available difficulty levels based on the provided information:
-    
-    
-    Name: ${name}
-    Owner: ${owner}
-    Stars: ${stars}
-    Description: ${description}
-    Topics: ${Array.isArray(topics) ? topics.join(", ") : "None"}
-    README: ${readme?.slice(0, 3000) || "No README available"}
-
-    The difficulty levels are as follows: ${skillLevels}
-    `;
-    const result = await model.generateContent({
-      contents: [{ parts: [{ text: prompt }] }],
-    });
-
-    const enumDif = await result.response.text();
-    console.log("Raw difficulty:", enumDif);
-
-    const difficulty =
-      DIFFICULTY_ENUM[enumDif.trim().replace(/[^a-zA-Z]/g, "")] || null;
-
-    return difficulty;
-  } catch (error) {
-    console.log("Error with creating repo difficulty/skill level: ", error);
-  }
-}
-
-//
-export async function repoSummary(repo, tags, difficulty) {
-  try {
-    const { name, owner, stars, description, topics, readme } = repo;
-    const prompt = `Please generate a clean, concise 150-200 word summary based on the following repo information.
-    
-    Name: ${name}
-    Owner: ${owner}
-    Stars: ${stars}
-    Description: ${description}
-    Topics: ${Array.isArray(topics) ? topics.join(", ") : "None"}
-    README: ${readme?.slice(0, 3000) || "No README available"}
-
-
-    The user-defined tags for this project are:
-    ${tags.join(", ")}
-
-    The estimated difficulty level of the repository is:
-    ${difficulty}
-    `;
-    const result = await model.generateContent({
-      contents: [{ parts: [{ text: prompt }] }],
-    });
-    const summary = await result.response.text();
-    console.log(summary);
-    return summary;
-  } catch (error) {
-    console.log("Error with creating repo summary: ", error);
-  }
-}
-
-// const result = await analyzeRepoWithGemini(repo, AVAILABLE_TAGS, DIFFICULTY_ENUM);
