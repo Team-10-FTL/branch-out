@@ -48,7 +48,7 @@ export default function RepoCardModal({ open, handleClose , repo}) {
             }}
           />
           <Box id="repo-modal-rating" sx={{ mt: 2 }}>
-            <span style={{ color: "#E83F25", fontWeight: 600 }}>Rating:</span> {repo.rating || "N/A"}
+            <span style={{ color: "#E83F25", fontWeight: 600 }}>Rating:</span> {repo.stars || "N/A"}
           </Box>
           <Box id="repo-modal-tags" sx={{ mt: 2 }}>
             <span style={{ color: "#E83F25", fontWeight: 600 }}>Tags:</span>{" "}

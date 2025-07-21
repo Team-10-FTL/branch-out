@@ -28,7 +28,7 @@ function PreferencesPage() {
   const [selectedLanguages, setSelectedLanguages] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
 
-  const VITE_URL = import.meta.env.DATABASE_URL
+  const VITE_URL = import.meta.env.VITE_DATABASE_URL
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
