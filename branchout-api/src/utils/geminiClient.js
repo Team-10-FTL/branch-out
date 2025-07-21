@@ -1,6 +1,6 @@
-import { GoogleGenAI, Type } from "@google/genai";
-import { parseRepoForGemini } from "../../helpers/repoParseHelper.js";
-import 'dotenv/config'; // This loads .env variables into process.env
+require('dotenv').config();
+const { GoogleGenAI, Type } = require("@google/genai");
+const { parseRepoForGemini } = require("../../helpers/repoParseHelper");
 
 // skill level enum adjusted for UI
 const DIFFICULTY_ENUM = {
@@ -34,10 +34,14 @@ const AVAILABLE_TAGS = [
   "DevOps, CI/CD",
 ];
 const apiKey = process.env.GEMINI_API_KEY;
-const ai = new GoogleGenAI(apiKey);
+console.log("Gemini API Key:", apiKey ? "Loaded" : "Not Loaded"); // Check if key is loaded
+if (!apiKey) {
+    console.error("GEMINI_API_KEY is not set in .env or environment variables!");
+}
+const ai = new GoogleGenAI({ apiKey });
 
 // wrapper that processes single repo -> calling Gemini!
-export async function analyzeRepoWithGemini(repo, AVAILABLE_TAGS, DIFFICULTY_ENUM) {
+async function analyzeRepoWithGemini(repo, AVAILABLE_TAGS, DIFFICULTY_ENUM) {
   const parsedRepo = await parseRepoForGemini(repo);
 
   const prompt = `
@@ -49,6 +53,7 @@ export async function analyzeRepoWithGemini(repo, AVAILABLE_TAGS, DIFFICULTY_ENU
   Repo Info:
   Name: ${parsedRepo.name}
   Owner: ${parsedRepo.owner}
+  Languages: ${parsedRepo.languages}
   Stars: ${parsedRepo.stars}
   Description: ${parsedRepo.description}
   Topics: ${parsedRepo.topics.join(", ")}
@@ -91,7 +96,13 @@ export async function analyzeRepoWithGemini(repo, AVAILABLE_TAGS, DIFFICULTY_ENU
   }
 
 
-  const difficultyFromDB = DIFFICULTY_ENUM[aiJSON.difficulty.trim().replace(/[^a-zA-Z]/g, "")] || null; // maps whatever difficulty gemini gave the repo to the ENUM we have in the schema (intermediate  ==> INTERMEDIATE)
+  let difficultyFromDB = null;
+  if (aiJSON.difficulty && typeof aiJSON.difficulty === 'string') {   // this only attempts to trim and replace if aiJSON.difficulty exists and is a string
+      difficultyFromDB = DIFFICULTY_ENUM[aiJSON.difficulty.trim().replace(/[^a-zA-Z]/g, "")] || null; 
+  } else {
+      console.warn(`Gemini response: 'difficulty' field is missing or not a string. Received: ${aiJSON.difficulty}`);
+      difficultyFromDB = DIFFICULTY_ENUM.Beginner;  // can decide null here instead if we want
+  }
 
   // return regular repo data + { summary, tags, difficulty };
   return {
@@ -99,7 +110,9 @@ export async function analyzeRepoWithGemini(repo, AVAILABLE_TAGS, DIFFICULTY_ENU
     summary: aiJSON.summary,
     tags: aiJSON.tags,
     skill: difficultyFromDB ? [difficultyFromDB] : [],
-    githubId: parsedRepo.github_id,
+    githubId: parsedRepo.githubId,
     repoLink: parsedRepo.repoLink,
   }
 }
+
+module.exports = { analyzeRepoWithGemini };

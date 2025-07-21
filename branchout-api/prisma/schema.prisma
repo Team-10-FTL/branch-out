@@ -63,7 +63,7 @@ model Repo{
     summary String?
     description String
     savedBy User[] @relation("savedRepos")
-    githubId String @unique
+    githubId Int @unique
     feedBack FeedBack[]
     repoLink String
 }

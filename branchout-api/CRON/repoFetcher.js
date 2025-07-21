@@ -1,8 +1,16 @@
-import 'dotenv/config';
-import {fetchReposWithFilters } from "../helpers/githubHelper.js";
-import { parseRepoForGemini } from "../helpers/repoParseHelper.js";
-import { analyzeRepoWithGemini } from "../src/utils/geminiClient.js";
-import axios from 'axios';
+// import 'dotenv/config';
+// import {fetchReposWithFilters } from "../helpers/githubHelper.js";
+// import { parseRepoForGemini } from "../helpers/repoParseHelper.js";
+// import { analyzeRepoWithGemini } from "../src/utils/geminiClient.js";
+// import axios from 'axios';
+// import { Language } from '@google/genai';
+require('dotenv').config();
+const { fetchReposWithFilters } = require("../helpers/githubHelper");
+const { parseRepoForGemini } = require("../helpers/repoParseHelper");
+const { analyzeRepoWithGemini } = require("../src/utils/geminiClient");
+const axios = require('axios');
+const { PrismaClient } = require('../generated/prisma');
+const prisma = new PrismaClient();
 
 // instead of having separate logic on the same edited file, use helpr functions in the helpers/ folder
 // here we can modularize the logic and PRs
@@ -47,17 +55,36 @@ const repoFetcher = async () => {
     // fetch repos from github (call the github helper)
     const repos = await fetchReposWithFilters({ startDate: lastPulled, endDate: currentDate })
 
-    const limitedRepos = repos.slice(0, 1); // limit to 1 repo for testing
+    const limitedRepos = repos.slice(0, 3); // limit to 1 repo for testing
 
-
-    for (const repo of repos){
-
-        // get Gemini enriched data so
-        // do a call to the geminin helper function here with parsed Repo as the passed-in arguments
+    for (const repo of limitedRepos){
+        // get Gemini enriched data 
         const geminiOutput = await analyzeRepoWithGemini(repo, AVAILABLE_TAGS, DIFFICULTY_ENUM)
+        const exists = await prisma.repo.findUnique({
+            where: {githubId: geminiOutput.githubId }
+        })
 
-        // will add pushing logic to db here later
-        console.log(geminiOutput)
+        if (!exists){
+r
+            await prisma.repo.create({
+                data: {
+                    owner: geminiOutput.owner,
+                    name: geminiOutput.name,
+                    stars: geminiOutput.stars,
+                    languages: geminiOutput.languages || [],
+                    tags: geminiOutput.tags || [],
+                    topics: geminiOutput.topics || [],
+                    skill: geminiOutput.skill || [],
+                    summary: geminiOutput.summary || "",
+                    description: geminiOutput.description || "",
+                    githubId: geminiOutput.githubId,
+                    repoLink: geminiOutput.repoLink,
+                }
+            });
+            console.log(`Inserted repo: ${geminiOutput.name}`)
+        } else {
+            console.log(`Repo already exists: ${geminiOutput.name}`)
+        }
     }
 
 }
