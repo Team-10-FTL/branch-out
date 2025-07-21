@@ -200,7 +200,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
               </div>
               <div className="repo-card-rating">
                 <Typography variant="body2" color="text.secondary">
-                  Rating: {repo.rating || "N/A"}
+                  Rating: {repo.stars || "N/A"}
                 </Typography>
               </div>
             </div>
