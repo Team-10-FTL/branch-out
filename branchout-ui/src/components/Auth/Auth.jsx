@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Auth.css";
 
+// ...imports remain unchanged
+
 function AuthComponent() {
   const { user, isLoaded } = useUser();
   const { openSignIn, openSignUp } = useClerk();
@@ -17,7 +19,6 @@ function AuthComponent() {
   const [error, setError] = useState("");
   const [localUser, setLocalUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
   const from = location.state?.from?.pathname || "/discovery";
 
   useEffect(() => {
@@ -27,9 +28,8 @@ function AuthComponent() {
 
       if (token && userData) {
         try {
-          const user = JSON.parse(userData);
-          setLocalUser(user);
-        } catch (e) {
+          setLocalUser(JSON.parse(userData));
+        } catch {
           localStorage.removeItem("authToken");
           localStorage.removeItem("userData");
         }
@@ -40,18 +40,12 @@ function AuthComponent() {
     restoreSession();
   }, []);
 
-  // Handle OAuth redirect after successful authentication
   useEffect(() => {
-    if (isLoaded && user) {
-      // User is authenticated via OAuth, redirect to intended page
-      navigate(from, { replace: true });
-    }
+    if (isLoaded && user) navigate(from, { replace: true });
   }, [isLoaded, user, navigate, from]);
 
   useEffect(() => {
-    // Only sync if user is signed in with Clerk
     if (isLoaded && user) {
-      // Send Clerk info to backend
       fetch("http://localhost:5000/auth/clerkSync", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -61,49 +55,31 @@ function AuthComponent() {
           username: user.username || user.firstName || user.id,
         }),
       })
-      .then(res => res.json())
-      .then(data => {
-        // Optionally store user data in localStorage or state
-        localStorage.setItem("userData", JSON.stringify(data.user));
-      })
-      .catch(console.error);
+        .then(res => res.json())
+        .then(data =>
+          localStorage.setItem("userData", JSON.stringify(data.user))
+        )
+        .catch(console.error);
     }
   }, [isLoaded, user]);
 
-  // Show loading state while checking for session
-  if (isLoading || !isLoaded) {
-    return <div>Loading session...</div>;
-  }
+  if (isLoading || !isLoaded) return <div>Loading session...</div>;
 
-  // Check if user is logged in (either locally or via Clerk)
   if (user || localUser) {
     const displayUser = user || localUser;
     return (
-      <div style={{ padding: "20px", color: "white" }}>
+      <div className="auth-container">
         <h2>✅ Logged in as: {displayUser.username || displayUser.email}</h2>
         <p>Auth Type: {user ? "OAuth (Clerk)" : "Local Database"}</p>
         <p>Account Role: {displayUser?.role || "USER"}</p>
         {user && <p>Clerk ID: {user.id}</p>}
         {localUser && <p>Local ID: {localUser.id}</p>}
-        <button
-          onClick={async () => {
-            if (user) {
-              await signOut();
-            }
-            localStorage.removeItem("authToken");
-            localStorage.removeItem("userData");
-            setLocalUser(null);
-            navigate('/login');
-          }}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#dc3545",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
+        <button className="btn btn-danger" onClick={async () => {
+          if (user) await signOut();
+          localStorage.clear();
+          setLocalUser(null);
+          navigate("/login");
+        }}>
           Sign Out
         </button>
       </div>
@@ -117,53 +93,33 @@ function AuthComponent() {
 
     try {
       const endpoint = isSignUp ? "/auth/signup" : "/auth/login";
-      
       const requestBody = isSignUp
         ? { username, email, password }
         : { username, password };
 
       const response = await fetch(`http://localhost:5000${endpoint}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),
       });
 
-      if (response.ok) {
-        const result = await response.json();
-        console.log("✅ Local auth successful!", result);
+      const result = await response.json();
 
+      if (response.ok) {
         const userData = {
           id: result.user?.id,
           username: result.user?.username,
           email: result.user?.email,
           role: result.user?.role,
         };
-
         setLocalUser(userData);
-
-        if (result.token) {
-          localStorage.setItem("authToken", result.token);
-          localStorage.setItem(
-            "userData",
-            JSON.stringify({
-              id: result.user?.id,
-              username: result.user?.username,
-              email: result.user?.email,
-              role: result.user?.role, // Store the role for admin checks
-            })
-          );
-        }
-        // redirect to directory once signup up or logged in
+        localStorage.setItem("authToken", result.token);
+        localStorage.setItem("userData", JSON.stringify(userData));
         navigate("/");
       } else {
-        const errorText = await response.text();
-        console.error("❌ Local auth failed:", errorText);
-        setError(`Authentication failed: ${errorText}`);
+        setError(`Authentication failed: ${result.message || "Try again."}`);
       }
-    } catch (error) {
-      console.error("❌ Local auth error:", error);
+    } catch {
       setError("Authentication failed. Please try again.");
     } finally {
       setLoading(false);
@@ -171,126 +127,58 @@ function AuthComponent() {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "400px" }}>
-      {/* Auth Mode Toggle */}
-      <div style={{ marginBottom: "20px", textAlign: "center" }}>
+    <div className="auth-container">
+      {/* Auth Mode Tabs */}
+      <div className="auth-tabs">
         <button
+          className={`tab ${authMode === "local" ? "active" : ""}`}
           onClick={() => setAuthMode("local")}
-          style={{
-            padding: "8px 16px",
-            backgroundColor: authMode === "local" ? "#007bff" : "transparent",
-            color: authMode === "local" ? "white" : "#007bff",
-            border: "1px solid #007bff",
-            borderRadius: "4px 0 0 4px",
-            cursor: "pointer",
-          }}
         >
           Local Account
         </button>
         <button
+          className={`tab ${authMode === "oauth" ? "active" : ""}`}
           onClick={() => setAuthMode("oauth")}
-          style={{
-            padding: "8px 16px",
-            backgroundColor: authMode === "oauth" ? "#007bff" : "transparent",
-            color: authMode === "oauth" ? "white" : "#007bff",
-            border: "1px solid #007bff",
-            borderRadius: "0 4px 4px 0",
-            cursor: "pointer",
-          }}
         >
           OAuth (Google, GitHub, etc.)
         </button>
       </div>
 
       {authMode === "local" ? (
-        <form onSubmit={handleLocalAuth}>
-          <h2 style={{ color: "white" }}>
-            {isSignUp ? "📝 Create Local Account" : "🔑 Local Login"}
-          </h2>
+        <form onSubmit={handleLocalAuth} className="auth-form">
+          <h2>{isSignUp ? "📝 Create Account" : "🔑 Login"}</h2>
 
-          {error && (
-            <div
-              style={{
-                color: "#ff6b6b",
-                marginBottom: "10px",
-                padding: "10px",
-                backgroundColor: "#ffe0e0",
-                borderRadius: "4px",
-                fontSize: "14px",
-              }}
-            >
-              {error}
-            </div>
-          )}
+          {error && <div className="error-box">{error}</div>}
 
           {isSignUp && (
-            <div style={{ marginBottom: "10px" }}>
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  borderRadius: "4px",
-                  border: "1px solid #ccc",
-                  fontSize: "14px",
-                }}
-              />
-            </div>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              required
+              onChange={(e) => setEmail(e.target.value)}
+            />
           )}
-
-          <div style={{ marginBottom: "10px" }}>
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              style={{
-                width: "100%",
-                padding: "12px",
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-                fontSize: "14px",
-              }}
-            />
-          </div>
-
-          <div style={{ marginBottom: "15px" }}>
-            <input
-              type="password"
-              placeholder="Password (min 8 chars)"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={8}
-              style={{
-                width: "100%",
-                padding: "12px",
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-                fontSize: "14px",
-              }}
-            />
-          </div>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            required
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password (min 8 chars)"
+            value={password}
+            required
+            minLength={8}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
           <button
             type="submit"
+            className="btn btn-primary"
             disabled={loading}
-            style={{
-              width: "100%",
-              padding: "12px",
-              backgroundColor: loading ? "#6c757d" : "#28a745",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: loading ? "not-allowed" : "pointer",
-              fontSize: "16px",
-              fontWeight: "bold",
-            }}
           >
             {loading
               ? "⏳ Processing..."
@@ -301,22 +189,13 @@ function AuthComponent() {
 
           <button
             type="button"
+            className="btn btn-secondary"
             onClick={() => {
               setError("");
               setEmail("");
               setPassword("");
               setUsername("");
               navigate(isSignUp ? "/login" : "/signup");
-            }}
-            style={{
-              width: "100%",
-              padding: "10px",
-              marginTop: "10px",
-              backgroundColor: "transparent",
-              border: "1px solid #28a745",
-              color: "#28a745",
-              borderRadius: "4px",
-              cursor: "pointer",
             }}
           >
             {isSignUp
@@ -325,56 +204,21 @@ function AuthComponent() {
           </button>
         </form>
       ) : (
-        <div>
-          <h2 style={{ color: "white", textAlign: "center" }}>
-            🔗 OAuth Registration
-          </h2>
+        <div className="auth-form">
+          <h2 style={{ textAlign: "center" }}>🔗 OAuth Registration</h2>
 
-          <button
-            onClick={() => openSignUp()}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginBottom: "10px",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "16px",
-            }}
-          >
+          <button className="btn btn-primary" onClick={() => openSignUp()}>
             🚀 Sign Up with OAuth
           </button>
 
-          <button
-            onClick={() => openSignIn()}
-            style={{
-              width: "100%",
-              padding: "12px",
-              backgroundColor: "transparent",
-              border: "1px solid #007bff",
-              color: "#007bff",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "16px",
-            }}
-          >
+          <button className="btn btn-secondary" onClick={() => openSignIn()}>
             🔑 Login with OAuth
           </button>
 
-          <div
-            style={{
-              marginTop: "15px",
-              padding: "10px",
-              backgroundColor: "#e7f3ff",
-              borderRadius: "4px",
-              border: "1px solid #b3d9ff",
-            }}
-          >
-            <p style={{ color: "#0066cc", fontSize: "12px", margin: 0 }}>
-              OAuth will open a popup with Google, GitHub, or other providers.
-              Your account will be managed by Clerk.
+          <div className="info-box">
+            <p>
+              OAuth will open a popup for Google, GitHub, or other providers.
+              Your account is securely managed by Clerk.
             </p>
           </div>
         </div>
@@ -384,3 +228,5 @@ function AuthComponent() {
 }
 
 export default AuthComponent;
+
+
