@@ -21,7 +21,7 @@ function AuthComponent() {
   const [isLoading, setIsLoading] = useState(true);
   const from = location.state?.from?.pathname || "/discovery";
 
-  const HOST_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const VITE_URL = import.meta.env.VITE_API_URL 
 
   useEffect(() => {
     const restoreSession = () => {
@@ -48,7 +48,7 @@ function AuthComponent() {
 
   useEffect(() => {
     if (isLoaded && user) {
-      fetch(`${HOST_URL}/auth/clerkSync`, {
+      fetch(`${VITE_URL}/auth/clerkSync`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -99,7 +99,7 @@ function AuthComponent() {
         ? { username, email, password }
         : { username, password };
 
-      const response = await fetch(`${HOST_URL}${endpoint}`, {
+      const response = await fetch(`${VITE_URL}${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),

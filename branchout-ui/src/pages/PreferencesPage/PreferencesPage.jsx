@@ -28,11 +28,11 @@ function PreferencesPage() {
   const [selectedLanguages, setSelectedLanguages] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
 
-  const HOST_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const VITE_URL = import.meta.env.VITE_API_URL
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    fetch(`${HOST_URL}/user/preferences`, {
+    fetch(`${VITE_URL}/user/preferences`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -66,7 +66,7 @@ function PreferencesPage() {
     };
     const token = localStorage.getItem("authToken");
     try {
-      const res = await fetch(`${HOST_URL}/user/preferences`, {
+      const res = await fetch(`${VITE_URL}/user/preferences`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
