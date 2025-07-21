@@ -27,7 +27,7 @@ const ProfilePage = () => {
     }
   })();
   const user = clerkUser || localUser;
-  const DATABASE_URL = import.meta.env.VITE_DATABASE_URL || 'http://localhost:5000';
+  const DATABASE_URL = import.meta.env.DATABASE_URL;
 
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
