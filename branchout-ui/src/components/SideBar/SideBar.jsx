@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useMediaQuery } from '@mui/material';
+import fullLogo from "../../assets/logo/fullLogo.png"
+
 
 import {
   Drawer,
@@ -97,7 +99,7 @@ export default function SideBar() {
         {!isCollapsed && (
           <Box sx={{ p: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="h6" sx={{ color: 'white' }}>Branch Out</Typography>
+            <img src = {fullLogo} style={{width:"200px"}}></img>
             </Box>
           </Box>
         )}
