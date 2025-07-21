@@ -1,9 +1,3 @@
-// import 'dotenv/config';
-// import {fetchReposWithFilters } from "../helpers/githubHelper.js";
-// import { parseRepoForGemini } from "../helpers/repoParseHelper.js";
-// import { analyzeRepoWithGemini } from "../src/utils/geminiClient.js";
-// import axios from 'axios';
-// import { Language } from '@google/genai';
 require('dotenv').config();
 const { fetchReposWithFilters } = require("../helpers/githubHelper");
 const { parseRepoForGemini } = require("../helpers/repoParseHelper");
@@ -65,7 +59,6 @@ const repoFetcher = async () => {
         })
 
         if (!exists){
-r
             await prisma.repo.create({
                 data: {
                     owner: geminiOutput.owner,
