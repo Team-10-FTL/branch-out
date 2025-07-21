@@ -1,0 +1,15 @@
+#footer{
+    width: 100vw;
+    color: black;
+    background-color: white;
+    padding: 20px;
+    text-align:center;
+    padding-left: 20vw;
+    margin-top: auto;
+}
+#footerAbout a{
+    color: black;
+}
+#footerAbout a:hover{
+    color: orange;
+}

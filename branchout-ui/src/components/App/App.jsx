@@ -13,8 +13,9 @@ import ProfilePage  from "../../pages/ProfilePage/ProfilePage";
 import "./App.css";
 import { ProtectedRoute, AdminRoute } from '../ProtectedRoute/ProtectedRoute';
 import SideBar from "../../components/SideBar/SideBar";
+import Footer from "../../components/Footer/Footer";
 
-const drawerWidth = 270;
+// const drawerWidth = 270;
 
 // Layout wrapper for protected pages
 const ProtectedLayout = ({ children }) => (
@@ -114,6 +115,7 @@ function App() {
       <Router>
         <AppContent />
       </Router>
+      <Footer></Footer>
     </>
   );
 }
