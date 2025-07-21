@@ -20,11 +20,14 @@ import Footer from "../../components/Footer/Footer";
 // Layout wrapper for protected pages
 const ProtectedLayout = ({ children }) => (
   <ProtectedRoute>
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'row' }}>
       <CssBaseline />
       <SideBar />
-      <Box component="main" sx={{ flexGrow: 1 }}>
-        {children}
+      <Box component="main" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ flex: 1 }}>
+          {children}
+        </Box>
+        <Footer />
       </Box>
     </Box>
   </ProtectedRoute>
@@ -115,7 +118,6 @@ function App() {
       <Router>
         <AppContent />
       </Router>
-      <Footer></Footer>
     </>
   );
 }

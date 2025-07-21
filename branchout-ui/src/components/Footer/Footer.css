@@ -1,15 +1,17 @@
-#footer{
-    width: 100vw;
-    color: black;
-    background-color: white;
+#footer {
+    width: 100%;
+    color: white;
+    background-color: transparent;
     padding: 20px;
-    text-align:center;
-    padding-left: 20vw;
+    text-align: center;
     margin-top: auto;
+    /* Remove padding-left so it touches the sidebar */
+    /* padding-left: 20vw; */
+    box-sizing: border-box;
 }
-#footerAbout a{
-    color: black;
+#footerAbout a {
+    color: white;
 }
-#footerAbout a:hover{
+#footerAbout a:hover {
     color: orange;
 }
