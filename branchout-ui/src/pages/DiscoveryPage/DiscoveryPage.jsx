@@ -2,8 +2,7 @@
 import { useState, useEffect } from 'react';
 import RepoCard from '../../components/RepoCard/RepoCard';
 import { Box, CssBaseline } from '@mui/material';
-import axios from "axios";
-
+import axios from 'axios';
 
 const DiscoveryPage = () => {
   const [repos, setRepos] = useState([
@@ -16,7 +15,7 @@ const DiscoveryPage = () => {
   
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const VITE_URL = import.meta.env.VITE_URL;
+  const VITE_URL = import.meta.env.VITE_DATABASE_URL;
 
   useEffect(() => {
     axios

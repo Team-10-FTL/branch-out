@@ -21,7 +21,7 @@ function AuthComponent() {
   const [isLoading, setIsLoading] = useState(true);
   const from = location.state?.from?.pathname || "/discovery";
 
-  const VITE_URL = import.meta.env.VITE_API_URL 
+  const VITE_URL = import.meta.env.VITE_DATABASE_URL
 
   useEffect(() => {
     const restoreSession = () => {

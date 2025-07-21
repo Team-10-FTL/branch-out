@@ -27,7 +27,7 @@ const ProfilePage = () => {
     }
   })();
   const user = clerkUser || localUser;
-  const DATABASE_URL = import.meta.env.VITE_DATABASE_URL || 'http://localhost:5000';
+  const DATABASE_URL = import.meta.env.VITE_DATABASE_URL;
 
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -79,7 +79,7 @@ const ProfilePage = () => {
     setSaveError("");
     const token = localStorage.getItem("authToken");
     try {
-      const res = await fetch(`${DATABASE_URL}/user/preferences`, {
+      const res = await fetch(`${VITE_DATABASE_URL}/user/preferences`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
