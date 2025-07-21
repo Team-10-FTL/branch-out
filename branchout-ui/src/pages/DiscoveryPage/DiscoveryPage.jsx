@@ -1,5 +1,6 @@
 // Example usage in your parent component
 import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import RepoCard from '../../components/RepoCard/RepoCard';
 import { Box, CssBaseline } from '@mui/material';
 import axios from 'axios';
