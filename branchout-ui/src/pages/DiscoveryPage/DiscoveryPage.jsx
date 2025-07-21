@@ -1,6 +1,6 @@
 // Example usage in your parent component
 import { useState } from 'react';
-import RepoCard from '../components/RepoCard/RepoCard';
+import RepoCard from '../../components/RepoCard/RepoCard';
 import { Box, CssBaseline } from '@mui/material';
 
 const DiscoveryPage = () => {

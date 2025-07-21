@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useTheme } from "../UISwitch/ThemeContext.jsx";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Box, CssBaseline } from "@mui/material";
-import PreferencesPage from "/src/pages/PreferencesPage";
-import DiscoveryPage from "/src/pages/DiscoveryPage";
+import PreferencesPage from "/src/pages/PreferencesPage/PreferencesPage";
+import DiscoveryPage from "/src/pages/DiscoveryPage/DiscoveryPage";
 import LoginPage from "/src/pages/Login/LoginPage";
 import SignupPage from "/src/pages/Signup/SignupPage";
 import AuthComponent from "../../components/Auth/Auth";

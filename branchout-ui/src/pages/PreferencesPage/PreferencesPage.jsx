@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Container, Divider, Chip, Box, Paper, Typography, Stack } from '@mui/material';
 import './PreferencesPage.css';
-import ToolTip from '../components/ToolTip/ToolTip';
+import ToolTip from '../../components/ToolTip/ToolTip';
 
 const LEVELS = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
 const LEVEL_TO_ENUM = {
