@@ -1,4 +1,3 @@
-// import axios from "axios";
 const axios = require("axios");
 
 // parses raw GitHub repository data into a structured format, useful for storing or displaying only the relevant details.
