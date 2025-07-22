@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
+import ChromeDino from "react-chrome-dino";
 
 const PageNotFound = () => {
   const { isSignedIn, isLoaded } = useUser();
@@ -24,6 +25,9 @@ const PageNotFound = () => {
       <h1>404 - Page Not Found</h1>
       <p>The page you are looking for does not exist.</p>
       <button onClick={() => navigate("/")}>Go to Home</button>
+        <div style={{ marginTop: 40 }}>
+          <ChromeDino />
+        </div>
     </div>
   );
 };
