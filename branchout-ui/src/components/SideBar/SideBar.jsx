@@ -59,26 +59,6 @@ export default function SideBar() {
 
   const handleSubmenuToggle = () => setSubmenuOpen(!submenuOpen);
 
-  const handleLogout = async () => {
-    try {
-      // Sign out from Clerk if using OAuth
-      if (clerkUser) {
-        await signOut();
-      }
-      
-      // Clear local storage
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userData');
-      
-      // Redirect to login
-      navigate('/login');
-    } catch (error) {
-      console.error('Error during logout:', error);
-      // Force redirect even if there's an error
-      navigate('/login');
-    }
-  };
-
   return (
     <Drawer
       variant="permanent"
@@ -162,9 +142,20 @@ export default function SideBar() {
                 justifyContent: 'center',
                 display: 'flex',
                 alignItems: 'center',
+                transition: 'color 0.3s ease',
+                '& .MuiSvgIcon-root': {
+                  color: 'white', // Default icon color
+                  transition: 'color 0.3s ease',
+                },
+                '&:hover': {
+                  color: '#e34714', // Text hover color
+                  '& .MuiSvgIcon-root': {
+                    color: '#e34714', // Icon hover color
+                  },
+                },
               }}
             >
-              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex' }}>
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"5px", paddingRight:"5px"}}>
                 <HomeIcon sx={{ color: 'white' }} />
               </ListItemIcon>
               {!isCollapsed && <ListItemText primary="Discovery" />}
@@ -178,9 +169,21 @@ export default function SideBar() {
                 justifyContent: 'center',
                 display: 'flex',
                 alignItems: 'center',
+                transition: 'color 0.3s ease',
+                '& .MuiSvgIcon-root': {
+                  color: 'white', // Default icon color
+                  transition: 'color 0.3s ease',
+                },
+                '&:hover': {
+                  color: '#e34714', // Text hover color
+                  '& .MuiSvgIcon-root': {
+                    color: '#e34714', // Icon hover color
+                  },
+                },
               }}
+              
             >
-              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex' }}>
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"2px", paddingRight:"5px"}}>
                 <SettingsIcon sx={{ color: 'white' }} />
               </ListItemIcon>
               {!isCollapsed && <ListItemText primary="Preferences" />}
@@ -196,9 +199,20 @@ export default function SideBar() {
                   justifyContent: 'center',
                   display: 'flex',
                   alignItems: 'center',
+                  transition: 'color 0.3s ease',
+                '& .MuiSvgIcon-root': {
+                  color: 'white', // Default icon color
+                  transition: 'color 0.3s ease',
+                },
+                '&:hover': {
+                  color: '#e34714', // Text hover color
+                  '& .MuiSvgIcon-root': {
+                    color: '#e34714', // Icon hover color
+                  },
+                },
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex' }}>
+                <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"5px", paddingRight:"5px" }}>
                   <AdminIcon sx={{ color: 'white' }} />
                 </ListItemIcon>
                 {!isCollapsed && <ListItemText primary="Admin Dashboard" />}
@@ -225,9 +239,20 @@ export default function SideBar() {
                 justifyContent: 'center',
                 display: 'flex',
                 alignItems: 'center',
+                transition: 'color 0.3s ease',
+                '& .MuiSvgIcon-root': {
+                  color: 'white', // Default icon color
+                  transition: 'color 0.3s ease',
+                },
+                '&:hover': {
+                  color: '#e34714', // Text hover color
+                  '& .MuiSvgIcon-root': {
+                    color: '#e34714', // Icon hover color
+                  },
+                },
               }}
             >
-              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex' }}>
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingRight:"5px"}}>
                 <ChatIcon sx={{ color: 'white' }} />
               </ListItemIcon>
               {!isCollapsed && <ListItemText primary="Saved Repos" />}
@@ -240,9 +265,20 @@ export default function SideBar() {
                 justifyContent: 'center',
                 display: 'flex',
                 alignItems: 'center',
+                transition: 'color 0.3s ease',
+                '& .MuiSvgIcon-root': {
+                  color: 'white', // Default icon color
+                  transition: 'color 0.3s ease',
+                },
+                '&:hover': {
+                  color: '#e34714', // Text hover color
+                  '& .MuiSvgIcon-root': {
+                    color: '#e34714', // Icon hover color
+                  },
+                },
               }}
             >
-              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex' }}>
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"5px", paddingRight:"5px" }}>
                 <CalendarIcon sx={{ color: 'white' }} />
               </ListItemIcon>
               {!isCollapsed && <ListItemText primary="History" />}
@@ -255,9 +291,21 @@ export default function SideBar() {
                 justifyContent: 'center',
                 display: 'flex',
                 alignItems: 'center',
+                transition: 'color 0.3s ease',
+                '& .MuiSvgIcon-root': {
+                  color: 'white', // Default icon color
+                  transition: 'color 0.3s ease',
+                },
+                '&:hover': {
+                  color: '#e34714', // Text hover color
+                  '& .MuiSvgIcon-root': {
+                    color: '#e34714', // Icon hover color
+                  },
+                },
               }}
+              onClick ={() => navigate("/settings")}
             >
-              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex' }}>
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"3px", paddingRight:"5px" }}>
                 <SettingsIcon sx={{ color: 'white' }} />
               </ListItemIcon>
               {!isCollapsed && <ListItemText primary="Settings" />}
@@ -266,7 +314,7 @@ export default function SideBar() {
         </List>
       </Box>
 
-      {/* Logout Button - Bottom Left */}
+      {/* Logout Button - Bottom Left
       <Box sx={{ p: 2, mt: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         {isCollapsed ? (
           <ListItemButton
@@ -304,7 +352,7 @@ export default function SideBar() {
             Logout
           </Button>
         )}
-      </Box>
+      </Box> */}
     </Drawer>
   );
 }
