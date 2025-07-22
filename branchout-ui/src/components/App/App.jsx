@@ -17,6 +17,7 @@ import Footer from "../../components/Footer/Footer";
 import SavedReposPage from "../../pages/SavedReposPage/SavedReposPage"; // Fixed import path
 import PageNotFound from "../../pages/PageNotFoundPage/PageNotFoundPage.jsx";
 import SettingsPage from "../../pages/Settings/SettingsPage.jsx"
+import AboutPage from "../../pages/AboutPage/AboutPage.jsx"
 
 // const drawerWidth = 270;
 
@@ -93,6 +94,16 @@ function AppContent() {
               </ProtectedLayout>
             </ProtectedRoute>
           } 
+        />
+         <Route 
+          path="/about" 
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <AboutPage />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }   
         />
         
         {/* Admin routes - with sidebar */}

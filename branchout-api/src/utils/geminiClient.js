@@ -45,7 +45,7 @@ async function analyzeRepoWithGemini(repo, AVAILABLE_TAGS, DIFFICULTY_ENUM) {
   const parsedRepo = await parseRepoForGemini(repo);
 
   const prompt = `
-  You are a computer science propfessor helping students find open source GitHub repositories to work on. Please analyze the following repository and respond in a **strict JSON format** with the following fields:
+  You are a computer science professor helping students find open source GitHub repositories to work on. Please analyze the following repository and respond in a **strict JSON format** with the following fields:
   - summary (a 150-200 word project description)
   - tags (an array of 1-5 tags selected from the provided list)
   - difficulty (one of: Beginner, Intermediate, Advanced, Professional)

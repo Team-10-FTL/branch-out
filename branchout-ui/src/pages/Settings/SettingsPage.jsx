@@ -6,7 +6,6 @@ import { Logout as LogoutIcon} from "@mui/icons-material";
 
 import "./SettingsPage.css";
 
-
 function SettingsPage(){
     const { user: clerkUser } = useUser();
     const { signOut } = useClerk();
