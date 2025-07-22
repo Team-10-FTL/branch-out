@@ -159,6 +159,44 @@ exports.filterRepos = async (req, res) => {
     }
 }
 
+// create feed back entry
+
+exports.handleSwipe = async (req, res) => {
+    const {userId, repoId, direction, feedbackReason} = req.body;
+
+    if (!userId || !repoId || !direction){
+        return res.status(400).json({ error: "Missing required fields!!"});
+    }
+
+    try {
+        // create the feedback in the first place
+        const feedback = await prisma.feedBack.create({
+            data: {
+                swipeDirection: direction,
+                feedbackReason: feedbackReason ?? null,
+                user: {connect: {id: userId}},
+                repo: {connect: {id: repoId}},
+            },
+        });
+
+        if (direction === "RIGHT"){
+            await prisma.user.update({
+                where: {id: userId},
+                data: {
+                    savedRepos:{
+                        connect: {id: repoId},
+                    },
+                },
+            });
+        }
+        res.status(201).json({message: "Swipe Stored", feedback});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({err: "Failed to handle swip :("});
+    }
+
+};
+
 
 
 

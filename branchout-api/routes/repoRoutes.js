@@ -10,6 +10,7 @@ router.post('/', authenticate, requireAdmin, repoController.create);
 router.put('/:id', authenticate, requireAdmin, repoController.update);
 router.delete('/:id', authenticate, requireAdmin, repoController.delete);
 router.get('/', authenticate, requireAdmin, repoController.filterRepos);
+router.post('/swipe', repoController.handleSwipe);
 
 module.exports = router;
 
