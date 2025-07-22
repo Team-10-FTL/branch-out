@@ -162,7 +162,7 @@ exports.filterRepos = async (req, res) => {
 // create feed back entry
 
 exports.handleSwipe = async (req, res) => {
-    const {userId, repoId, direction, feedbackRepo} = req.body;
+    const {userId, repoId, direction, feedbackReason} = req.body;
 
     if (!userId || !repoId || !direction){
         return res.status(400).json({ error: "Missing required fields!!"});
@@ -191,6 +191,7 @@ exports.handleSwipe = async (req, res) => {
         }
         res.status(201).json({message: "Swipe Stored", feedback});
     } catch (error) {
+        console.error(error);
         res.status(500).json({err: "Failed to handle swip :("});
     }
 

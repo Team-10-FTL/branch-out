@@ -1,10 +1,20 @@
 // Example usage in your parent component
 import { useState, useEffect } from 'react';
 import RepoCard from '../../components/RepoCard/RepoCard';
-import { Box, CssBaseline } from '@mui/material';
+import CritiqueChips from '../../components/Feedback/CritiqueChips';
+import { Box, CssBaseline, Modal, Backdrop, Fade } from '@mui/material';
+import { useAuth, useUser } from '@clerk/clerk-react';
 import axios from "axios";
 
 const DiscoveryPage = () => {
+
+  const CRITIQUE_OPTIONS = [
+    "NOTINTERESTED",
+    "MISLEADING",
+    "TOOCOMPLEX",
+    "TOOEASY"
+  ];
+
   const [repos, setRepos] = useState([
 // { id: 1, name: 'Repo 1', description: 'First repository', tags: ['Machine Learning', 'React'], rating: 4.5 },
 //  { id: 2, name: 'Repo 2', description: 'Second repository', tags: ['MCP', "Android Development", 'Java'] , rating: 2000},
@@ -12,10 +22,25 @@ const DiscoveryPage = () => {
   
 ]);
 
+  const { user: clerkUser } = useUser();
   const [loading, setLoading] = useState(true);
-  
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [selectedRepo, setSelectedRepo] = useState(null);
+  const { getToken } = useAuth();
 
+  const localUser = (() => {
+    try {
+      const userData = localStorage.getItem("userData");
+      return userData ? JSON.parse(userData) : null;
+    } catch {
+      return null;
+    }
+  })();
+
+  // Final user
+  const user = clerkUser || localUser;
+  const userId = user?.id;
   const VITE_URL = import.meta.env.VITE_DATABASE_URL;
 
   useEffect(() => {
@@ -36,13 +61,58 @@ const DiscoveryPage = () => {
 
   const handleSwipeLeft = (repo) => {
     console.log('Swiped left on:', repo.name);
-    // Move to next card
+    setSelectedRepo(repo);
+    setShowFeedbackModal(true); // show chips modal
+  };
+
+  const handleSwipeRight = async (repo) => {
+
+    try {
+      const token = await getToken();
+      await axios.post(`${VITE_URL}/repo/swipe`, {
+        userId: user?.id,  // this works for both Clerk and local
+        repoId: repo.id,
+        direction: "RIGHT"
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+      }
+    });
+
+    console.log('Feedback submitted');
+    } catch (err) {
+      console.error("Swipe RIGHT failed", err);
+    }
+
     setCurrentIndex(prev => (prev + 1) % repos.length);
   };
 
-  const handleSwipeRight = (repo) => {
-    console.log('Swiped right on:', repo.name);
-    // Move to next card
+  const handleCritiqueSelect = async (reason) => {
+
+    try {
+      const token = await getToken();
+      const payload = {
+        userId: user?.id,  // this works for both Clerk and local
+        repoId: selectedRepo?.id,
+        direction: "LEFT",
+        feedbackReason: reason
+      };
+
+      console.log("Sending swipe payload:", payload);
+
+      await axios.post(`${VITE_URL}/repo/swipe`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      console.log('Feedback submitted');
+    } catch (error) {
+      console.error('Error sending feedback:', error.response?.data || error.message);
+    }
+
+    setShowFeedbackModal(false);
+    setSelectedRepo(null);
     setCurrentIndex(prev => (prev + 1) % repos.length);
   };
 
@@ -76,6 +146,27 @@ const DiscoveryPage = () => {
           />
         )}
     </Box>
+    <Modal
+      open={showFeedbackModal}
+      onClose={() => setShowFeedbackModal(false)}
+      closeAfterTransition
+    >
+      <Fade in={showFeedbackModal}>
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          boxShadow: 24,
+          p: 4,
+        }}>
+        <CritiqueChips onSelect={handleCritiqueSelect} />
+        </Box>
+      </Fade>
+    </Modal>
     </Box>
   );
 }
