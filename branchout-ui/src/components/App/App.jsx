@@ -15,6 +15,7 @@ import { ProtectedRoute, AdminRoute } from '../ProtectedRoute/ProtectedRoute';
 import SideBar from "../../components/SideBar/SideBar";
 import Footer from "../../components/Footer/Footer";
 import SavedReposPage from "../../pages/SavedReposPage/SavedReposPage"; // Fixed import path
+import PageNotFound from "../../pages/PageNotFoundPage/PageNotFound.jsx";
 
 // const drawerWidth = 270;
 
@@ -60,6 +61,8 @@ function AppContent() {
         {/* Public routes - no sidebar */}
         <Route path="/login" element={<AuthComponent />} />
         <Route path="/signup" element={<AuthComponent />} />
+        <Route path="*" element={<PageNotFound/>} />
+
         
         {/* Protected routes - with sidebar */}
         <Route 
@@ -117,7 +120,6 @@ function AppContent() {
         
         {/* Default redirects */}
         <Route path="/" element={<Navigate to="/discovery" replace />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
     </ThemeProvider>
   );
