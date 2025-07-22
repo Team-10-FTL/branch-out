@@ -15,6 +15,7 @@ import { ProtectedRoute, AdminRoute } from '../ProtectedRoute/ProtectedRoute';
 import SideBar from "../../components/SideBar/SideBar";
 import Footer from "../../components/Footer/Footer";
 import SavedReposPage from "../../pages/SavedReposPage/SavedReposPage"; // Fixed import path
+import PageNotFound from "../../pages/PageNotFoundPage/PageNotFound.jsx";
 import SettingsPage from "../../pages/Settings/SettingsPage.jsx"
 
 // const drawerWidth = 270;
@@ -128,7 +129,7 @@ function AppContent() {
         
         {/* Default redirects */}
         <Route path="/" element={<Navigate to="/discovery" replace />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<PageNotFound />} />
         </Routes>
     </ThemeProvider>
   );
