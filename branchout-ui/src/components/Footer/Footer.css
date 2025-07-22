@@ -10,8 +10,8 @@
     box-sizing: border-box;
 }
 #footerAbout a {
-    color: white;
+    color: #daa7e2;
 }
 #footerAbout a:hover {
-    color: orange;
+    color: #4c1255;
 }
