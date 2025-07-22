@@ -6,10 +6,11 @@ import axios from 'axios';
 
 const DiscoveryPage = () => {
   const [repos, setRepos] = useState([
-    // { id: 1, name: 'Repo 1', description: 'First repository', tags: ['Machine Learning', 'React'], rating: 4.5 },
-    // { id: 2, name: 'Repo 2', description: 'Second repository', tags: ['MCP', "Android Development", 'Java'] , rating: 2000},
-    // { id: 3, name: 'Repo 3', description: 'Third repository', tags: ['Web Development', 'Node.js'], rating: 4600 },
-  ]);
+// { id: 1, name: 'Repo 1', description: 'First repository', tags: ['Machine Learning', 'React'], rating: 4.5 },
+//  { id: 2, name: 'Repo 2', description: 'Second repository', tags: ['MCP', "Android Development", 'Java'] , rating: 2000},
+//  { id: 3, name: 'Repo 3', description: 'Third repository', tags: ['Web Development', 'Node.js'], rating: 4600 },
+  
+]);
 
   const [loading, setLoading] = useState(true);
   
@@ -21,10 +22,15 @@ const DiscoveryPage = () => {
     axios
       .get(`${VITE_URL}/repo/`)
       .then((res) => {
-        setRepos(res.data);
+        if (res.data && res.data.length > 0) {
+          setRepos(res.data);
+        }
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        // Only set loading to false, keep sample repos
+        setLoading(false);
+      });
   }, []);
 
 
