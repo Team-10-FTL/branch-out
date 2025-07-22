@@ -8,11 +8,11 @@ import './index.css'
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <ClerkProvider publishableKey={clerkPubKey}>
       <CustomThemeProvider>
         <App />
       </CustomThemeProvider>
     </ClerkProvider>
-  </StrictMode>,
+  //* </StrictMode>, */}
 )
