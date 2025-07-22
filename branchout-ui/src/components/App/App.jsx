@@ -14,6 +14,7 @@ import "./App.css";
 import { ProtectedRoute, AdminRoute } from '../ProtectedRoute/ProtectedRoute';
 import SideBar from "../../components/SideBar/SideBar";
 import Footer from "../../components/Footer/Footer";
+import SavedReposPage from "../../pages/SavedReposPage/SavedReposPage"; // Fixed import path
 
 // const drawerWidth = 270;
 
@@ -99,6 +100,16 @@ function AppContent() {
             <ProtectedRoute>
               <ProtectedLayout>
                 <ProfilePage />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/SavedRepos" 
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <SavedReposPage />
               </ProtectedLayout>
             </ProtectedRoute>
           } 

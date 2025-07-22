@@ -32,7 +32,7 @@ import {
   AdminPanelSettings as AdminIcon
 } from '@mui/icons-material';
 import { useUser, useClerk } from '@clerk/clerk-react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const drawerWidth = 270;
 
@@ -218,6 +218,8 @@ export default function SideBar() {
         <List>
           <ListItem disablePadding>
             <ListItemButton
+                component={Link}
+                to="/SavedRepos"
               sx={{
                 color: 'white',
                 justifyContent: 'center',
