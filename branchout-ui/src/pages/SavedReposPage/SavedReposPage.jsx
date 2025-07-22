@@ -1,59 +1,70 @@
 import './SavedRepos.css';
 import { useEffect, useState } from 'react';
-import { useUser } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 import RepoCard from '../../components/RepoCard/RepoCard';
-import RepoCardModal from '../../components/RepoCardModal/RepoCardModal';
+import { useAuth } from '../../components/ProtectedRoute/ProtectedRoute.jsx';
 
 function SavedReposPage() {
-  const { user } = useUser();
+  const { user, isLoading, isAuthenticated } = useAuth();
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-    useEffect(() => {
-    if (!user) {
+  useEffect(() => {
+    if (isLoading) return;
+    if (!isAuthenticated) {
       navigate('/login', { replace: true });
       return;
     }
     const fetchSavedRepos = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_DATABASE_URL}/repos/saved`, {
-          headers: {
-            Authorization: `Bearer ${user.getToken()}`,
-          },
-        });
+        let token;
+        let userId;
+        if (user && typeof user.getToken === 'function') {
+          token = await user.getToken();
+          userId = user.id;
+        } else {
+          token = localStorage.getItem('authToken');
+          userId = user?.id;
+        }
+        if (!userId) {
+          throw new Error('User ID not found');
+        }
+        const response = await fetch(
+          `${import.meta.env.VITE_DATABASE_URL}/user/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch saved repositories');
+          throw new Error('Failed to fetch user info');
         }
         const data = await response.json();
-        setRepos(data);
+        setRepos(data.savedRepos || []);
       } catch (error) {
         console.error('Error fetching saved repositories:', error);
       }
       setLoading(false);
     };
     fetchSavedRepos();
-  }, [user, navigate]); 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-    if (repos.length === 0) {
-        return <div>No saved repositories found.</div>;
-    }
-    return (
+  }, [isAuthenticated, isLoading, navigate, user]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  if (repos.length === 0) {
+    return <div>No saved repositories found.</div>;
+  }
+  return (
     <div className="saved-repos-page">
       <h1>Saved Repositories</h1>
       <div className="repo-list">
         {repos.map((repo) => (
-          <RepoCard
-            key={repo.id}
-            repo={repo}
-            onClick={() => navigate(`/repo/${repo.id}`)}
-          />
+          <RepoCard key={repo.id} repo={repo} />
         ))}
       </div>
-      <RepoCardModal />
     </div>
   );
 }
