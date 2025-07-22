@@ -3,12 +3,13 @@ import { useUser } from '@clerk/clerk-react';
 import { useState, useEffect } from 'react';
 
 // Check if user is authenticated (either Clerk or local)
-const useAuth = () => {
-  const { user: clerkUser } = useUser();
+export const useAuth = () => {
+  const { user: clerkUser , isLoaded} = useUser();
   const [localUser, setLocalUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!isLoaded) return; 
     const checkLocalAuth = () => {
       const token = localStorage.getItem('authToken');
       const userData = localStorage.getItem('userData');
@@ -32,12 +33,12 @@ const useAuth = () => {
     };
 
     checkLocalAuth();
-  }, []);
+  }, [isLoaded]);
 
   return {
     user: clerkUser || localUser,
     isLoading,
-    isAuthenticated: !!(clerkUser || localUser)
+    isAuthenticated: !!(clerkUser || localUser),
   };
 };
 
@@ -63,6 +64,7 @@ export const ProtectedRoute = ({ children }) => {
     // Redirect to login with the current location they were trying to access
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
+
 
   return children;
 };
