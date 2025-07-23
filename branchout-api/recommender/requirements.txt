@@ -1,0 +1,4 @@
+turicreate
+sentence-transformers
+prisma
+numpy
