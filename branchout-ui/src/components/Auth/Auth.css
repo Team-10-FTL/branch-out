@@ -1,34 +1,74 @@
+.auth-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
 .auth-container {
-  max-width: 420px;
-  margin: 0 auto;
-  padding: 24px;
+  width: 400px; 
+  min-height: 425px;
+  margin-top: 0 auto;
+  padding: 40px;
   background-color: #1e1e1e;
   color: white;
   border-radius: 8px;
 }
 
-.auth-tabs {
+.auth-tabs{
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 0px;
+  font-size: 13pt;
+}
+
+.auth-title{
+  font-size: 30pt;
+  margin: 0px;
   margin-bottom: 20px;
 }
 
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.auth-tabs h2{
+  text-align: center;
+}
+
 .tab {
-  flex: 1;
+  /* flex: 1; */
   padding: 10px;
-  border: 1px solid #007bff;
   background-color: transparent;
-  color: #007bff;
+  color: white;
   cursor: pointer;
+  border: none;
   transition: 0.3s;
+  border-radius: 0px;
 }
 
 .tab.active {
-  background-color: #007bff;
-  color: white;
+  /* background-color: #007bff; */
+  color: #e37106;
+  border-bottom: 2px solid #4c1255;
 }
 
+.tab:focus,
+.tab:active {
+  outline: none;
+  box-shadow: none;
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+
+
 .auth-form {
+  margin-top: 25px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -37,7 +77,7 @@
 .auth-form input {
   padding: 12px;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid #daa7e2;
   font-size: 14px;
 }
 
@@ -51,34 +91,57 @@
 }
 
 .btn-primary {
-  background-color: #28a745;
+  background-color: #4c1255;
   color: white;
 }
 
 .btn-secondary {
   background-color: transparent;
-  border: 1px solid #28a745;
-  color: #28a745;
+  border: 1px solid #4c1255;
+  color: #e37106;
 }
 
 .btn-danger {
-  background-color: #dc3545;
+  background-color: #e34714;
   color: white;
   margin-top: 16px;
 }
 
 .error-box {
-  background-color: #ffe0e0;
-  color: #ff6b6b;
+  background-color: #e34714;
+  color: black;
   padding: 10px;
   border-radius: 4px;
   font-size: 14px;
 }
 
 .info-box {
-  background-color: #e7f3ff;
-  color: #0066cc;
+  background-color: #daa7e2;
+  color: black;
   padding: 10px;
   border-radius: 4px;
   font-size: 13px;
+}
+
+
+.loginSignupLogo{
+  width: 400px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+  .tab {
+    padding: 6px 4px; 
+    font-size: 15px;   
+    white-space: nowrap;  
+    flex: 1 1 auto; 
+  }
+
+  .auth-container {
+    width: 95%; 
+    padding: 20px;
+  }
+  .loginSignupLogo{
+    width: 250px;
+  }
 }

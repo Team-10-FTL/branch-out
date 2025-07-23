@@ -12,6 +12,7 @@ import {
   Stack,
   TextField,
   Button,
+  Avatar,
   ListItemIcon,
 } from "@mui/material";
 import "./ProfilePage.css"; 
@@ -145,6 +146,30 @@ const ProfilePage = () => {
             {saveError}
           </Alert>
         )}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center", 
+            alignItems: "center",
+            marginBottom: "20px"
+          }}
+        >
+          <Avatar
+            sx={{
+              width: 200,
+              height: 200,
+              bgcolor: "#daa7e2",
+              fontSize: "80pt",
+            }}
+          >
+            {(clerkUser?.firstName?.charAt(0) ||
+              user?.username?.charAt(0) ||
+              user?.email?.charAt(0) ||
+              "U").toUpperCase()}
+          </Avatar>
+        </Box>
+
+        <Divider className="profile-divider" sx={{ borderColor: "#222", mb: 2 }} />
 
         {/* Editable Name & Email Section */}
         <Box className="profile-edit-section" sx={{ mb: 3 }}>
