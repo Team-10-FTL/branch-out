@@ -1,202 +1,157 @@
 const prisma = require("../models/prismaClient");
 
+// Helper: emit event if io is available
+function emitEvent(req, event, data) {
+    if (req.io) {
+        req.io.emit(event, data);
+    }
+}
 
-// bare /repo routes like those on this file should be usable by ADMINS only, repos that are user specific should be stored/posted/fetched from the user endpoints
-
-// get all repos (DONt ACTUALLY NEED THIS) bc its thousands of repos assuming we do the cron job
-exports.getAllRepos = async (requestAnimationFrame, res) => {
+// Get all repos (admin only)
+exports.getAllRepos = async (req, res) => {
     try {
-        // end point protected by middleware, user is admin so can access
         const repos = await prisma.repo.findMany({
             select: {
-                id: true, 
-                owner: true,
-                name: true,
-                stars: true,
-                languages: true,
-                tags: true, // AI generated tags
-                topics: true, // pulled from github API
-                skill: true, // AI assigned level
-                summary: true, // AI generates summary
-                description: true,
-                savedBy: true, // relation to user
-                githubId: true,
-                feedBack: true,
-                repoLink: true,
+                id: true, owner: true, name: true, stars: true, languages: true,
+                tags: true, topics: true, skill: true, summary: true,
+                description: true, savedBy: true, githubId: true, feedBack: true, repoLink: true,
             }
         });
-        res.status(200).json(repos)
+        res.status(200).json(repos);
     } catch (error) {
         console.log(error.message);
-        res.status(500).send("Error fetching repos!")
+        res.status(500).send("Error fetching repos!");
     }
 };
 
-// get a specific repo by id
+// Get a specific repo by id
 exports.getByID = async (req, res) => {
     try {
         const id = Number(req.params.id);
-        const repo = await prisma.repo.findUnique({where: {id},
-        select: {
-            id: true, 
-            owner: true,
-            name: true,
-            stars: true,
-            languages: true,
-            tags: true, 
-            topics: true, 
-            skill: true, 
-            summary: true, 
-            description: true,
-            savedBy: true, 
-            githubId: true,
-            feedBack: true,
-            repoLink: true,
-        },
-    });
-    if (!repo) {
-        return res.status(404).json({error: "Repo not found!"});
-    }
-    res.status(200).json(repo);
-    } catch {
+        const repo = await prisma.repo.findUnique({
+            where: { id },
+            select: {
+                id: true, owner: true, name: true, stars: true, languages: true,
+                tags: true, topics: true, skill: true, summary: true,
+                description: true, savedBy: true, githubId: true, feedBack: true, repoLink: true,
+            },
+        });
+        if (!repo) {
+            return res.status(404).json({ error: "Repo not found!" });
+        }
+        res.status(200).json(repo);
+    } catch (error) {
         console.log(error.message);
-        res.status(500).send("Error fetching repo")
+        res.status(500).send("Error fetching repo");
     }
 };
 
-// make new repo
+// Create new repo
 exports.create = async (req, res) => {
-    const {owner, name, stars, languages, tags, topics, level, summary, description, savedBy, githubId, feedBack, repoLink} = req.body;
+    try {
+        const {
+            owner, name, stars, languages, tags, topics, skill, summary,
+            description, savedBy, githubId, feedBack, repoLink
+        } = req.body;
 
-    // prepare data for prisma create
-    const data = {
-        owner, 
-        name,
-        stars,
-        languages,
-        tags,
-        topics,
-        skill, 
-        summary, 
-        description,
-        savedBy,
-        githubId,
-        feedBack, 
-        repoLink
-    };
+        const data = {
+            owner, name, stars, languages, tags, topics, skill, summary,
+            description, savedBy, githubId, feedBack, repoLink
+        };
 
-    const newRepo = await prisma.repo.create({ data });
-    res.status(201).json(newRepo)
-}
+        const newRepo = await prisma.repo.create({ data });
+        emitEvent(req, "repoCreated", newRepo); // WebSocket event
+        res.status(201).json(newRepo);
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).json({ error: "Error creating repo!" });
+    }
+};
 
-// update repo 
-exports.update = async(req, res) => {
-
-    try{
-    const id = Number(req.params.id);
-    const updatedRepo = await prisma.repo.update({
-        where: {id},
-        data: req.body,
-    });
-    res.json(updatedRepo);
-    } catch {
+// Update repo
+exports.update = async (req, res) => {
+    try {
+        const id = Number(req.params.id);
+        const updatedRepo = await prisma.repo.update({
+            where: { id },
+            data: req.body,
+        });
+        emitEvent(req, "repoUpdated", updatedRepo); // WebSocket event
+        res.json(updatedRepo);
+    } catch (error) {
         console.log(error.message);
         return res.status(400).json({ error: "Error updating repo information!" });
     }
 };
 
-// delete repo
-exports.delete = async(req, res) => {
-    
+// Delete repo
+exports.delete = async (req, res) => {
     try {
         const id = Number(req.params.id);
-        await prisma.repo.delete({
-            where: { id },
-        });
+        await prisma.repo.delete({ where: { id } });
+        emitEvent(req, "repoDeleted", { id }); // WebSocket event
         res.status(204).end();
     } catch (error) {
         console.log(error.message);
-        return res.status(500).json({ error: "Error deleting repo!"})
+        return res.status(500).json({ error: "Error deleting repo!" });
     }
-}
+};
 
-// GET/filter repos by user inputed preferences like level, languages, and tags
+// Filter repos by user preferences
 exports.filterRepos = async (req, res) => {
     try {
         const { level, languages, tags } = req.query;
-        // Build the filter object based on query parameters
-        const filter ={};
-        if (languages){
-            filter.level= {hasSome: level.split(',') };
-            filter.languages = {hasSome: languages.split(',') };
-            filter.tags = {hasSome: tags.split(',') };
+        const filter = {};
+        if (level) filter.skill = { hasSome: level.split(',') };
+        if (languages) filter.languages = { hasSome: languages.split(',') };
+        if (tags) filter.tags = { hasSome: tags.split(',') };
 
-            const filteredRepos = await prisma.repo.findMany({
-                where: filter,
-                select: {
-                    id: true, 
-                    owner: true,
-                    name: true,
-                    stars: true,
-                    languages: true,
-                    tags: true, 
-                    topics: true, 
-                    skill: true, 
-                    summary: true, 
-                    description: true,
-                    savedBy: true, 
-                    githubId: true,
-                    feedBack: true,
-                    repoLink: true,
-                },
-            });
+        const filteredRepos = await prisma.repo.findMany({
+            where: filter,
+            select: {
+                id: true, owner: true, name: true, stars: true, languages: true,
+                tags: true, topics: true, skill: true, summary: true,
+                description: true, savedBy: true, githubId: true, feedBack: true, repoLink: true,
+            },
+        });
 
-            res.status(200).json(filteredRepos);
-        }
+        res.status(200).json(filteredRepos);
     } catch (error) {
         console.log(error.message);
-        res.status(500).send("Error filtering repos!!")
+        res.status(500).send("Error filtering repos!!");
     }
-}
+};
 
-// create feed back entry
-
+// Handle swipe/feedback
 exports.handleSwipe = async (req, res) => {
-    const {userId, repoId, direction, feedbackReason} = req.body;
+    const { userId, repoId, direction, feedbackReason } = req.body;
 
-    if (!userId || !repoId || !direction){
-        return res.status(400).json({ error: "Missing required fields!!"});
+    if (!userId || !repoId || !direction) {
+        return res.status(400).json({ error: "Missing required fields!!" });
     }
 
     try {
-        // create the feedback in the first place
         const feedback = await prisma.feedBack.create({
             data: {
                 swipeDirection: direction,
                 feedbackReason: feedbackReason ?? null,
-                user: {connect: {id: userId}},
-                repo: {connect: {id: repoId}},
+                user: { connect: { id: userId } },
+                repo: { connect: { id: repoId } },
             },
         });
 
-        if (direction === "RIGHT"){
+        if (direction === "RIGHT") {
             await prisma.user.update({
-                where: {id: userId},
+                where: { id: userId },
                 data: {
-                    savedRepos:{
-                        connect: {id: repoId},
-                    },
+                    savedRepos: { connect: { id: repoId } },
                 },
             });
         }
-        res.status(201).json({message: "Swipe Stored", feedback});
+        emitEvent(req, "feedbackCreated", feedback); // WebSocket event
+        res.status(201).json({ message: "Swipe Stored", feedback });
     } catch (error) {
         console.error(error);
-        res.status(500).json({err: "Failed to handle swip :("});
+        res.status(500).json({ err: "Failed to handle swipe :(" });
     }
-
 };
-
-
-
-

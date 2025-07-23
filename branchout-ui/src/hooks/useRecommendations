@@ -1,0 +1,45 @@
+import { useEffect, useRef, useState } from "react";
+
+export function useRecommendations(userId) {
+  const [recommendations, setRecommendations] = useState([]);
+  const wsRef = useRef(null);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    // Connect to your WebSocket server
+    const ws = new WebSocket("ws://localhost:8080");
+    wsRef.current = ws;
+
+    ws.onopen = () => {
+      // Send userId to backend
+      ws.send(JSON.stringify({ userId }));
+    };
+
+    ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.recommendations && data.recommendations.length > 0) {
+        setRecommendations(prev => [...prev, ...data.recommendations]);
+    }
+    };
+
+    ws.onerror = (err) => {
+      console.error("WebSocket error:", err);
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket closed");
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, [userId]);
+
+  // Optionally, expose a function to trigger refreshes
+  const refreshRecommendations = () => {
+    wsRef.current?.send(JSON.stringify({ userId }));
+  };
+
+  return { recommendations, refreshRecommendations };
+}
