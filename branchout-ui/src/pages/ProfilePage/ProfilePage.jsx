@@ -137,7 +137,7 @@ const ProfilePage = () => {
 
 
         <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, letterSpacing: 1 }}>
-          Profile Page
+          Profile
         </Typography>
         <Divider className="profile-divider" sx={{ borderColor: "#222", mb: 2 }} />
 

@@ -6,11 +6,11 @@ export default function Footer(){
         <>
             <div id = "footer">
                 <p id = "footerReserve">© 2025 branch out. All rights reserved.</p>
-                <p id = "footerAbout">
-                    <a href="/about">About</a>
-                    {/* <a href="/contact">Contact</a> ·
+                  {/* <a href="/contact">Contact</a> ·
                     <a href="/privacy">Privacy</a> */}
-                </p>
+                {/* <p id = "footerAbout">
+                    <a href="/about">About</a>
+                </p> */}
             </div>
         </>
     )
