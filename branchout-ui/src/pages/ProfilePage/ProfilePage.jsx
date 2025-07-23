@@ -136,10 +136,10 @@ const ProfilePage = () => {
       >
 
 
-        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, letterSpacing: 1 }}>
+        {/* <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, letterSpacing: 1 }}>
           Profile
         </Typography>
-        <Divider className="profile-divider" sx={{ borderColor: "#222", mb: 2 }} />
+        <Divider className="profile-divider" sx={{ borderColor: "#4c1255", mb: 2 }} /> */}
 
         {saveError && (
           <Alert severity="error" className="profile-alert" sx={{ background: "#222", color: "#fff" }}>
@@ -169,7 +169,7 @@ const ProfilePage = () => {
           </Avatar>
         </Box>
 
-        <Divider className="profile-divider" sx={{ borderColor: "#222", mb: 2 }} />
+        <Divider className="profile-divider" sx={{ borderColor: "#4c1255", mb: 2 }} />
 
         {/* Editable Name & Email Section */}
         <Box className="profile-edit-section" sx={{ mb: 3 }}>
@@ -218,7 +218,7 @@ const ProfilePage = () => {
             ) : (
               <>
                 <Typography variant="body1" className="profile-section" sx={{ color: "#fff" }}>
-                  <strong>Name:</strong> {display.username || display.firstName || display.email || "User"}
+                  <strong style = {{}}>Name:</strong> {display.username || display.firstName || display.email || "User"}
                 </Typography>
                 <Typography variant="body1" className="profile-section" sx={{ color: "#fff" }}>
                   <strong>Email:</strong> {display.email || "N/A"}
@@ -262,16 +262,17 @@ const ProfilePage = () => {
             <Typography variant="body1" className="profile-section" sx={{ color: "#fff" }}>
               <strong>Auth:</strong> {clerkUser ? "OAuth" : "Local"}
             </Typography>
-            <Divider sx={{ my: 2, borderColor: "#222" }} />
+            <Divider sx={{ my: 2, borderColor: "#4c1255" }} />
           </>
         )}
 
-      <Typography variant="subtitle1" sx={{ color: "#E83F25", mt: 2 }}>Skill Level:</Typography>
+      <Typography variant="subtitle1" sx={{  color: "", mt: 2, fontWeight:"600", paddingBottom:"10px" }}>Skill Level</Typography>
             <Stack
               direction="row"
               spacing={2}
               rowGap={1}
               flexWrap="wrap"
+              paddingBottom="10px"
               className="profile-stack"
               justifyContent="center"
               alignItems="center"
@@ -295,8 +296,8 @@ const ProfilePage = () => {
               ))
             : <Chip label="None" color="default" variant="outlined" sx={{ color: "#fff", border: "1.5px solid #E83F25", background: "transparent" }} />}
         </Stack>
-
-        <Typography variant="subtitle1" sx={{ color: "#E83F25", mt: 2 }}>Languages:</Typography>
+        <Divider className="profile-divider" sx={{ borderColor: "#4c1255", mb: 2 }} />
+        <Typography variant="subtitle1" sx={{ color: "", mt: 2, fontWeight:"600", paddingBottom:"10px" }}>Languages</Typography>
             <Stack
               direction="row"
               spacing={2}
@@ -324,14 +325,16 @@ const ProfilePage = () => {
               ))
             : <Chip label="None" color="default" variant="outlined" sx={{ color: "#fff", border: "1.5px solid #E83F25", background: "transparent" }} />}
         </Stack>
+        <Divider className="profile-divider" sx={{ borderColor: "#4c1255", mb: 2 }} />
 
-        <Typography variant="subtitle1" sx={{ color: "#E83F25", mt: 2 }}>Tags:</Typography>
+        <Typography variant="subtitle1" sx={{ color: "", mt: 2, fontWeight:"600", paddingBottom:"10px" }}>Tags</Typography>
 
           <Stack
             direction="row"
             spacing={2}
             rowGap={1}
             flexWrap="wrap"
+            paddingBottom="10px"
             className="profile-stack"
             justifyContent="center"
             alignItems="center"

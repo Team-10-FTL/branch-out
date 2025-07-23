@@ -106,7 +106,7 @@ function PreferencesPage() {
         <Divider className="preferences-divider" sx={{ borderColor: "#222", mb: 2 }} />
 
         <Typography variant="h6" sx={{ color: "#0ff", mt: 2 }}>
-          Level <ToolTip className="ToolTip" information={"Set your school level - think of 1st as freshman and 4th as senior! This will correlate to the level repositories you get in your feed."} />
+          Skill Level <ToolTip className="ToolTip" information={"Set your school level - think of 1st as freshman and 4th as senior! This will correlate to the level repositories you get in your feed."} />
         </Typography>
           <Stack
             direction="row"
@@ -216,7 +216,7 @@ function PreferencesPage() {
         >
           <div className='preferences-save-btn-content'>Save Preferences</div>
         </button>
-        <ToolTip className="ToolTip" information="Select your preferences below. Click to toggle selection." />
+        {/* <ToolTip className="ToolTip" information="Select your preferences below. Click to toggle selection." /> */}
       </Paper>
     </Box>
   );
