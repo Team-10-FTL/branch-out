@@ -139,18 +139,18 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         ref={cardRef}
         sx={{
           maxWidth: 400,
-          borderRadius: 3, // Rounded corners
-          boxShadow: 6,    // Elevation/shadow
+          borderRadius: 3, 
+          boxShadow: 6,   
           overflow: "hidden",
           transition: isDragging
             ? "none"
             : "transform 0.3s cubic-bezier(.4,2,.6,1), opacity 0.3s",
           touchAction: "none",
-          background: "#111", // Soft gradient
+          background: "#111", 
           color: "#fff",
           "&:hover": {
-            background: "#111", // <-- keep background black on hover
-            boxShadow: "0 0 24px 4px rgba(232,63,37,0.10)", // optional: subtle glow
+            background: "#111", 
+            boxShadow: "0 0 24px 4px rgba(232,63,37,0.10)", 
             transform: "scale(1.015)",          
           },
           cursor: "grab",
@@ -165,90 +165,80 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         className="repo-card"
       >
         <CardActionArea>
-          {/* <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 700, letterSpacing: 1 }}>
-            {repo.name}
-          </Typography> */}
-
-          {/* <Card sx={{ borderRadius: 3, overflow: "hidden" }}>
-            <CardMedia
-              onClick={handleCardClick}
-              component="img"
-              height="160"
-              image="https://avatars.githubusercontent.com/u/583231?v=4"
-              alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
-              sx={{
-                borderRadius: 2,
-                boxShadow: 2,
-                objectFit: "cover",
-                marginBottom: 1,
-                cursor: "pointer",
-                transition: "transform 0.2s",
-              }}
-            />
-            <Box
-            sx={{
-              position: "absolute",         // <-- NEW: Overlay style
-              bottom: 0,                    // <-- Stick to bottom of image
-              width: "100%",
-              height: "40%",                // <-- Adjust gradient size as needed
-              background: "linear-gradient(to top, #111, rgba(17,17,17,0)))", // <-- Fade up into transparency
-              borderRadius: 2,              // <-- Match image border
-              pointerEvents: "none",        // <-- So it doesn’t block clicks
-            }}
-            /> */}
             <Card sx={{ borderRadius: 3, overflow: "hidden", backgroundColor: (theme) => theme.palette.background.default, boxShadow: 3}}>
-            <Box sx={{ position: "relative" }}> {/* <-- NEW: Wrap image to allow overlay */}
+            <Box sx={{ position: "relative", height: 280, borderRadius: 2, overflow: "hidden" }}>
+              {/* Background Image */}
               <CardMedia
-                onClick={handleCardClick}
                 component="img"
-                height="170"
-                image="https://avatars.githubusercontent.com/u/583231?v=4"
+                image={`src/assets/LangImages/${repo.languages[0]}.png`}
                 alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
                 sx={{
-                  borderRadius: 2,
-                  boxShadow: 2,
+                  height: "100%",
+                  width: "100%",
                   objectFit: "cover",
-                  marginBottom: 1,
-                  cursor: "pointer",
                   transition: "transform 0.2s",
+                  cursor: "pointer",
                 }}
+                onClick={handleCardClick}
               />
+
+              {/* Gradient Overlay */}
               <Box
                 sx={{
-                  position: "absolute",         // <-- NEW: Overlay style
-                  bottom: 0,                    // <-- Stick to bottom of image
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
                   width: "100%",
-                  height: "40%",                // <-- Adjust gradient size as needed
-                  background: "linear-gradient(to top, #111, rgba(15,15,15,0))", // <-- Fade up into transparency
-                  borderRadius: 2,              // <-- Match image border
-                  pointerEvents: "none",        // <-- So it doesn’t block clicks
+                  height: "65%",
+                  background: (theme) =>
+                    `linear-gradient(to top, ${theme.palette.background.paper}, rgba(250,250,250,0))`,
+                  
                 }}
               />
+
+              {/* Text Overlay */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: 12,
+                  left: 16,
+                  right: 16,
+                  color: "#fff",
+                  zIndex: 2,
+                }}
+              >
+                <Typography variant="h5" sx={{ fontWeight: 700, letterSpacing: 1 }}>
+                  {repo.name}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "#ddd", mt: 0.5 }}>
+                ☆ {repo.stars || "N/A"}
+                </Typography>
+              </Box>
             </Box>
 
             <CardContent  sx={{ padding: 2 }}>
-            <Typography gutterBottom variant="h5" sx={{ fontWeight: 700, letterSpacing: 1 }}>
+            {/* <Typography gutterBottom variant="h5" sx={{ fontWeight: 700, letterSpacing: 1 }}>
             {repo.name}
-            </Typography>
+            </Typography> */}
               <div className="repo-card-labels">
                 <div className="repo-card-tags">
                   {repo.tags?.map((tag) => (
                     <Chip
-                      size="small"  // <-- Add this line
+                      size="small"  
                       key={tag}
                       label={tag}
                       variant="outlined"
                       sx={{ 
                         margin: "2px",
-                        borderRadius: "10px", // <-- Change this value as you like
+                        borderRadius: "10px", 
                       }}
                     />
                   ))}
                 </div>
                 <div className="repo-card-rating">
-                  <Typography variant="body2" color="#fff" marginBottom={2}>
+                  {/* <Typography variant="body2" color="#fff" marginBottom={2}>
                   ⭐  {repo.stars || "N/A"}
-                  </Typography>
+                  </Typography> */}
                 </div>
               </div>
 
@@ -261,12 +251,11 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
                       size="small" 
                       key={language}
                       label={language}
-                      variant="filled" // <-- Change to filled
+                      variant="filled" 
                       sx={{ 
                         margin: "2px",
                         borderRadius: "10px",
-                        // color: "#90caf9", // <-- Text color (light blue)
-                        borderColor: "#90caf9", // <-- Outline color
+                        borderColor: "#90caf9",
                       }}
                     />
                   ))}

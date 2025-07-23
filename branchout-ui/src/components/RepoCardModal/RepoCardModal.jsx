@@ -40,7 +40,7 @@ export default function RepoCardModal({ open, handleClose , repo}) {
           <CardMedia
             component="img"
             height="140"
-            image="https://avatars.githubusercontent.com/u/583231?v=4"
+            image={`src/assets/LangImages/${repo.languages[0]}.png`}
             alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
             sx={{
               borderRadius: "12px",
