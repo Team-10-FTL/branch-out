@@ -45,7 +45,7 @@ let languages = [];
         owner: repo.owner?.login || "",
         stars: repo.stargazers_count || 0,
         repoLink: repo.html_url || "",
-        languages: repo.languages || [],
+        languages: languages,
         license: repo.license?.spdx_id || "",
         description: repo.description || "",
         topics: repo.topics || [],
