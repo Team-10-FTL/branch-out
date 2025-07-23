@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useMediaQuery } from '@mui/material';
 import fullLogo from "../../assets/logo/fullLogo.png"
+import miniLogo from "../../assets/logo/miniLogo.png"
 
 
 import {
@@ -39,7 +40,7 @@ const drawerWidth = 270;
 export default function SideBar() {
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const { user: clerkUser } = useUser();
-  const isCollapsed = useMediaQuery('(max-width:600px)');
+  const isCollapsed = useMediaQuery('(max-width:1000px)');
   const  {signOut}  = useClerk();
   const navigate = useNavigate();
 
@@ -76,23 +77,30 @@ export default function SideBar() {
     >
       <Toolbar>
         {/* Logo */}
-        {!isCollapsed && (
-          <Box sx={{ p: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+        {!isCollapsed ? (
+           <Box sx={{ p: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <img src = {fullLogo} style={{width:"200px"}}></img>
             </Box>
           </Box>
-        )}
+        ) : (
+          <Box sx={{ p: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <img src={miniLogo} style={{ width: "35px", paddingRight: "5px"}} />
+          </Box>
+        </Box>
+        )} 
       </Toolbar>
       <Divider />
       {/* User Info */}
       <Box
         sx={{
           p: 2,
+          paddingLeft: isCollapsed ? 2 : 5, 
           color: 'white',
           cursor: currentUser ? 'pointer' : 'not-allowed',
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: isCollapsed ? 'center' : 'flex-start',
           alignItems: 'center',
           '&:hover': { backgroundColor: currentUser ? 'rgba(255,255,255,0.05)' : 'inherit' }
         }}
@@ -102,7 +110,8 @@ export default function SideBar() {
           }
         }}
       >
-        <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
+        {/* Logo */}
+        <Avatar sx={{ width: 32, height: 32, bgcolor: '#daa7e2' }}>
           {(clerkUser?.firstName?.charAt(0) ||
             currentUser?.username?.charAt(0) ||
             currentUser?.email?.charAt(0) ||
@@ -117,7 +126,7 @@ export default function SideBar() {
                   currentUser?.email ||
                   'User'}
             </Typography>
-            <Typography variant="caption" sx={{ color: 'grey.400' }}>
+            <Typography variant="caption" sx={{ color: 'grey.400', paddingRight: "13pt"}}>
               {currentUser?.role || 'USER'}
             </Typography>
           </Box>
@@ -138,6 +147,7 @@ export default function SideBar() {
             <ListItemButton
               href="/discovery"
               sx={{
+                paddingLeft: isCollapsed ? 2.5 : 5 ,
                 color: 'white',
                 justifyContent: 'center',
                 display: 'flex',
@@ -165,6 +175,7 @@ export default function SideBar() {
             <ListItemButton
               href="/preferences"
               sx={{
+                paddingLeft: isCollapsed ? 2.5 : 5,
                 color: 'white',
                 justifyContent: 'center',
                 display: 'flex',
@@ -195,6 +206,7 @@ export default function SideBar() {
               <ListItemButton
                 href="/admin"
                 sx={{
+                  paddingLeft: isCollapsed ? 2.5 : 5 ,
                   color: 'white',
                   justifyContent: 'center',
                   display: 'flex',
@@ -235,6 +247,7 @@ export default function SideBar() {
                 component={Link}
                 to="/SavedRepos"
               sx={{
+                paddingLeft: isCollapsed ? 2.5 : 5 ,
                 color: 'white',
                 justifyContent: 'center',
                 display: 'flex',
@@ -261,6 +274,7 @@ export default function SideBar() {
           <ListItem disablePadding>
             <ListItemButton
               sx={{
+                paddingLeft: isCollapsed ? 2.5 : 5 ,
                 color: 'white',
                 justifyContent: 'center',
                 display: 'flex',
@@ -287,6 +301,7 @@ export default function SideBar() {
           <ListItem disablePadding>
             <ListItemButton
               sx={{
+                paddingLeft: isCollapsed ? 2.5 : 5 ,
                 color: 'white',
                 justifyContent: 'center',
                 display: 'flex',
