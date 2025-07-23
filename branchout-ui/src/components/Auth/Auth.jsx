@@ -2,6 +2,8 @@ import { useUser, useClerk } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Auth.css";
+import fullLogo from "../../assets/logo/fullLogo.png"
+
 
 // ...imports remain unchanged
 
@@ -129,7 +131,10 @@ function AuthComponent() {
   };
 
   return (
+    <div className = "auth-wrapper">
     <div className="auth-container">
+        <img src = {fullLogo} className = "loginSignupLogo"/>
+        {/* <h2 className = "auth-title">{isSignUp ? "Create Account" : " Login"}</h2> */}
       {/* Auth Mode Tabs */}
       <div className="auth-tabs">
         <button
@@ -148,7 +153,6 @@ function AuthComponent() {
 
       {authMode === "local" ? (
         <form onSubmit={handleLocalAuth} className="auth-form">
-          <h2>{isSignUp ? "📝 Create Account" : "🔑 Login"}</h2>
 
           {error && <div className="error-box">{error}</div>}
 
@@ -207,14 +211,20 @@ function AuthComponent() {
         </form>
       ) : (
         <div className="auth-form">
-          <h2 style={{ textAlign: "center" }}>🔗 OAuth Registration</h2>
+          {/* <h2 style={{ textAlign: "center" }}>🔗 OAuth Registration</h2> */}
 
-          <button className="btn btn-primary" onClick={() => openSignUp()}>
-            🚀 Sign Up with OAuth
+          <button className="btn btn-primary" onClick={() => {
+            navigate("/signup");
+            openSignUp();
+          }}>
+          Sign Up with OAuth 🚀
           </button>
 
-          <button className="btn btn-secondary" onClick={() => openSignIn()}>
-            🔑 Login with OAuth
+          <button className="btn btn-secondary" onClick={() => {
+            navigate("/login");
+            openSignIn();
+          }}>
+          Login with OAuth 🔑
           </button>
 
           <div className="info-box">
@@ -225,6 +235,7 @@ function AuthComponent() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }
