@@ -138,7 +138,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
       <Card
         ref={cardRef}
         sx={{
-          maxWidth: 345,
+          maxWidth: 400,
           borderRadius: 3, // Rounded corners
           boxShadow: 6,    // Elevation/shadow
           overflow: "hidden",
@@ -165,50 +165,114 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         className="repo-card"
       >
         <CardActionArea>
-          <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 700, letterSpacing: 1 }}>
+          {/* <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 700, letterSpacing: 1 }}>
             {repo.name}
-          </Typography>
-          <CardMedia
-            onClick={handleCardClick}
-            component="img"
-            height="140"
-            image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-            alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
-            sx={{
-              borderRadius: 2,
-              boxShadow: 2,
-              objectFit: "cover",
-              marginBottom: 1,
-              cursor: "pointer",
-              transition: "transform 0.2s",
-            }}
-          />
-          <CardContent  sx={{ padding: 3 }}>
-            <div className="repo-card-labels">
-              <div className="repo-card-tags">
-                {repo.tags?.map((tag) => (
-                  <Chip
-                    key={tag}
-                    label={tag}
-                    variant="outlined"
-                    sx={{ 
-                      margin: "2px",
-                      borderRadius: "10px", // <-- Change this value as you like
-                    }}
-                  />
-                ))}
-              </div>
-              <div className="repo-card-rating">
-                <Typography variant="body2" color="text.secondary">
-                  Rating: {repo.stars || "N/A"}
-                </Typography>
-              </div>
-            </div>
+          </Typography> */}
 
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {repo.summary || "No summary available"}
+          {/* <Card sx={{ borderRadius: 3, overflow: "hidden" }}>
+            <CardMedia
+              onClick={handleCardClick}
+              component="img"
+              height="160"
+              image="https://avatars.githubusercontent.com/u/583231?v=4"
+              alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
+              sx={{
+                borderRadius: 2,
+                boxShadow: 2,
+                objectFit: "cover",
+                marginBottom: 1,
+                cursor: "pointer",
+                transition: "transform 0.2s",
+              }}
+            />
+            <Box
+            sx={{
+              position: "absolute",         // <-- NEW: Overlay style
+              bottom: 0,                    // <-- Stick to bottom of image
+              width: "100%",
+              height: "40%",                // <-- Adjust gradient size as needed
+              background: "linear-gradient(to top, #111, rgba(17,17,17,0)))", // <-- Fade up into transparency
+              borderRadius: 2,              // <-- Match image border
+              pointerEvents: "none",        // <-- So it doesn’t block clicks
+            }}
+            /> */}
+            <Card sx={{ borderRadius: 3, overflow: "hidden", backgroundColor: (theme) => theme.palette.background.default, boxShadow: 3}}>
+            <Box sx={{ position: "relative" }}> {/* <-- NEW: Wrap image to allow overlay */}
+              <CardMedia
+                onClick={handleCardClick}
+                component="img"
+                height="170"
+                image="https://avatars.githubusercontent.com/u/583231?v=4"
+                alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
+                sx={{
+                  borderRadius: 2,
+                  boxShadow: 2,
+                  objectFit: "cover",
+                  marginBottom: 1,
+                  cursor: "pointer",
+                  transition: "transform 0.2s",
+                }}
+              />
+              <Box
+                sx={{
+                  position: "absolute",         // <-- NEW: Overlay style
+                  bottom: 0,                    // <-- Stick to bottom of image
+                  width: "100%",
+                  height: "40%",                // <-- Adjust gradient size as needed
+                  background: "linear-gradient(to top, #111, rgba(15,15,15,0))", // <-- Fade up into transparency
+                  borderRadius: 2,              // <-- Match image border
+                  pointerEvents: "none",        // <-- So it doesn’t block clicks
+                }}
+              />
+            </Box>
+
+            <CardContent  sx={{ padding: 2 }}>
+            <Typography gutterBottom variant="h5" sx={{ fontWeight: 700, letterSpacing: 1 }}>
+            {repo.name}
             </Typography>
-          </CardContent>
+              <div className="repo-card-labels">
+                <div className="repo-card-tags">
+                  {repo.tags?.map((tag) => (
+                    <Chip
+                      size="small"  // <-- Add this line
+                      key={tag}
+                      label={tag}
+                      variant="outlined"
+                      sx={{ 
+                        margin: "2px",
+                        borderRadius: "10px", // <-- Change this value as you like
+                      }}
+                    />
+                  ))}
+                </div>
+                <div className="repo-card-rating">
+                  <Typography variant="body2" color="#fff" marginBottom={2}>
+                  ⭐  {repo.stars || "N/A"}
+                  </Typography>
+                </div>
+              </div>
+
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {repo.summary || "No summary available"}
+              </Typography>
+              <div className="repo-card-languages">
+                  {repo.languages?.map((language) => (
+                    <Chip
+                      size="small" 
+                      key={language}
+                      label={language}
+                      variant="filled" // <-- Change to filled
+                      sx={{ 
+                        margin: "2px",
+                        borderRadius: "10px",
+                        // color: "#90caf9", // <-- Text color (light blue)
+                        borderColor: "#90caf9", // <-- Outline color
+                      }}
+                    />
+                  ))}
+                </div>
+            </CardContent>
+          </Card>
         </CardActionArea>
       </Card>
 
@@ -221,7 +285,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
               top: "50%",
               left: "10px",
               transform: "translateY(-50%)",
-              color: "red",
+              color: "#E34714",
               fontSize: "24px",
               opacity: isDragging ? (currentX < -50 ? 1 : 0.3) : 1,
               transition: "opacity 0.2s",
@@ -257,7 +321,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             onClick={handleRightClick}
             onMouseDown={(e) => e.stopPropagation()}
           >
-             <ArrowForwardIosIcon fontSize="large" />
+            <ArrowForwardIosIcon fontSize="large" />
           </Box>
         </>
       )}

@@ -1,6 +1,6 @@
 .repo-card {
   width: 700px;
-  height: 1000px;
+  height: 800px;
   margin: 20px;
   transition: transform 0.3s ease-in-out;
 display: flex;
@@ -23,4 +23,14 @@ cursor: pointer;
     align-items: center;
     gap: 8px;
     margin-top: 8px;
+}
+
+.repo-card-languages{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
 }

@@ -2,6 +2,7 @@ import './SavedRepos.css';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RepoCard from '../../components/RepoCard/RepoCard';
+import SavedRepoCard from '../../components/SavedRepoCard/SavedRepoCard';
 import { useAuth } from '../../components/ProtectedRoute/ProtectedRoute.jsx';
 
 function SavedReposPage() {
@@ -62,7 +63,7 @@ function SavedReposPage() {
       <h1>Saved Repositories</h1>
       <div className="repo-list">
         {repos.map((repo) => (
-          <RepoCard key={repo.id} repo={repo} />
+          <SavedRepoCard key={repo.id} repo={repo} />
         ))}
       </div>
     </div>
