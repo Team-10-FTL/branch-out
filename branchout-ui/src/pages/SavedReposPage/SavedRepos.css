@@ -1,0 +1,12 @@
+.repo-list {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+
+}
+
+@media (max-width: 1300px ){
+    .repo-list{
+        flex-flow: row wrap;
+    }
+}

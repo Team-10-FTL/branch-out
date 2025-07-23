@@ -3,15 +3,16 @@ import { Modal, Box, Typography, CardMedia, Chip } from "@mui/material";
 
 const style = {
   position: 'absolute',
+  textAlign: "center",
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: '#111',
   color: '#fff',
-  border: '2px solid #E83F25',
+  border: '2px solid transparent', // <-- Transparent border to maintain shape
   borderRadius: '20px',
-  boxShadow: '0 0 32px 8px rgba(232,63,37,0.18)',
+  boxShadow: '0 0 30px 6px rgba(232,63,37,0.5)', // <-- Stronger glow effect
   p: 4,
   marginLeft: '130px', // <-- set to your sidebar width
 
@@ -32,14 +33,14 @@ export default function RepoCardModal({ open, handleClose , repo}) {
             id="repo-modal-title"
             variant="h6"
             component="h2"
-            sx={{ color: "#E83F25", fontWeight: 700, mb: 2 }}
+            sx={{ textAlign: "center", color: "#E83F25", fontWeight: 700, mb: 2 }}
           >
             {repo.name}
           </Typography>
           <CardMedia
             component="img"
             height="140"
-            image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
+            image="https://avatars.githubusercontent.com/u/583231?v=4"
             alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
             sx={{
               borderRadius: "12px",
@@ -48,7 +49,7 @@ export default function RepoCardModal({ open, handleClose , repo}) {
             }}
           />
           <Box id="repo-modal-rating" sx={{ mt: 2 }}>
-            <span style={{ color: "#E83F25", fontWeight: 600 }}>Rating:</span> {repo.stars || "N/A"}
+            <span style={{ color: "#E83F25", fontWeight: 600 }}>⭐</span> {repo.stars || "N/A"}
           </Box>
           <Box id="repo-modal-tags" sx={{ mt: 2 }}>
             <span style={{ color: "#E83F25", fontWeight: 600 }}>Tags:</span>{" "}
