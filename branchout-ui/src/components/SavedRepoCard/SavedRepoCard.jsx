@@ -37,7 +37,7 @@ return (
         <CardMedia
             component="img"
             height="140"
-            image="https://avatars.githubusercontent.com/u/583231?v=4"
+            image={`src/assets/LangImages/${repo.languages[0]}.png`}
             alt={`Image of ${repo.name}`}
             sx={{ objectFit: "cover", borderRadius: 2 }}
         />
