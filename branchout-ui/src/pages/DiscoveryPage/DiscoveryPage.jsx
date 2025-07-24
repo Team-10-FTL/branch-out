@@ -115,24 +115,20 @@ const DiscoveryPage = () => {
     setSelectedRepo(null);
     setCurrentIndex(prev => (prev + 1) % repos.length);
   };
-
-  const drawerWidth = 270;
-
+ 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <>
       <CssBaseline />
       
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          minHeight: '100vh'
+          minHeight: '100vh',
         }}
       >
         <h1>Discovery Page</h1>
@@ -167,7 +163,7 @@ const DiscoveryPage = () => {
         </Box>
       </Fade>
     </Modal>
-    </Box>
+    </>
   );
 }
 
