@@ -162,6 +162,7 @@ const DiscoveryPage = () => {
             boxShadow: 24,
             p: 4,
           }}>
+            
             <CritiqueChips onSelect={handleCritiqueSelect} />
           </Box>
         </Fade>
