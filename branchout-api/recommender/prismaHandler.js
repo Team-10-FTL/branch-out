@@ -70,7 +70,7 @@ exports.getRecommendations = async (req, res) => {
     }));
 
     // Send to FastAPI for on-the-fly embedding and scoring
-    const fastapiRes = await axios.post('http://localhost:8000/recommend', {
+    const fastapiRes = await axios.post(process.env.FASTAPI_URL, {
       user_profile: userProfile,
       repos: repoPayload
     });
