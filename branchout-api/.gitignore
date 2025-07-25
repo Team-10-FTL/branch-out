@@ -1,4 +1,24 @@
-# Logs
+# Created by venv; see https://docs.python.org/3/library/venv.html
+*
+
+generated
+prisma/generated/
+prisma/migrations/
+node_modules/
+.env
+share/
+package-lock.json
+include/
+bin/
+.venv/
+.python-version
+pyvenv.cfg
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+
 logs
 *.log
 npm-debug.log*

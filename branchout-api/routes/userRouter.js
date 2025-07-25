@@ -5,6 +5,7 @@ const { authenticate, requireAdmin } = require("../middleware/authCheck");
 const router = express.Router();
 const { hybridAuth } = require("../middleware/authCheck");
 
+router.get("/recommendations/:userId", userController.getRecommendations);
 router.get("/profile", authenticate, userController.getUserProfile);
 router.get("/users", authenticate, requireAdmin, userController.getAllUsers);
 router.get("/:id", authenticate, requireAdmin, userController.getUser);
