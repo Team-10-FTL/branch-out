@@ -1,0 +1,5 @@
+# turicreate
+fastapi[standard]
+sentence-transformers
+prisma
+numpy
