@@ -49,7 +49,7 @@ const repoFetcher = async () => {
     // fetch repos from github (call the github helper)
     const repos = await fetchReposWithFilters({ startDate: lastPulled, endDate: currentDate })
 
-    const limitedRepos = repos.slice(0, 3); // limit to 1 repo for testing
+    const limitedRepos = repos.slice(0, 20); // limit to 1 repo for testing
 
     for (const repo of limitedRepos){
         // get Gemini enriched data 

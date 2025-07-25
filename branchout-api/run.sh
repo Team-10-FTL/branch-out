@@ -2,33 +2,46 @@
 
 set -e
 
-IMAGE_NAME="branchout-api"
-CONTAINER_NAME="branchout-api-container"
+PYTHON_VERSION="3.10"
+VENV_DIR=".venv"
+
+# Check for pyenv, install if missing
+if ! command -v pyenv &>/dev/null; then
+  echo "❌ pyenv is not installed. Installing with Homebrew..."
+  brew install pyenv
+fi
+
+# Install Python 3.8 with pyenv if not present
+if ! pyenv versions | grep -q "${PYTHON_VERSION}"; then
+  echo "🐍 Installing Python ${PYTHON_VERSION} with pyenv..."
+  pyenv install ${PYTHON_VERSION}
+fi
+
+# Set local python version
+pyenv local ${PYTHON_VERSION}
+
+# Create virtual environment if it doesn't exist
+if [ ! -d "$VENV_DIR" ]; then
+  echo "🐍 Creating Python ${PYTHON_VERSION} virtual environment..."
+  python3 -m venv $VENV_DIR
+fi
+
+# Activate the virtual environment
+source $VENV_DIR/bin/activate
+
+
+# Install project dependencies
+pip3 install -r requirements.txt
 
 # Optional: Check for .env file
 if [ ! -f .env ]; then
   echo "⚠️  .env file not found. Exiting."
+  deactivate
   exit 1
 fi
 
-# Optional: Stop and remove any previous container
-if docker ps -a --format '{{.Names}}' | grep -Eq "^${CONTAINER_NAME}\$"; then
-  echo "🧹 Removing existing container..."
-  docker rm -f $CONTAINER_NAME
-fi
+# ✅ Run FastAPI server from project root to keep imports valid
+echo "🚀 Starting FastAPI server..."
+fastapi dev ./recommender/sentence_transformer_predict.py
 
-# Build the Docker image
-echo "🐳 Building Docker image..."
-docker build -t $IMAGE_NAME .
-
-# Run the container
-echo "🚀 Starting container..."
-docker run -d \
-  --name $CONTAINER_NAME \
-  --env-file .env \
-  -p 5000:5000 \
-  -p 3000:3000 \
-  -p 8080:8080 \
-  $IMAGE_NAME
-
-echo "✅ Container '$CONTAINER_NAME' is running."
+deactivate
