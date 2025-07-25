@@ -32,7 +32,7 @@ function SavedReposPage() {
           throw new Error('User ID not found');
         }
         const response = await fetch(
-          `${import.meta.env.VITE_DATABASE_URL}/user/${userId}`,
+          `${import.meta.env.VITE_DATABASE_URL}/user/profile`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

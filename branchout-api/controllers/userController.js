@@ -138,7 +138,8 @@ exports.getUserProfile = async (req, res) => {
         updatedAt: true,
         languages: true,
         skill: true,
-        preferenceTags: true
+        preferenceTags: true,
+        savedRepos: true
       },
     });
 
