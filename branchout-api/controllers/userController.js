@@ -182,19 +182,28 @@ exports.getUser = async (req, res) => {
   }
 };
 
-exports.updateUser = async (req, res) => {
-  const userId = req.user?.userId || req.auth?.userId;
+exports.updateProfile = async (req, res) => {
   try {
+    const userId = req.user?.userId || req.auth?.userId;
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: req.body,
+      data: {
+        username: req.body.username,
+        email: req.body.email,
+      },
     });
+
     res.json(updatedUser);
   } catch (error) {
-    console.log(error.message);
-    return res.status(400).json({ error: "Error updating user information" });
+    console.error("Failed to update profile:", error);
+    res.status(500).json({ error: "Failed to update profile" });
   }
 };
+
 
 exports.getPreferences = async (req, res) => {
   const userId = req.user?.userId || req.auth?.userId;
