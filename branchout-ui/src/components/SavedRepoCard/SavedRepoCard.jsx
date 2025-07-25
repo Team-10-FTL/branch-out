@@ -37,8 +37,12 @@ return (
         <CardMedia
             component="img"
             height="140"
-            image={`src/assets/LangImages/${repo.languages[0]}.png`}
-            alt={`Image of ${repo.name}`}
+                    src={`src/assets/LangImages/${repo.languages[0]}.png`}
+                    alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
+                    onError={(e) => {
+                        e.target.onerror = null; // Prevents infinite loop if fallback also fails
+                        e.target.src = 'https://avatars.githubusercontent.com/u/31138227?v=4'; // Default fallback image URL
+                    }}
             sx={{ objectFit: "cover", borderRadius: 2 }}
         />
         <CardContent>

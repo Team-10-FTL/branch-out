@@ -170,8 +170,12 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
               {/* Background Image */}
               <CardMedia
                 component="img"
-                image={`src/assets/LangImages/${repo.languages[0]}.png`}
+                src={`src/assets/LangImages/${repo.languages[0]}.png`}
                 alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
+                onError={(e) => {
+                  e.target.onerror = null; // Prevents infinite loop if fallback also fails
+                  e.target.src = 'https://avatars.githubusercontent.com/u/31138227?v=4'; // Default fallback image URL
+                }}
                 sx={{
                   height: "100%",
                   width: "100%",
@@ -236,9 +240,6 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
                   ))}
                 </div>
                 <div className="repo-card-rating">
-                  {/* <Typography variant="body2" color="#fff" marginBottom={2}>
-                  ⭐  {repo.stars || "N/A"}
-                  </Typography> */}
                 </div>
               </div>
 
