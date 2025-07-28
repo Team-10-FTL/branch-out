@@ -66,7 +66,7 @@ const ProfilePage = () => {
         setError(err.message);
         setLoading(false);
       });
-  }, [user, editMode]);
+  }, []);
 
   function mapSkillLevel(level) {
     const mapping = {
@@ -100,6 +100,7 @@ const ProfilePage = () => {
       setEditMode(false);
     } catch (err) {
       setSaveError("Network error");
+      console.log("Error:",err)
     }
   };
 
