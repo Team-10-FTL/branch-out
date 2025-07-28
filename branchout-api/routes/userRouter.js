@@ -7,10 +7,10 @@ const { hybridAuth } = require("../middleware/authCheck");
 
 router.get("/recommendations/:userId", userController.getRecommendations);
 router.get("/profile", authenticate, userController.getUserProfile);
+router.put("/profile", authenticate, userController.updateProfile);
 router.get("/users", authenticate, requireAdmin, userController.getAllUsers);
 router.get("/:id", authenticate, requireAdmin, userController.getUser);
 router.get("/preferences", authenticate, userController.getPreferences);
-router.put("/preferences", authenticate, userController.updateUser);
 router.delete("/:id", authenticate, requireAdmin, userController.deleteUser);
 
 module.exports = router;

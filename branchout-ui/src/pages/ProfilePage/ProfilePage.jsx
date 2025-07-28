@@ -56,15 +56,17 @@ const ProfilePage = () => {
       })
       .then((data) => {
         setProfile(data);
-        setName(data.username || "");
-        setEmail(data.email || "");
+        if (!editMode) {
+          setName(data.username || "");
+          setEmail(data.email || "");
+        }
         setLoading(false);
       })
       .catch((err) => {
         setError(err.message);
         setLoading(false);
       });
-  }, [user]);
+  }, [user, editMode]);
 
   function mapSkillLevel(level) {
     const mapping = {
@@ -80,7 +82,7 @@ const ProfilePage = () => {
     setSaveError("");
     const token = localStorage.getItem("authToken");
     try {
-      const res = await fetch(`${VITE_DATABASE_URL}/user/preferences`, {
+      const res = await fetch(`${DATABASE_URL}/user/profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
