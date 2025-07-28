@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Request
 from sentence_transformers import SentenceTransformer
 import numpy as np
-
 app = FastAPI()
 model = SentenceTransformer('all-MiniLM-L6-v2')
 

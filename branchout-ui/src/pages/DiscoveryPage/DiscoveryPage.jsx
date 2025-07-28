@@ -48,6 +48,7 @@ const DiscoveryPage = () => {
         setRepos(response.data.recommendations || []);
       } catch (err) {
         setLoading(false);
+        console.log("Error:", err)
       }
       setLoading(false);
     };
@@ -65,6 +66,7 @@ const DiscoveryPage = () => {
       setRepos(response.data.recommendations || []);
     } catch (err) {
       setLoading(false);
+      console.log("Error:", err)
     }
     setLoading(false);
   };
@@ -115,6 +117,22 @@ const DiscoveryPage = () => {
     setSelectedRepo(null);
     setCurrentIndex(prev => (prev + 1) % repos.length);
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const currentRepo = repos[currentIndex];
+      if (!currentRepo) return;
+
+      if(e.key === "ArrowLeft" || e.key.toLowerCase() === "a"){
+        handleSwipeLeft(currentRepo);
+      } else if(e.key === "ArrowRight" || e.key.toLowerCase() === "d"){
+        handleSwipeRight(currentRepo);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return() => window.removeEventListener("keydown", handleKeyDown);
+  }, [repos, currentIndex]);
 
   return (
     <>

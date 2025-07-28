@@ -47,6 +47,9 @@ exports.getRecommendations = async (req, res) => {
       }
     });
 
+    // console.log("repos:", repos)
+
+
     if (!repos.length) {
       return res.json({ recommendations: [] });
     }
@@ -69,13 +72,13 @@ exports.getRecommendations = async (req, res) => {
         ...(repo.tags || [])
       ].join(' ')
     }));
-
+    // console.log("repo payload", repoPayload)
     // Send to FastAPI for on-the-fly embedding and scoring
     const fastapiRes = await axios.post('http://localhost:8000/recommend', {
       user_profile: userProfile,
       repos: repoPayload
     });
-
+    console.log("fast api", fastapiRes.data)
     const recommendedRepoIds = fastapiRes.data.recommendations || [];
 
     // After getting recommendedRepoIds
