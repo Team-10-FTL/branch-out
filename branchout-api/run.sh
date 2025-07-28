@@ -42,6 +42,6 @@ fi
 
 # ✅ Run FastAPI server from project root to keep imports valid
 echo "🚀 Starting FastAPI server..."
-fastapi dev ./recommender/sentence_transformer_predict.py
+fastapi run ./recommender/sentence_transformer_predict.py
 
 deactivate
