@@ -9,6 +9,8 @@ import "./RepoCard.css";
 import RepoCardModal from "../RepoCardModal/RepoCardModal";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   const [startX, setStartX] = useState(0);
@@ -113,14 +115,12 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   const handleLeftClick = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    console.log("Left click triggered");
     onSwipeLeft?.(repo);
   };
 
   const handleRightClick = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    console.log("Right click triggered");
     onSwipeRight?.(repo);
   };
 
@@ -289,7 +289,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             onClick={handleLeftClick}
             onMouseDown={(e) => e.stopPropagation()}
           >
-            <ArrowBackIosNewIcon fontSize="large" />
+            <CancelIcon fontSize="large" />
           </Box>
           <Box
             sx={{
@@ -311,7 +311,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             onClick={handleRightClick}
             onMouseDown={(e) => e.stopPropagation()}
           >
-            <ArrowForwardIosIcon fontSize="large" />
+            <CheckCircleIcon fontSize="large" />
           </Box>
         </>
       )}
