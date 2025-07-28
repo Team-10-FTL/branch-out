@@ -72,11 +72,13 @@ const DiscoveryPage = () => {
   };
 
   const handleSwipeLeft = (repo) => {
+    console.log("Left swipe triggered")
     setSelectedRepo(repo);
     setShowFeedbackModal(true);
   };
 
   const handleSwipeRight = async (repo) => {
+    console.log("Right swipe triggered")
     try {
       const token = await getToken();
       await axios.post(`${VITE_URL}/repo/swipe`, {
