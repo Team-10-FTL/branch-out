@@ -24,3 +24,15 @@ package-lock.json
 *.njsproj
 *.sln
 *.sw?
+
+# Python
+**/__pycache__/
+**/*.pyc
+branchout-api/venv/
+branchout-llm-service/venv/
+
+# Environment variables
+.env
+**/__pycache__/
+branchout-llm-service/venv/
+

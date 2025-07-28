@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import RepoCard from '../../components/RepoCard/RepoCard';
 import CritiqueChips from '../../components/Feedback/CritiqueChips';
+import Chat from '../../components/ChatBox/Chat.jsx';
 import { Box, CssBaseline, Modal, Fade } from '@mui/material';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import axios from "axios";
@@ -150,6 +151,7 @@ const DiscoveryPage = () => {
           minHeight: '100vh',
         }}
       >
+        <Chat></Chat>
         <h1>Discovery Page</h1>
         <p>Swipe left to dislike, right to like!</p>
         {loading && <p>Loading recommendations...</p>}
