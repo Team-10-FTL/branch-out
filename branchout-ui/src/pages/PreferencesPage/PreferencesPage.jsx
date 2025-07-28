@@ -66,7 +66,7 @@ function PreferencesPage() {
     };
     const token = localStorage.getItem("authToken");
     try {
-      const res = await fetch(`${VITE_URL}/user/preferences`, {
+      const res = await fetch(`${VITE_URL}/user/profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

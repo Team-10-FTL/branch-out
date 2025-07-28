@@ -244,7 +244,9 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
                 <div className="repo-card-rating">
                 </div>
               </div>
-
+              <Typography variant="h6">
+                {repo.summaryTitle}
+              </Typography>
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
                 <AutoFixHighIcon sx = {{width:"20px"}}/>
                 { repo.summary || "No summary available"}

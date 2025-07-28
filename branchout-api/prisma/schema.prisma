@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma"
   binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
@@ -9,74 +9,71 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-    id          Int      @id @default(autoincrement())
-    username    String   @unique
-    email       String   @unique
-    password    String?  // Make optional for Clerk users
-    clerkId     String?  @unique // Add this field
-    provider    Provider @default(local) // "local" or "clerk"
-    role        Role     @default(USER)
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    feedback FeedBack[]
-    savedRepos Repo[] @relation("savedRepos")
-    languages String[]
-    skill SkillLevel[]
-    preferenceTags  String[]
-
-
+model User {
+  id             Int          @id @default(autoincrement())
+  username       String       @unique
+  email          String       @unique
+  password       String?
+  clerkId        String?      @unique
+  provider       Provider     @default(local)
+  role           Role         @default(USER)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  languages      String[]
+  skill          SkillLevel[]
+  preferenceTags String[]
+  feedback       FeedBack[]
+  savedRepos     Repo[]       @relation("savedRepos")
 }
 
-enum SkillLevel{
-    FIRSTYEAR
-    SECONDYEAR
-    THIRDYEAR
-    FOURTHYEAR
+model Repo {
+  id           Int          @id @default(autoincrement())
+  owner        String
+  name         String
+  stars        Int
+  languages    String[]
+  tags         String[]
+  topics       String[]
+  summary      String?
+  description  String
+  repoLink     String
+  skill        SkillLevel[]
+  githubId     Int          @unique
+  summaryTitle String
+  feedBack     FeedBack[]
+  savedBy      User[]       @relation("savedRepos")
 }
 
-enum Provider{
-    local
-    clerk
+model FeedBack {
+  id             Int       @id @default(autoincrement())
+  userId         Int
+  repoId         Int
+  swipeDirection String
+  feedbackReason Critique?
+  repo           Repo      @relation(fields: [repoId], references: [id], onDelete: Cascade)
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-enum Role{
-    USER
-    ADMIN
+enum SkillLevel {
+  FIRSTYEAR
+  SECONDYEAR
+  THIRDYEAR
+  FOURTHYEAR
 }
 
-enum Critique{
-    NOTINTERESTED
-    MISLEADING
-    TOOCOMPLEX
-    TOOEASY
+enum Provider {
+  local
+  clerk
 }
 
-model Repo{
-    id Int @id @default(autoincrement())
-    owner String
-    name String
-    stars Int
-    languages String[]
-    tags String[]
-    topics String[]
-    skill SkillLevel[] // AI assigned level
-    summary String?
-    description String
-    savedBy User[] @relation("savedRepos")
-    githubId Int @unique
-    feedBack FeedBack[]
-    repoLink String
+enum Role {
+  USER
+  ADMIN
 }
 
-
-// Feedback will be a later sprint feature
-model FeedBack{
-    id Int @id @default(autoincrement())
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId Int
-    repo Repo @relation(fields: [repoId], references: [id], onDelete: Cascade)
-    repoId Int
-    swipeDirection String
-    feedbackReason Critique?
+enum Critique {
+  NOTINTERESTED
+  MISLEADING
+  TOOCOMPLEX
+  TOOEASY
 }

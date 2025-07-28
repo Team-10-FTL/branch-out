@@ -197,6 +197,9 @@ exports.updateProfile = async (req, res) => {
       data: {
         username: req.body.username,
         email: req.body.email,
+        languages: req.body.languages,
+        skill: req.body.skill,
+        preferenceTags: req.body.preferenceTags,
       },
     });
 
@@ -209,8 +212,10 @@ exports.updateProfile = async (req, res) => {
 
 
 exports.getPreferences = async (req, res) => {
+  console.log("🧪 getPreferences accessed by role:", req.user?.role);
   const userId = req.user?.userId || req.auth?.userId;
   try {
+    console.log("userId in getPreferences:", userId);
     const userPreferences = await prisma.user.findUnique({
       where: { id: userId },
       select: {
