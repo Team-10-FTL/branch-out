@@ -19,6 +19,8 @@ import {
   Toolbar,
   Button
 } from '@mui/material';
+import SettingsAccessibilityIcon from '@mui/icons-material/SettingsAccessibility';
+import InfoIcon from '@mui/icons-material/Info';
 import {
   Home as HomeIcon,
   Search as SearchIcon,
@@ -53,6 +55,7 @@ export default function SideBar() {
       const userData = localStorage.getItem('userData');
       return userData ? JSON.parse(userData) : null;
     } catch (e) {
+      console.log("ERROR", e)
       return null;
     }
   };
@@ -75,24 +78,46 @@ export default function SideBar() {
           backgroundColor: 'black',
           display: 'flex',
           flexDirection: 'column',
+           "&::after": {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: '4px', // thickness of the border
+            height: '100%',
+            background: 'linear-gradient(to left, rgba(197, 111, 31, 0.7), rgba(227, 71, 20, 0.2), transparent)',              }
         },
       }}
     >
       <Toolbar>
         {/* Logo */}
-        {!isCollapsed ? (
-           <Box sx={{ p: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <img src = {fullLogo} style={{width:"200px"}}></img>
-            </Box>
-          </Box>
-        ) : (
-          <Box sx={{ p: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <img src={miniLogo} style={{ width: "35px", paddingRight: "5px"}} />
-          </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', position: 'relative' }}>
+          {/* Full logo (visible only when not collapsed) */}
+          <img
+            src={fullLogo}
+            alt="full logo"
+            style={{
+              width: '200px',
+              opacity: isCollapsed ? 0 : 1,
+              transition: 'opacity 0.3s ease',
+              position: 'absolute',
+              pointerEvents: isCollapsed ? 'none' : 'auto',
+            }}
+          />
+
+          {/* Mini logo (visible only when collapsed) */}
+          <img
+            src={miniLogo}
+            alt="mini logo"
+            style={{
+              width: '35px',
+              opacity: isCollapsed ? 1 : 0,
+              transition: 'opacity 0.3s ease',
+              position: 'absolute',
+              pointerEvents: isCollapsed ? 'auto' : 'none',
+            }}
+          />
         </Box>
-        )} 
       </Toolbar>
       <Divider />
       {/* User Info */}
@@ -138,15 +163,15 @@ export default function SideBar() {
 
       <Divider />
 
-      {/* NAVIGATION Section */}
+      {/* FEATURES Section */}
       <Box sx={{ p: 1, flexGrow: 1 }}>
         {!isCollapsed && (
           <Typography variant="caption" sx={{ px: 2, color: 'text.secondary', fontWeight: 'bold' }}>
-            NAVIGATION
+            FEATURES
           </Typography>
         )}
         <List>
-          <ListItem disablePadding>
+          <ListItem disablePadding sx = {{mb:1}}>
             <ListItemButton
               href="/discovery"
               sx={{
@@ -174,7 +199,7 @@ export default function SideBar() {
               {!isCollapsed && <ListItemText primary="Discovery" />}
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
+          <ListItem disablePadding sx = {{mb:1}}>
             <ListItemButton
               href="/preferences"
               sx={{
@@ -195,17 +220,84 @@ export default function SideBar() {
                   },
                 },
               }}
-              
             >
               <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"2px", paddingRight:"5px"}}>
-                <SettingsIcon sx={{ color: 'white' }} />
+                <SettingsAccessibilityIcon sx={{ color: 'white' }} />
               </ListItemIcon>
               {!isCollapsed && <ListItemText primary="Preferences" />}
             </ListItemButton>
           </ListItem>
+          <ListItem disablePadding sx = {{mb:1}}>
+            <ListItemButton
+                component={Link}
+                to="/SavedRepos"
+              sx={{
+                paddingLeft: isCollapsed ? 2.5 : 5 ,
+                color: 'white',
+                justifyContent: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                transition: 'color 0.3s ease',
+                '& .MuiSvgIcon-root': {
+                  color: 'white', // Default icon color
+                  transition: 'color 0.3s ease',
+                  width: "20px"
+                },
+                '&:hover': {
+                  color: '#e34714', // Text hover color
+                  '& .MuiSvgIcon-root': {
+                    color: '#e34714', // Icon hover color
+                  },
+                },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingRight:"5px"}}>
+                <ChatIcon sx={{ color: 'white', marginLeft:"2px" }} />
+              </ListItemIcon>
+              {!isCollapsed && <ListItemText primary="Saved Repos" />}
+            </ListItemButton>
+          </ListItem>
+          <Divider sx ={{marginBottom:"10px"}}/>
+          {/* NAVIGATION Section */}
+        {!isCollapsed && (
+          <Typography 
+            variant="caption"
+            sx={{ px: 2, color: 'text.secondary', fontWeight: 'bold', mb:1}}>
+            NAVIGATION
+          </Typography>
+        )}
+          <ListItem disablePadding sx = {{mb:1}}>
+            <ListItemButton
+              href="/about"
+              sx={{
+                paddingLeft: isCollapsed ? 2.5 : 5 ,
+                color: 'white',
+                justifyContent: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                transition: 'color 0.3s ease',
+                paddingTop:"20px",
+              '& .MuiSvgIcon-root': {
+                color: 'white', // Default icon color
+                transition: 'color 0.3s ease',
+              },
+              '&:hover': {
+                color: '#e34714', // Text hover color
+                '& .MuiSvgIcon-root': {
+                  color: '#e34714', // Icon hover color
+                },
+              },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"5px", paddingRight:"5px" }}>
+                <InfoIcon sx={{ color: 'white' }} />
+              </ListItemIcon>
+                {!isCollapsed && <ListItemText primary="About" />}
+              </ListItemButton>
+            </ListItem>
           {/* Admin Dashboard - only show if user is admin */}
           {currentUser?.role === 'ADMIN' && (
-            <ListItem disablePadding>
+            <ListItem disablePadding sx = {{mb:1}}>
               <ListItemButton
                 href="/admin"
                 sx={{
@@ -234,47 +326,7 @@ export default function SideBar() {
               </ListItemButton>
             </ListItem>
           )}
-        </List>
-      </Box>
-
-      {/* FEATURES Section */}
-      <Box sx={{ p: 1 }}>
-        {!isCollapsed && (
-          <Typography variant="caption" sx={{ px: 2, color: 'text.secondary', fontWeight: 'bold' }}>
-            FEATURES
-          </Typography>
-        )}
-        <List>
-          <ListItem disablePadding>
-            <ListItemButton
-                component={Link}
-                to="/SavedRepos"
-              sx={{
-                paddingLeft: isCollapsed ? 2.5 : 5 ,
-                color: 'white',
-                justifyContent: 'center',
-                display: 'flex',
-                alignItems: 'center',
-                transition: 'color 0.3s ease',
-                '& .MuiSvgIcon-root': {
-                  color: 'white', // Default icon color
-                  transition: 'color 0.3s ease',
-                },
-                '&:hover': {
-                  color: '#e34714', // Text hover color
-                  '& .MuiSvgIcon-root': {
-                    color: '#e34714', // Icon hover color
-                  },
-                },
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingRight:"5px"}}>
-                <ChatIcon sx={{ color: 'white' }} />
-              </ListItemIcon>
-              {!isCollapsed && <ListItemText primary="Saved Repos" />}
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
+          <ListItem disablePadding sx = {{mb:1}}>
             <ListItemButton
               sx={{
                 paddingLeft: isCollapsed ? 2.5 : 5 ,
@@ -301,7 +353,7 @@ export default function SideBar() {
               {!isCollapsed && <ListItemText primary="History" />}
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
+          <ListItem disablePadding sx = {{mb:1}}>
             <ListItemButton
               sx={{
                 paddingLeft: isCollapsed ? 2.5 : 5 ,
@@ -331,46 +383,6 @@ export default function SideBar() {
           </ListItem>
         </List>
       </Box>
-
-      {/* Logout Button - Bottom Left
-      <Box sx={{ p: 2, mt: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        {isCollapsed ? (
-          <ListItemButton
-            onClick={handleLogout}
-            sx={{
-              color: 'white',
-              borderColor: 'rgba(255, 255, 255, 0.3)',
-              backgroundColor: 'transparent',
-              '&:hover': {
-                borderColor: 'rgba(255, 255, 255, 0.5)',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              },
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <LogoutIcon />
-          </ListItemButton>
-        ) : (
-          <Button
-            fullWidth
-            variant="outlined"
-            startIcon={<LogoutIcon />}
-            onClick={handleLogout}
-            sx={{
-              color: 'white',
-              borderColor: 'rgba(255, 255, 255, 0.3)',
-              '&:hover': {
-                borderColor: 'rgba(255, 255, 255, 0.5)',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              },
-            }}
-          >
-            Logout
-          </Button>
-        )}
-      </Box> */}
     </Drawer>
   );
 }

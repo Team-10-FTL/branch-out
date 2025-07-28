@@ -11,6 +11,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   const [startX, setStartX] = useState(0);
@@ -226,6 +227,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             </Typography> */}
               <div className="repo-card-labels">
                 <div className="repo-card-tags">
+                  <AutoFixHighIcon sx = {{width:"20px", paddingTop:"5px"}}/>
                   {repo.tags?.map((tag) => (
                     <Chip
                       size="small"  
@@ -244,9 +246,11 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
               </div>
 
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {repo.summary || "No summary available"}
+                <AutoFixHighIcon sx = {{width:"20px"}}/>
+                { repo.summary || "No summary available"}
               </Typography>
               <div className="repo-card-languages">
+                  <AutoFixHighIcon sx = {{width:"20px", paddingBottom:"5px"}}/>
                   {repo.languages?.map((language) => (
                     <Chip
                       size="small" 
