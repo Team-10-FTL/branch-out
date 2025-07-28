@@ -3,17 +3,21 @@ from sentence_transformers import SentenceTransformer
 import numpy as np
 app = FastAPI()
 model = SentenceTransformer('all-MiniLM-L6-v2')
+
 @app.post("/recommend")
 async def recommend(request: Request):
     data = await request.json()
     user_profile = data.get('user_profile', '')
     repos = data.get('repos', [])
+
     if not user_profile or not repos:
         return {"recommendations": []}
+
     user_emb = model.encode(user_profile)
     repo_texts = [repo['text'] for repo in repos]
     repo_ids = [repo['id'] for repo in repos]
     repo_embs = model.encode(repo_texts)
+
     scores = np.dot(repo_embs, user_emb) / (
         np.linalg.norm(repo_embs, axis=1) * np.linalg.norm(user_emb) + 1e-8
     )
