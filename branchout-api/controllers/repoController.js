@@ -36,7 +36,7 @@ exports.getAllRepos = async (requestAnimationFrame, res) => {
 exports.getByID = async (req, res) => {
     try {
         const id = Number(req.params.id);
-        const repo = await prisma.repo.findUnique({where: {id},
+        const repo = await prisma.Repo.findUnique({where: {id},
         select: {
             id: true, 
             owner: true,
