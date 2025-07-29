@@ -1,7 +1,7 @@
 const prisma = require("../models/prismaClient");
 const axios = require("axios");
 
-
+const FASTAPI_URL = process.env.FASTAPI_URL || "http://localhost:8000";
 exports.getRecommendations = async (req, res) => {
   try {
     const userId = req.user?.userId || req.auth?.userId || req.params.userId;
@@ -74,7 +74,7 @@ exports.getRecommendations = async (req, res) => {
     }));
     // console.log("repo payload", repoPayload)
     // Send to FastAPI for on-the-fly embedding and scoring
-    const fastapiRes = await axios.post('http://localhost:8000/recommend', {
+    const fastapiRes = await axios.post(`${process.env.FASTAPI_URL}/recommend`, {
       user_profile: userProfile,
       repos: repoPayload
     });
