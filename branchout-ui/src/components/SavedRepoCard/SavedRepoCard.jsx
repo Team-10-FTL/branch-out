@@ -37,7 +37,7 @@ return (
         <CardMedia
             component="img"
             height="140"
-                    src={`src/assets/LangImages/${repo.languages[0]}.png`}
+                    src={`public/LangImages/${repo.languages[0]}.png`}
                     alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
                     onError={(e) => {
                         e.target.onerror = null; // Prevents infinite loop if fallback also fails
