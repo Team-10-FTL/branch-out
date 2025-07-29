@@ -46,6 +46,7 @@ async function analyzeRepoWithGemini(repo, AVAILABLE_TAGS, DIFFICULTY_ENUM) {
 
   const prompt = `
   You are a computer science professor helping university students find open source GitHub repositories to work on. Please analyze the following repository and respond in a **strict JSON format** with the following fields:
+  - summary title (25 characters or less)
   - summary (a 100-150 word project description)
   - tags (an array of 1-5 tags selected from the provided list)
   - difficulty (one of: Beginner, Intermediate, Advanced, Professional)
@@ -72,6 +73,7 @@ async function analyzeRepoWithGemini(repo, AVAILABLE_TAGS, DIFFICULTY_ENUM) {
         responseSchema: {
           type: Type.OBJECT,
           properties: {
+            summaryTitle: {type: Type.STRING},
             summary: { type: Type.STRING },
             tags: {
               type: Type.ARRAY,
@@ -104,9 +106,10 @@ async function analyzeRepoWithGemini(repo, AVAILABLE_TAGS, DIFFICULTY_ENUM) {
       difficultyFromDB = DIFFICULTY_ENUM.Beginner;  // can decide null here instead if we want
   }
 
-  // return regular repo data + { summary, tags, difficulty };
+  // return regular repo data + { summary title, summary, tags, difficulty };
   return {
     ...parsedRepo, // includes name, owner, stars, repoLink, license, description, topics, readme, created_at, github_id
+    summaryTitle: aiJSON.summaryTitle,
     summary: aiJSON.summary,
     tags: aiJSON.tags,
     skill: difficultyFromDB ? [difficultyFromDB] : [],

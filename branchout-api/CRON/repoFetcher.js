@@ -68,6 +68,7 @@ const repoFetcher = async () => {
                     tags: geminiOutput.tags || [],
                     topics: geminiOutput.topics || [],
                     skill: geminiOutput.skill || [],
+                    summaryTitle: geminiOutput.summaryTitle || "",
                     summary: geminiOutput.summary || "",
                     description: geminiOutput.description || "",
                     githubId: geminiOutput.githubId,
