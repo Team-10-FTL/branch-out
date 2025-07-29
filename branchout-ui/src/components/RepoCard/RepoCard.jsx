@@ -171,7 +171,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
               {/* Background Image */}
               <CardMedia
                 component="img"
-                src={`public/LangImages/${repo.languages[0]}.png`}
+                src={`LangImages/${repo.languages[0]}.png`}
                 alt={repo.name ? `Image of ${repo.name}` : "Repository image"}
                 onError={(e) => {
                   e.target.onerror = null; // Prevents infinite loop if fallback also fails
