@@ -83,10 +83,12 @@ function PreferencesPage() {
   };
 
   return (
-    <Box sx={{ position: "relative", maxWidth: 500, mx: "auto", mt: 6 }}>
+    <Box sx={{ maxWidth: 1200, mx: "auto", mt: 8, px:2 }}>
       <Paper
         className="preferences-container"
         sx={{
+          width: "100%",
+          maxWidth:"100",
           background: "#111",
           color: "#fff",
           borderRadius: 4,
@@ -100,12 +102,12 @@ function PreferencesPage() {
           },
         }}
       >
-        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, letterSpacing: 1 }}>
-          Preferences Page
+        <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, letterSpacing: 1, fontFamily: "Inter, sans-serif"}}>
+          Preferences
         </Typography>
         <Divider className="preferences-divider" sx={{ borderColor: "#222", mb: 2 }} />
 
-        <Typography variant="h6" sx={{ color: "#0ff", mt: 2 }}>
+        <Typography variant="h6" sx={{ color: "#0ff", mt: 2, fontFamily: "Inter, sans-serif" }}>
           Skill Level <ToolTip className="ToolTip" information={"Set your school level - think of 1st as freshman and 4th as senior! This will correlate to the level repositories you get in your feed."} />
         </Typography>
           <Stack
@@ -133,6 +135,9 @@ function PreferencesPage() {
                 marginRight: 1,
                 marginBottom: 1,
                 borderRadius: "10px", // <-- Change this value as you like
+                width: "100px",
+                justifyContent:"center",
+                textAlign:"center",
               }}
             />
           ))}
@@ -140,7 +145,7 @@ function PreferencesPage() {
 
         <Divider sx={{ borderColor: "#222", my: 2 }} />
 
-        <Typography variant="h6" sx={{ color: "#0ff", mt: 2 }}>
+        <Typography variant="h6" sx={{ color: "#0ff", mt: 2, fontFamily: "Inter, sans-serif" }}>
           Languages <ToolTip className="ToolTip" information={"Set any languages you know (or want to know) here"} />
         </Typography>
             <Stack
@@ -168,6 +173,9 @@ function PreferencesPage() {
                 marginRight: 1,
                 marginBottom: 1,
                 borderRadius: "10px", // <-- Change this value as you like
+                width: "100px",
+                justifyContent:"center",
+                textAlign:"center",
               }}
             />
           ))}
@@ -175,7 +183,7 @@ function PreferencesPage() {
 
         <Divider sx={{ borderColor: "#222", my: 2 }} />
 
-        <Typography variant="h6" sx={{ color: "#0ff", mt: 2 }}>
+        <Typography variant="h6" sx={{ color: "#0ff", mt: 2, fontFamily: "Inter, sans-serif" }}>
           Tags <ToolTip className="ToolTip" information={"Set any tags of topics that you know or want to know here"} />
         </Typography>
           <Stack
@@ -203,6 +211,9 @@ function PreferencesPage() {
                 marginRight: 1,
                 marginBottom: 1,
                 borderRadius: "10px", // <-- Change this value as you like
+                width: "135px",
+                justifyContent:"center",
+                textAlign:"center",
               }}
             />
           ))}

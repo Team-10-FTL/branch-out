@@ -125,6 +125,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
     onSwipeRight?.(repo);
   };
 
+
   return (
     <Box
       sx={{
@@ -141,6 +142,9 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         sx={{
           maxWidth: 400,
           borderRadius: 3, 
+          height: "800px",
+          display:"flex",
+          flexDirection:"column",
           boxShadow: 6,   
           overflow: "hidden",
           transition: isDragging
@@ -165,9 +169,8 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         onMouseLeave={handleMouseUp}
         className="repo-card"
       >
-        <CardActionArea>
-            <Card sx={{ borderRadius: 3, overflow: "hidden", backgroundColor: (theme) => theme.palette.background.default, boxShadow: 3}}>
-            <Box sx={{ position: "relative", height: 280, borderRadius: 2, overflow: "hidden" }}>
+        <CardActionArea sx = {{flexGrow:1, display:"flex", flexDirection:"column", justifyContent:"space-between", overflow:"hidden"}}>
+            <Box sx={{ position: "relative", width: "100%",height: 280, overflow: "hidden" }}>
               {/* Background Image */}
               <CardMedia
                 component="img"
@@ -221,13 +224,13 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
               </Box>
             </Box>
 
-            <CardContent  sx={{ padding: 2 }}>
+            <CardContent  sx={{ padding: 2}}>
             {/* <Typography gutterBottom variant="h5" sx={{ fontWeight: 700, letterSpacing: 1 }}>
             {repo.name}
             </Typography> */}
               <div className="repo-card-labels">
                 <div className="repo-card-tags">
-                  <AutoFixHighIcon sx = {{width:"20px", paddingTop:"5px"}}/>
+                  <AutoFixHighIcon sx = {{width:"20px", paddingTop:"5px", maxHeight: 'calc(600px - 280px)' }}/>
                   {repo.tags?.map((tag) => (
                     <Chip
                       size="small"  
@@ -268,7 +271,6 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
                   ))}
                 </div>
             </CardContent>
-          </Card>
         </CardActionArea>
       </Card>
 
