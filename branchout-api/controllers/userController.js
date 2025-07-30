@@ -4,12 +4,23 @@ const axios = require("axios");
 const FASTAPI_URL = process.env.FASTAPI_URL || "http://localhost:8000";
 exports.getRecommendations = async (req, res) => {
   try {
-    const userId = req.user?.userId || req.auth?.userId || req.params.userId;
+    let userId = req.user?.userId || req.auth?.userId || req.params.userId || req.query.userId;
     if (!userId) {
       return res.status(400).json({ recommendations: [], message: "User ID missing" });
     }
 
     // Fetch user and their preferences
+    if (userId.startsWith("user_")) {
+      const userObj = await prisma.user.findUnique({
+        where: { clerkId: userId },
+        select: { id: true }
+      });
+      if (!userObj) {
+        console.log("User not found for ID:", userObj);
+        return res.status(404).json({ recommendations: [], message: "User not found" });
+      }
+      userId = userObj.id; // Use the actual numeric ID for further queries
+    }
     const user = await prisma.user.findUnique({
       where: { id: Number(userId) },
       select: {
