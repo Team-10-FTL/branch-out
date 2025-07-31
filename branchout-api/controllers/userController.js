@@ -153,7 +153,8 @@ exports.getUserProfile = async (req, res) => {
         languages: true,
         skill: true,
         preferenceTags: true,
-        savedRepos: true
+        savedRepos: true,
+        hasCompletedOnboarding: true,
       },
     });
 
@@ -203,7 +204,7 @@ exports.updateProfile = async (req, res) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const updatedUser = await prisma.user.update({
+    const updatedUser = await prisma.User.update({
       where: { id: userId },
       data: {
         username: req.body.username,
@@ -211,6 +212,7 @@ exports.updateProfile = async (req, res) => {
         languages: req.body.languages,
         skill: req.body.skill,
         preferenceTags: req.body.preferenceTags,
+        hasCompletedOnboarding: req.body.hasCompletedOnboarding || false,
       },
     });
 
