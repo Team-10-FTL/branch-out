@@ -1,6 +1,7 @@
 import os
 import asyncio
 from datetime import datetime
+from dotenv import load_dotenv
 import json
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,6 +10,7 @@ from mcp.client.stdio import stdio_client
 from mcp import StdioServerParameters
 from google import genai
 
+load_dotenv()
 app = FastAPI()
 
 # Enable CORS for frontend requests
@@ -38,7 +40,7 @@ server_params = StdioServerParameters(
 )
 
 # gemini client
-GEMINI_API_KEY="AIzaSyAXQnUUSmvcUt1LI4HOKioh-LoA2MsHjxc"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 #   define form of communication frontend -> here
