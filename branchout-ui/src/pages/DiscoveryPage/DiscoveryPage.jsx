@@ -121,6 +121,61 @@ const DiscoveryPage = () => {
     setCurrentIndex(prev => (prev + 1) % repos.length);
   };
 
+  const getCardStyles = (styleClass) => {
+        const baseStyles = {
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+          pointerEvents: 'none',
+        };
+
+        switch (styleClass) {
+          case 'active':
+            return {
+              ...baseStyles,
+              transform: 'translate(-50%, -50%) scale(1)',
+              opacity: 1,
+              zIndex: 10,
+              pointerEvents: 'auto',
+            };
+          case 'left':
+            return {
+              ...baseStyles,
+              transform: {
+                xs: 'translate(-100%, -50%) scale(0.5)',
+                sm: 'translate(-110%, -50%) scale(0.52)',
+                md: 'translate(-130%, -50%) scale(0.55)',
+              },
+              opacity: 0.3,
+              filter: 'blur(1px)',
+              zIndex: 5,
+            };
+          case 'right':
+            return {
+              ...baseStyles,
+              transform: {
+                xs: 'translate(-20%, -50%) scale(0.5)',
+                sm: 'translate(-10%, -50%) scale(0.52)',
+                md: 'translate(30%, -50%) scale(0.55)',
+              },
+              opacity: 0.3,
+              filter: 'blur(1px)',
+              zIndex: 5,
+            };
+          case 'far':
+            return {
+              ...baseStyles,
+              transform: 'translate(-50%, -50%) scale(0.5)',
+              opacity: 0,
+              zIndex: 1,
+              visibility: 'hidden',
+            };
+          default:
+            return baseStyles;
+        }
+      };
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       const currentRepo = repos[currentIndex];
@@ -140,6 +195,9 @@ const DiscoveryPage = () => {
   return (
     <>
       <CssBaseline />
+      <h1>Discovery</h1>
+        <p>Swipe left to dislike, right to like!</p>
+        {loading && <p>Loading recommendations...</p>}
       <Box
         component="main"
         sx={{
@@ -152,17 +210,47 @@ const DiscoveryPage = () => {
         }}
       >
         <Chat></Chat>
-        <h1>Discovery Page</h1>
-        <p>Swipe left to dislike, right to like!</p>
-        {loading && <p>Loading recommendations...</p>}
         {!loading && repos.length > 0 && (
-          <RepoCard
-            repo={repos[currentIndex]}
-            onSwipeLeft={handleSwipeLeft}
-            onSwipeRight={handleSwipeRight}
-            className="repo-card"
-          />
+          <Box 
+            className = "carousel-container"
+            sx={{ 
+            position: 'relative', 
+            width: '100%', 
+            maxWidth:"700px", 
+            mt:2,
+            display:"flex",
+            justifyContent: 'center',
+            alignItems:"center",
+            }}>
+            {repos.map((repo, i) => {
+            let styleClass = 'far';
+            if (i === currentIndex) {
+              styleClass = 'active';
+            } else if (i === currentIndex - 1) {
+              styleClass = 'left';
+            } else if (i === currentIndex + 1) {
+              styleClass = 'right';
+            }
+
+            if (styleClass === 'far') return null;
+
+
+              return (
+                <Box
+                  key={repo.id}
+                  sx={getCardStyles(styleClass)}
+                >
+                  <RepoCard
+                    repo={repo}
+                    onSwipeLeft={handleSwipeLeft}
+                    onSwipeRight={handleSwipeRight}
+                  />
+                </Box>
+              );
+            })}
+          </Box>
         )}
+
         {!loading && repos.length === 0 && (
           <p>No recommendations available.</p>
         )}

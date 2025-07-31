@@ -34,7 +34,7 @@ function AboutPage() {
         <hr className = "aboutLine"/>
         <div className = "meetFounders">meet the founders</div>
         <div className = "founderContent">
-            <a href = "https://www.linkedin.com/in/jackiejurado">
+            <a href = "https://www.linkedin.com/in/jackiejurado" target = "_blank">
             <div className = "jackie">
                 <img src = {jackie} alt = "Jackie's Portrait"></img>
                 <h2>Jaqueline Jurado</h2>
@@ -42,14 +42,14 @@ function AboutPage() {
             </div>
             </a>
             <div className = "nathan">
-                <a href = "https://www.linkedin.com/in/nathan-kenmognie-5541a4291">
+                <a href = "https://www.linkedin.com/in/nathan-kenmognie-5541a4291" target = "_blank">
                 <img src = {nathan} alt = "Nathan's Portrait"></img>
                 <h2>Nathan Kenmognie</h2>
                 <p>CS @ UT San Antonio</p>
                  </a>
             </div>
             <div className = "taliyah">
-                <a href = "https://www.linkedin.com/in/taliyah-harvey">
+                <a href = "https://www.linkedin.com/in/taliyah-harvey" target = "_blank">
                 <img src = {taliyah} alt = "Taliyah's Portrait"></img>
                 <h2>Taliyah Harvey</h2>
                 <p>CS @ USC</p>

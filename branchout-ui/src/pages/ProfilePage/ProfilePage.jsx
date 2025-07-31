@@ -294,6 +294,9 @@ const ProfilePage = () => {
                     fontWeight: 500,
                     background: "transparent",
                     borderRadius: "10px", // <-- Change this value as you like
+                    width: "100px",
+                    justifyContent:"center",
+                    textAlign:"center",
                   }}
                 />
               ))
@@ -323,6 +326,9 @@ const ProfilePage = () => {
                     fontWeight: 500,
                     background: "transparent",
                     borderRadius: "10px", // <-- Change this value as you like
+                    width: "100px",
+                    justifyContent:"center",
+                    textAlign:"center",
                   }}
                 />
               ))
@@ -355,6 +361,9 @@ const ProfilePage = () => {
                     fontWeight: 500,
                     background: "transparent",
                     borderRadius: "10px", // <-- Change this value as you like
+                    width: "135px",
+                    justifyContent:"center",
+                    textAlign:"center",
                   }}
                 />
               ))

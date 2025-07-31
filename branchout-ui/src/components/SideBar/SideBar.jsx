@@ -37,7 +37,7 @@ import {
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-const drawerWidth = 270;
+const drawerWidth = 180;
 
 export default function SideBar() {
   const [submenuOpen, setSubmenuOpen] = useState(false);
@@ -97,7 +97,7 @@ export default function SideBar() {
             src={fullLogo}
             alt="full logo"
             style={{
-              width: '200px',
+              width: '150px',
               opacity: isCollapsed ? 0 : 1,
               transition: 'opacity 0.3s ease',
               position: 'absolute',
@@ -110,7 +110,7 @@ export default function SideBar() {
             src={miniLogo}
             alt="mini logo"
             style={{
-              width: '35px',
+              width: '30px',
               opacity: isCollapsed ? 1 : 0,
               transition: 'opacity 0.3s ease',
               position: 'absolute',
@@ -124,7 +124,7 @@ export default function SideBar() {
       <Box
         sx={{
           p: 2,
-          paddingLeft: isCollapsed ? 2 : 5, 
+          paddingLeft: isCollapsed ? 2.25 : 1.5, 
           color: 'white',
           cursor: currentUser ? 'pointer' : 'not-allowed',
           display: 'flex',
@@ -165,17 +165,17 @@ export default function SideBar() {
 
       {/* FEATURES Section */}
       <Box sx={{ p: 1, flexGrow: 1 }}>
-        {!isCollapsed && (
+        {/* {!isCollapsed && (
           <Typography variant="caption" sx={{ px: 2, color: 'text.secondary', fontWeight: 'bold' }}>
             FEATURES
           </Typography>
-        )}
+        )} */}
         <List>
-          <ListItem disablePadding sx = {{mb:1}}>
+          <ListItem disablePadding>
             <ListItemButton
               href="/discovery"
               sx={{
-                paddingLeft: isCollapsed ? 2.5 : 5 ,
+                paddingLeft: isCollapsed ? 2.25 : 1.5 ,
                 color: 'white',
                 justifyContent: 'center',
                 display: 'flex',
@@ -199,11 +199,11 @@ export default function SideBar() {
               {!isCollapsed && <ListItemText primary="Discovery" />}
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding sx = {{mb:1}}>
+          <ListItem disablePadding>
             <ListItemButton
               href="/preferences"
               sx={{
-                paddingLeft: isCollapsed ? 2.5 : 5,
+                paddingLeft: isCollapsed ? 2.25 : 1.5,
                 color: 'white',
                 justifyContent: 'center',
                 display: 'flex',
@@ -227,12 +227,12 @@ export default function SideBar() {
               {!isCollapsed && <ListItemText primary="Preferences" />}
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding sx = {{mb:1}}>
+          <ListItem disablePadding>
             <ListItemButton
                 component={Link}
                 to="/SavedRepos"
               sx={{
-                paddingLeft: isCollapsed ? 2.5 : 5 ,
+                paddingLeft: isCollapsed ? 2.25 : 1.5 ,
                 color: 'white',
                 justifyContent: 'center',
                 display: 'flex',
@@ -257,20 +257,20 @@ export default function SideBar() {
               {!isCollapsed && <ListItemText primary="Saved Repos" />}
             </ListItemButton>
           </ListItem>
-          <Divider sx ={{marginBottom:"10px"}}/>
+          <Divider sx ={{marginBottom:1, marginTop:2}}/>
           {/* NAVIGATION Section */}
-        {!isCollapsed && (
+        {/* {!isCollapsed && (
           <Typography 
             variant="caption"
             sx={{ px: 2, color: 'text.secondary', fontWeight: 'bold', mb:1}}>
             NAVIGATION
           </Typography>
-        )}
-          <ListItem disablePadding sx = {{mb:1}}>
+        )} */}
+          <ListItem disablePadding>
             <ListItemButton
               href="/about"
               sx={{
-                paddingLeft: isCollapsed ? 2.5 : 5 ,
+                paddingLeft: isCollapsed ? 2.25 : 1.5,
                 color: 'white',
                 justifyContent: 'center',
                 display: 'flex',
@@ -297,11 +297,11 @@ export default function SideBar() {
             </ListItem>
           {/* Admin Dashboard - only show if user is admin */}
           {currentUser?.role === 'ADMIN' && (
-            <ListItem disablePadding sx = {{mb:1}}>
+            <ListItem disablePadding>
               <ListItemButton
                 href="/admin"
                 sx={{
-                  paddingLeft: isCollapsed ? 2.5 : 5 ,
+                  paddingLeft: isCollapsed ? 2.25 : 1.5 ,
                   color: 'white',
                   justifyContent: 'center',
                   display: 'flex',
@@ -326,10 +326,10 @@ export default function SideBar() {
               </ListItemButton>
             </ListItem>
           )}
-          <ListItem disablePadding sx = {{mb:1}}>
+          <ListItem disablePadding>
             <ListItemButton
               sx={{
-                paddingLeft: isCollapsed ? 2.5 : 5 ,
+                paddingLeft: isCollapsed ? 2.25 : 1.5 ,
                 color: 'white',
                 justifyContent: 'center',
                 display: 'flex',
@@ -353,10 +353,10 @@ export default function SideBar() {
               {!isCollapsed && <ListItemText primary="History" />}
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding sx = {{mb:1}}>
+          <ListItem disablePadding>
             <ListItemButton
               sx={{
-                paddingLeft: isCollapsed ? 2.5 : 5 ,
+                paddingLeft: isCollapsed ? 2.25 : 1.5 ,
                 color: 'white',
                 justifyContent: 'center',
                 display: 'flex',
