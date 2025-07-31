@@ -18,6 +18,7 @@ import SavedReposPage from "../../pages/SavedReposPage/SavedReposPage"; // Fixed
 import PageNotFound from "../../pages/PageNotFoundPage/PageNotFoundPage.jsx";
 import SettingsPage from "../../pages/Settings/SettingsPage.jsx"
 import AboutPage from "../../pages/AboutPage/AboutPage.jsx"
+import HomePage from "../../pages/HomePage/HomePage.jsx"
 
 // const drawerWidth = 270;
 
@@ -76,21 +77,21 @@ function AppContent() {
           }   
         />
         <Route 
+          path="/home" 
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <HomePage />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }   
+        />
+        <Route 
           path="/preferences" 
           element={
             <ProtectedRoute>
               <ProtectedLayout>
                 <PreferencesPage />
-              </ProtectedLayout>
-            </ProtectedRoute>
-          } 
-        />
-         <Route 
-          path="/settings" 
-          element={
-            <ProtectedRoute>
-              <ProtectedLayout>
-                <SettingsPage />
               </ProtectedLayout>
             </ProtectedRoute>
           } 
@@ -128,7 +129,7 @@ function AppContent() {
           } 
         />
         <Route 
-          path="/SavedRepos" 
+          path="/savedrepos" 
           element={
             <ProtectedRoute>
               <ProtectedLayout>

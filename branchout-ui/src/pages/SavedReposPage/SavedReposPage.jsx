@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import RepoCard from '../../components/RepoCard/RepoCard';
 import SavedRepoCard from '../../components/SavedRepoCard/SavedRepoCard';
 import { useAuth } from '../../components/ProtectedRoute/ProtectedRoute.jsx';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
 function SavedReposPage() {
   const { user, isLoading, isAuthenticated } = useAuth();
@@ -61,7 +62,7 @@ function SavedReposPage() {
   return (
     <div className="saved-repos-page">
       <h1>Saved Repositories</h1>
-      <div className="repo-list">
+      <div className="repo-list" >
         {repos.map((repo) => (
           <SavedRepoCard key={repo.id} repo={repo} />
         ))}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useClerk } from "@clerk/clerk-react";
 import EditIcon from "@mui/icons-material/Edit";
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Paper,
@@ -14,11 +15,28 @@ import {
   Button,
   Avatar,
   ListItemIcon,
+  ListItemButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from "@mui/material";
+import { Logout as LogoutIcon} from "@mui/icons-material";
+
 import "./ProfilePage.css"; 
 
 const ProfilePage = () => {
-  const { user: clerkUser } = useUser();
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [saveError, setSaveError] = useState("");
+
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
   const localUser = (() => {
     try {
       const userData = localStorage.getItem("userData");
@@ -27,16 +45,13 @@ const ProfilePage = () => {
       return null;
     }
   })();
+
+  const { user: clerkUser } = useUser();
+  const { signOut } = useClerk();
+  const navigate = useNavigate();
   const user = clerkUser || localUser;
   const DATABASE_URL = import.meta.env.VITE_DATABASE_URL;
 
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [editMode, setEditMode] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [saveError, setSaveError] = useState("");
 
   useEffect(() => {
     if (!user) {
@@ -67,6 +82,26 @@ const ProfilePage = () => {
         setLoading(false);
       });
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      // Sign out from Clerk if using OAuth
+      if (clerkUser) {
+        await signOut();
+      }      
+
+      // Clear local storage
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userData');
+      
+      // Redirect to login
+      navigate('/login');
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Force redirect even if there's an error
+      navigate('/login');
+    }
+  };
 
   function mapSkillLevel(level) {
     const mapping = {
@@ -176,7 +211,7 @@ const ProfilePage = () => {
 
         {/* Editable Name & Email Section */}
         <Box className="profile-edit-section" sx={{ mb: 3 }}>
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", }}>
             {editMode ? (
               <>
                 <TextField
@@ -221,7 +256,7 @@ const ProfilePage = () => {
             ) : (
               <>
                 <Typography variant="body1" className="profile-section" sx={{ color: "#fff" }}>
-                  <strong style = {{}}>Name:</strong> {display.username || display.firstName || display.email || "User"}
+                  <strong style = {{}}>Username:</strong> {display.username || display.firstName || display.email || "User"}
                 </Typography>
                 <Typography variant="body1" className="profile-section" sx={{ color: "#fff" }}>
                   <strong>Email:</strong> {display.email || "N/A"}
@@ -369,6 +404,61 @@ const ProfilePage = () => {
               ))
             : <Chip label="None" color="default" variant="outlined" sx={{ color: "#fff", border: "1.5px solid #E83F25", background: "transparent" }} />}
         </Stack>
+        <Box sx={{ p: 2, mt: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <ListItemButton className = "settingsButton"
+            onClick={handleOpenModal}
+            sx={{
+              color: 'white',
+              // borderColor: 'rgba(255, 255, 255, 0.3)',
+              backgroundColor: '#e37106',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              maxWidth: "200px",
+              borderRadius: "7px"
+            , '&:hover': {
+              backgroundColor: "#e34714",
+              color: "black"
+            }}}
+          > Logout  
+            <LogoutIcon />
+          </ListItemButton>
+      </Box>
+       {/* Logout Confirmation Modal */}
+      <Dialog
+        open={openModal}
+        onClose={handleCloseModal}
+        PaperProps={{
+          sx: {
+            backgroundColor: '#1e1e1e',
+            color: 'white',
+            borderRadius: 3,
+            p: 3,
+            minWidth: 300,
+          },
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 'bold', fontSize: '1.2rem', pb: 0, textAlign: "center", marginBottom: "15px" }}>
+          Confirm Logout
+        </DialogTitle>
+        <DialogContent sx={{ pt: 1, pb: 2 }}>
+          Are you sure you want to log out?
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center' }}>
+          <Button onClick={handleCloseModal} variant = "text" sx={{ color: 'white', backgroundColor: '#e34714', '&:hover': {
+            backgroundColor: '#e37106', color:"black",
+          },}}>
+            Cancel
+          </Button>
+          <Button onClick={handleLogout} sx={{ backgroundColor: 'transparent',
+          color: 'white',
+          '&:hover': {
+            backgroundColor: 'transparent', color:"#4c1255",
+          }}}>
+            Yes, Logout
+          </Button>
+        </DialogActions>
+      </Dialog>
       </Paper>
     </Box>
   );

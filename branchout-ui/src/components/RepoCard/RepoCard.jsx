@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
-import { Box, Chip } from "@mui/material";
+import { Box, Chip, useTheme, useMediaQuery } from "@mui/material";
 import "./RepoCard.css";
 import RepoCardModal from "../RepoCardModal/RepoCardModal";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -20,6 +20,10 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   const [isHovered, setIsHovered] = useState(false);
   const [open, setOpen] = useState(false);
   const cardRef = useRef(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
+
   const handleClose = () => setOpen(false);
   const handleCardClick = () => {
     setOpen(true);
@@ -47,7 +51,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   const handleTouchEnd = () => {
     if (!isDragging) return;
 
-    const threshold = 100;
+    const threshold = isMobile ? 80 : 100;
 
     if (Math.abs(currentX) > threshold) {
       if (currentX > 0) {
@@ -89,7 +93,7 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
   };
 
   const handleMouseUp = () => {
-    if (!isDragging) return;
+    if (!isDragging || isMobile) return;
 
     const threshold = 100;
 
@@ -133,24 +137,48 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         userSelect: "none",
         cursor: isDragging ? "grabbing" : "grab",
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => !isMobile && setIsHovered(true)}
+      onMouseLeave={() => !isMobile && setIsHovered(false)}
     >
       <RepoCardModal open={open} handleClose={handleClose} repo={repo} />
       <Card
         ref={cardRef}
         sx={{
-          maxWidth: 400,
+          maxWidth: {
+            xs:"90vw",
+            sm:"80vw",
+            md:400
+          },
+          width:{
+            xs:"100%",
+            md:400
+          },
           borderRadius: 3, 
-          height: "800px",
+          height: {
+            xs:"70vh",
+            sm:"75vh",
+            md:"800px"
+          },
+          height:{
+            xs:"70vh",
+            sm:"75vh",
+            md:"800px"
+          },
+          minHeight:{
+            xs:500,
+            md:800
+          },
           display:"flex",
-          flexDirection:"column",
-          boxShadow: 6,   
+          flexDirection:"column",  
           overflow: "hidden",
+          boxShadow: `
+            inset 0 0 1px rgba(9, 1, 1, 0.70),
+            0 0 10px 3px rgba(98, 90, 100, 0.46)
+          `,
           transition: isDragging
             ? "none"
             : "transform 0.3s cubic-bezier(.4,2,.6,1), opacity 0.3s",
-          touchAction: "none",
+          touchAction: "pan-y",
           background: "#111", 
           color: "#fff",
           "&:hover": {
@@ -169,8 +197,9 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
         onMouseLeave={handleMouseUp}
         className="repo-card"
       >
-        <CardActionArea sx = {{flexGrow:1, display:"flex", flexDirection:"column", justifyContent:"space-between", overflow:"hidden"}}>
-            <Box sx={{ position: "relative", width: "100%",height: 280, overflow: "hidden" }}>
+        <CardActionArea sx = {{flexGrow:1, display:"flex", flexDirection:"column", overflow:"hidden"}}>
+            <Box sx={{ position: "relative", width: "100%",height: {xs:200, sm:240, md:280}, overflow: "hidden" }}               
+            onClick={handleCardClick}>
               {/* Background Image */}
               <CardMedia
                 component="img"
@@ -187,7 +216,6 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
                   transition: "transform 0.2s",
                   cursor: "pointer",
                 }}
-                onClick={handleCardClick}
               />
 
               {/* Gradient Overlay */}
@@ -208,38 +236,51 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
               <Box
                 sx={{
                   position: "absolute",
-                  bottom: 12,
-                  left: 16,
-                  right: 16,
+                  bottom: {
+                    xs:8,
+                    md:12
+                  },
+                  left: {
+                    xs:12,
+                    md:16
+                  },
+                  right: {
+                    xs:12,
+                    md:16
+                  },
                   color: "#fff",
                   zIndex: 2,
                 }}
               >
-                <Typography variant="h5" sx={{ fontWeight: 700, letterSpacing: 1 }}>
+                <Typography variant= {isSmall ? "h6": "h5"} sx={{ fontWeight: 700, letterSpacing: 1, fontSize:{xs:"1.1rem", sm:"1.3rem", md:"1.5rem"}}}>
                   {repo.name}
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#ddd", mt: 0.5 }}>
+                <Typography variant="body2" sx={{ color: "#ddd", mt: 0.5, fontSize:{xs:".8rem", md:".875rem"} }}>
                 ☆ {repo.stars || "N/A"}
                 </Typography>
               </Box>
             </Box>
 
-            <CardContent  sx={{ padding: 2}}>
+            <CardContent  sx={{ padding: {xs:1, md:1.5, display:"flex", flexDirection:"column", overflow:"hidden"}}}>
             {/* <Typography gutterBottom variant="h5" sx={{ fontWeight: 700, letterSpacing: 1 }}>
             {repo.name}
             </Typography> */}
               <div className="repo-card-labels">
                 <div className="repo-card-tags">
-                  <AutoFixHighIcon sx = {{width:"20px", paddingTop:"5px", maxHeight: 'calc(600px - 280px)' }}/>
+                  <AutoFixHighIcon sx = {{width:{xs:"16px", md:"20px"}, paddingTop:"5px", maxHeight: 'calc(600px - 280px)' }}/>
                   {repo.tags?.map((tag) => (
                     <Chip
-                      size="small"  
+                      size={isSmall ? "small": "medium"}
                       key={tag}
                       label={tag}
                       variant="outlined"
                       sx={{ 
                         margin: "2px",
                         borderRadius: "10px", 
+                        fontSize:{
+                          xs:".7rem",
+                          md:".82rem"
+                        }
                       }}
                     />
                   ))}
@@ -247,18 +288,68 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
                 <div className="repo-card-rating">
                 </div>
               </div>
-              <Typography variant="h6">
-                {repo.summaryTitle}
+              <Typography variant= {isSmall ? "subtitle1":"h6"}
+                sx={{
+                fontSize: {
+                  xs: '1rem',
+                  md: '1.25rem'
+                },
+                fontWeight: 600,
+                lineHeight: 1.2,
+                // Add these 3 lines:
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap"
+              }}
+              >
+              {repo.summaryTitle}
               </Typography>
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                <AutoFixHighIcon sx = {{width:"20px"}}/>
-                { repo.summary || "No summary available"}
+              <Typography variant="body2"
+                sx={{ 
+                color: "text.secondary",
+                fontSize: {
+                  xs: '0.6rem',
+                  md: '0.7rem'
+                },
+                lineHeight: 1.4,
+                alignItems: 'flex-start',
+                gap: 0.5,
+                flexGrow: 1,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                display: "-webkit-box",
+                WebkitLineClamp:{
+                  xs:11,
+                  md:20
+                },
+                WebkitBoxOrient:"vertical"
+              }}
+              >
+                <AutoFixHighIcon 
+                  sx={{
+                  width: {
+                    xs: "14px",
+                    md: "20px"
+                  },
+                  flexShrink: 0,
+                  mt: 0.1
+                }}
+                />
+                <span>{ repo.summary || "No summary available"}</span>
               </Typography>
-              <div className="repo-card-languages">
-                  <AutoFixHighIcon sx = {{width:"20px", paddingBottom:"5px"}}/>
+              <div className="repo-card-languages" style = {{marginTop:"auto"}}>
+                  <AutoFixHighIcon 
+                    sx={{
+                    width: {
+                      xs: "16px",
+                      md: "20px"
+                    },
+                    paddingBottom: "5px"
+                  }}
+                  />
                   {repo.languages?.map((language) => (
                     <Chip
-                      size="small" 
+                      size={isSmall ? "small": "medium"}
                       key={language}
                       label={language}
                       variant="filled" 
@@ -266,6 +357,10 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
                         margin: "2px",
                         borderRadius: "10px",
                         borderColor: "#90caf9",
+                        fontSize: {
+                          xs: '0.7rem',
+                          md: '0.8125rem'
+                        }
                       }}
                     />
                   ))}
@@ -281,21 +376,27 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             sx={{
               position: "absolute",
               top: "50%",
-              left: "10px",
+              left: {
+                xs:"20px",
+                md:"24px"
+              },
               transform: "translateY(-50%)",
               color: "#E34714",
-              fontSize: "24px",
               opacity: isDragging ? (currentX < -50 ? 1 : 0.3) : 1,
               transition: "opacity 0.2s",
               cursor: "pointer",
               zIndex: 1000,
+              fontSize: "24px",
               "&:hover": {
-                opacity: 1,
-                transform: "translateY(-50%) scale(1.2)",
+                  opacity: 1,
+                  transform: isMobile 
+                    ? "translateY(-50%)" 
+                    : "translateY(-50%) scale(1.2)",
               },
             }}
             onClick={handleLeftClick}
             onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
           >
             <CancelIcon fontSize="large" />
           </Box>
@@ -303,23 +404,32 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
             sx={{
               position: "absolute",
               top: "50%",
-              right: "10px",
+              right: {
+                xs: "5px",
+                md: "10px"
+              },
               transform: "translateY(-50%)",
               color: "green",
-              fontSize: "24px",
+              fontSize: {
+                xs: "20px",
+                md: "24px"
+              },
               opacity: isDragging ? (currentX > 50 ? 1 : 0.3) : 1,
               transition: "opacity 0.2s",
               cursor: "pointer",
               zIndex: 1000,
               "&:hover": {
                 opacity: 1,
-                transform: "translateY(-50%) scale(1.2)",
+                transform: isMobile 
+                  ? "translateY(-50%)" 
+                  : "translateY(-50%) scale(1.2)",
               },
             }}
             onClick={handleRightClick}
             onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
           >
-            <CheckCircleIcon fontSize="large" />
+          <CheckCircleIcon fontSize={isMobile ? "medium" : "large"} />
           </Box>
         </>
       )}
