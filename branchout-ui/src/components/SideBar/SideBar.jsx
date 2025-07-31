@@ -139,7 +139,7 @@ export default function SideBar() {
         }}
       >
         {/* Logo */}
-        <Avatar sx={{ width: 32, height: 32, bgcolor: '#daa7e2' }}>
+        <Avatar className="profile-avatar" sx={{ width: 32, height: 32, bgcolor: '#daa7e2' }}>
           {(clerkUser?.firstName?.charAt(0) ||
             currentUser?.username?.charAt(0) ||
             currentUser?.email?.charAt(0) ||

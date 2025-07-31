@@ -18,6 +18,7 @@ import SavedReposPage from "../../pages/SavedReposPage/SavedReposPage"; // Fixed
 import PageNotFound from "../../pages/PageNotFoundPage/PageNotFoundPage.jsx";
 import SettingsPage from "../../pages/Settings/SettingsPage.jsx"
 import AboutPage from "../../pages/AboutPage/AboutPage.jsx"
+import OnboardingSystem from "../../components/Onboarding/OnboardingSystem.jsx";
 
 // const drawerWidth = 270;
 
@@ -59,6 +60,7 @@ function AppContent() {
 
   return (
     <ThemeProvider theme={theme}>
+      <OnboardingSystem />
       <Routes>
         {/* Public routes - no sidebar */}
         <Route path="/login" element={<AuthComponent />} />
