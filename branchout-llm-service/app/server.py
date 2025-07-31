@@ -1,22 +1,41 @@
 # In: branchout-llm-service/app/server.py
+import asyncio
+import uvicorn
+import json
 from fastmcp import FastMCP
 from pydantic import Field
+from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
+from typing import Any, Dict
 
-# --- THIS IS THE CRITICAL STEP ---
+
 # Import the classes and variables you need from your other file.
-from .git_api_service import GitAPIService, GitAPIServiceParams, API_PATH_TEMPLATES
+# from git_api_service import GitAPIService, GitAPIServiceParams, API_PATH_TEMPLATES
+from app.git_api_service import GitAPIService, GitAPIServiceParams, API_PATH_TEMPLATES
 
 # Define a constant for the tool name
 GIT_API_SERVICE_TOOL_NAME = "GitHub_API"
 
 mcp = FastMCP(
-    name="BranchoutLLMService",
+    name="OpenSourceInsight",
     version="1.0.0",
+    middleware=[
+        {
+            "middleware_class": CORSMiddleware,
+            "options": {
+                "allow_origins": ["http://localhost:5173"],
+                "allow_credentials": True,
+                "allow_methods": ["GET", "POST", "OPTIONS"],
+                "allow_headers": ["*"],
+            },
+        }
+    ]
 )
 
 @mcp.tool(
     name=GIT_API_SERVICE_TOOL_NAME,
-    description="""Use this tool to interact with the GitHub API to retrieve information about repositories, commits, pull requests, and more.
+    description="""Use this tool to interact with the GitHub API to retrieve detailed information about repositories, users, and issues to support open source discovery and contribution.
         
         :mag: AUTOMATIC TRACKING: All API calls are automatically tracked with source attribution.
 
@@ -24,80 +43,84 @@ mcp = FastMCP(
 
         Workflow:
         1. Call the `connect` method to establish a connection to the GitHub API.
-        2. Use the following available API endpoints to perform various operations:
+        2. Use the API endpoints below to gather information about repositories, issues, users, and more to help users discover projects and contribution opportunities.
 
         Here are the available APIs:
         1. REST API - Fetch Current User (/user)
-            - What it provides: Details about the current user.
-            - Why it's useful: Use this to get information about the current user, such as their name, email, and avatar.
-            Example LLM Query: "What is the current user's name?"
+            - Provides details about the authenticated GitHub user.
+            - Useful to get profile info such as name, email, and avatar.
+            Example LLM Query: "What is my GitHub username?"
         2. REST API - Code Search (/search/code?q={query})
-            - What it provides: Search for code in a repository.
-            - Why it's useful: Use this to search for specific code in a repository.
-            Example LLM Query: "What is the code for the salesforce-knowledge-pipeline repository?"
+            - Search for code snippets in repositories.
+            - Useful to find specific implementations or examples.
+            Example LLM Query: "Show me examples of OAuth code in the branchout-llm-service repo."
         3. REST API - Commit Search (/search/commits?q={query})
-            - What it provides: Search for commits in a repository.
-            - Why it's useful: Use this to search for specific commits in a repository.
-            Example LLM Query: "What are the commits for the salesforce-knowledge-pipeline repository?"
+            - Search commits in repositories.
+            - Useful to explore recent changes or history.
+            Example LLM Query: "What recent commits have been made to the open source recommendation engine?"
         4. REST API - Issue Search (/search/issues?q={query})
-            - What it provides: Search for issues in a repository.
-            - Why it's useful: Use this to search for specific issues in a repository.
-            Example LLM Query: "What are the issues for the salesforce-knowledge-pipeline repository?"
+            - Search for issues in repositories.
+            - Useful to find open issues suitable for contribution.
+            Example LLM Query: "List open issues labeled 'good first issue' in the branchout repo."
         5. REST API - Label Search (/search/labels?q={query}&repository_id={repository_id})
-            - What it provides: Search for labels in a repository.
-            - Why it's useful: Use this to search for specific labels in a repository.
-            Example LLM Query: "What are the labels for the salesforce-knowledge-pipeline repository?"
+            - Search for labels within a repository.
+            - Useful to understand issue categorization.
+            Example LLM Query: "What labels are available in the branchout-llm-service repo?"
         6. REST API - Fetch Organization Details (/orgs/{org})
-            - What it provides: Details about a specific GitHub organization.
-            - Why it's useful: Use this to get information about an organization, such as its name, description, and avatar.
-            Example LLM Query: "What are the details of the salesforce organization?"
+            - Get details about a GitHub organization.
+            - Useful to overview organizations hosting repositories.
+            Example LLM Query: "What is the description of the 'branchout' organization?"
         7. REST API - Fetch Organization Repositories (/orgs/{org}/repos)
-            - What it provides: List of repositories in a specific GitHub organization.
-            - Why it's useful: Use this to get a quick overview of the repositories in an organization.
-            Example LLM Query: "What are the repositories in the salesforce organization?"
+            - List repositories in an organization.
+            - Useful to discover projects to contribute to within an organization.
+            Example LLM Query: "What repositories belong to the 'branchout' organization?"
         8. REST API - Fetch Organization Teams (/orgs/{org}/teams)
-            - What it provides: List of teams in a specific GitHub organization.
-            - Why it's useful: Use this to get a quick overview of the teams in an organization.
-            Example LLM Query: "What are the teams in the salesforce organization?"
+            - List teams within an organization.
+            - Useful to understand project groups and maintainers.
+            Example LLM Query: "What teams exist in the 'branchout' org?"
         9. REST API - Fetch Public Gists (/gists/public)
-            - What it provides: List of public gists.
-            - Why it's useful: Use this to get a quick overview of the public gists.
-            Example LLM Query: "What are the public gists?"
+            - List public gists.
+            - Useful to explore community code snippets.
+            Example LLM Query: "Show me recent public gists on OAuth implementations."
         10. REST API - Fetch Repository Details (/repos/{owner}/{repo})
-            - What it provides: Details about a specific GitHub repository.
-            - Why it's useful: Use this to get information about a repository, such as its name, description, and owner.
-            Example LLM Query: "What are the details of the salesforce-knowledge-pipeline repository?"
-        11. REST API - Fetch Repository Search (/search/repositories?q={query})
-            - What it provides: Search for repositories.
-            - Why it's useful: Use this to search for specific repositories.
-            Example LLM Query: "What are the repositories for the salesforce organization?"
+            - Get details about a specific repository.
+            - Useful to gather description, owner, contributors, and activity.
+            Example LLM Query: "What are the details of the 'branchout-llm-service' repository?"
+        11. REST API - Repository Search (/search/repositories?q={query})
+            - Search for repositories across GitHub.
+            - Useful to find projects matching a keyword or topic.
+            Example LLM Query: "Find repositories related to 'open source contribution'."
         12. REST API - Fetch Current User Repositories (/user/repos)
-            - What it provides: List of repositories for the current user.
-            - Why it's useful: Use this to get a quick overview of the repositories for the current user.
-            Example LLM Query: "What are the repositories for the current user?"
+            - List repositories owned by the current user.
+            - Useful for personalized views of user projects.
+            Example LLM Query: "List my GitHub repositories."
         13. REST API - Fetch User Details (/users/{user})
-            - What it provides: Details about a specific GitHub user.
-            - Why it's useful: Use this to get information about a user, such as their name, email, and avatar.
-            Example LLM Query: "What are the details of the salesforce user?"
+            - Get profile details for a GitHub user.
+            - Useful to display info about other contributors or users.
+            Example LLM Query: "What is the GitHub profile info for user 'janedoe'?"
         14. REST API - Fetch User Repositories (/users/{user}/repos)
-            - What it provides: List of repositories for a specific GitHub user.
-            - Why it's useful: Use this to get a quick overview of the repositories for a specific user.
-            Example LLM Query: "What are the repositories for the salesforce user?"
+            - List repositories owned by a specified user.
+            - Useful to explore potential projects to contribute to.
+            Example LLM Query: "Show me repositories owned by 'janedoe'."
         15. REST API - Topic Search (/search/topics?q={query})
-            - What it provides: Search for topics.
-            - Why it's useful: Use this to search for specific topics.
-            Example LLM Query: "What are the topics for the salesforce organization?"
+            - Search topics used to tag repositories.
+            - Useful to find projects by interest area.
+            Example LLM Query: "What topics are tagged for 'machine learning'?"
         16. REST API - Fetch User Organizations (/user/orgs)
-            - What it provides: List of organizations for the current user.
-            - Why it's useful: Use this to get a quick overview of the organizations for the current user.
-            Example LLM Query: "What are the organizations for the current user?"
-        17. REST API - Fetch User Search (/search/users?q={query})
-            - What it provides: Search for users.
-            - Why it's useful: Use this to search for specific users.
-            Example LLM Query: "What are the users for the salesforce organization?"""
+            - List organizations the current user belongs to.
+            - Useful for personalized contribution contexts.
+            Example LLM Query: "What organizations am I a member of?"
+        17. REST API - User Search (/search/users?q={query})
+            - Search for users by name or username.
+            - Useful to find contributors or collaborators.
+            Example LLM Query: "Find users with the name 'janedoe'."
+    """
 )
 async def call_git_api(
-    api_endpoint: str = Field(description="The API endpoint to call", enum=list(API_PATH_TEMPLATES.keys())),
+    api_endpoint: str = Field(
+        description="The API endpoint to call",
+        json_schema_extra={"enum": list(API_PATH_TEMPLATES.keys())}
+    ),
     owner: str = Field(description="The owner of the repository", default=""),
     repo: str = Field(description="The name of the repository", default=""),
     user: str = Field(description="The name of the user", default=""),
@@ -119,10 +142,10 @@ async def call_git_api(
         print(f"Calling Git API Service with params: {params}")
         git_api_service = GitAPIService()
         response = await git_api_service._make_api_call(params=params)
-        return response
+        return {"result": json.dumps(response)}
     except Exception as e:
         print(f"An error occurred: {e}")
         return f"An error occurred: {e}"
 
-# Note: The if __name__ == "__main__": block is not needed
-# when running with a production server like Uvicorn.
+if __name__ == "__main__":
+    mcp.run(transport="streamable-http", host="0.0.0.0", port=8000)
