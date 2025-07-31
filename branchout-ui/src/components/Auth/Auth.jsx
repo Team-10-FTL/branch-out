@@ -136,7 +136,7 @@ function AuthComponent() {
         <img src = {fullLogo} className = "loginSignupLogo"/>
         {/* <h2 className = "auth-title">{isSignUp ? "Create Account" : " Login"}</h2> */}
       {/* Auth Mode Tabs */}
-      <div className="auth-tabs">
+      {/* <div className="auth-tabs">
         <button
           className={`tab ${authMode === "local" ? "active" : ""}`}
           onClick={() => setAuthMode("local")}
@@ -149,7 +149,7 @@ function AuthComponent() {
         >
           OAuth (Google, GitHub, etc.)
         </button>
-      </div>
+      </div> */}
 
       {authMode === "local" ? (
         <form onSubmit={handleLocalAuth} className="auth-form">
