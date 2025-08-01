@@ -50,10 +50,10 @@ function AppContent() {
     palette: {
       mode: isDarkMode ? 'dark' : 'light',
       primary: {
-        main: '#4c1255',
+        main: '#4C1255',
       },
       secondary: {
-        main: '#e34714',
+        main: '#E34714',
       },
       background: {
         default: isDarkMode ? '#121212' : '#ffffff',
