@@ -24,6 +24,7 @@ model User {
   preferenceTags String[]
   feedback       FeedBack[]
   savedRepos     Repo[]       @relation("savedRepos")
+  hasCompletedOnboarding Boolean?      @default(false)
 }
 
 model Repo {
