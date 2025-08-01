@@ -30,7 +30,7 @@ const ONBOARDING_STEPS = [
     id: 'saved-repos',
     title: 'Saved Repositories',
     content: 'All your liked repositories will appear here for easy access and future reference.',
-    target: '[href="/SavedRepos"]',
+    target: '[href="/savedrepos"]',
     position: 'right'
   },
   {
@@ -38,14 +38,14 @@ const ONBOARDING_STEPS = [
     title: 'Your Profile',
     content: 'Click here to manage your account information and view your current preferences.',
     target: '.profile-avatar',
-    position: 'bottom'
+    position: 'right'
   },
   {
     id: 'repo-interaction',
     title: 'Repository Cards',
     content: 'Swipe left to dislike, right to save. Click on cards for detailed information. Use keyboard arrows or A/D keys too!',
     target: '.repo-card',
-    position: 'top'
+    position: 'left'
   }
 ];
 
