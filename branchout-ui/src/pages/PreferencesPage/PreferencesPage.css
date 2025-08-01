@@ -10,7 +10,6 @@
   margin: 64px auto 0 auto;
   padding: 32px;
   border-radius: 24px;
-  background: #111;
   color: #fff;
 }
 
@@ -64,4 +63,13 @@
 
 .preferences-save-btn-content {
     font-size: 10pt;
+}
+.oneLineTitle {
+  font-family: "Inter", "sans-serif";
+  display: inline;
+  font-weight: 800;
+}
+.select, .preferences{
+  font-family: "Inter", "sans-serif";
+  font-weight: 800;
 }

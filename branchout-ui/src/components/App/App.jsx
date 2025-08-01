@@ -19,6 +19,8 @@ import PageNotFound from "../../pages/PageNotFoundPage/PageNotFoundPage.jsx";
 import SettingsPage from "../../pages/Settings/SettingsPage.jsx"
 import AboutPage from "../../pages/AboutPage/AboutPage.jsx"
 import OnboardingSystem from "../../components/Onboarding/OnboardingSystem.jsx";
+import HomePage from "../../pages/HomePage/HomePage.jsx"
+
 
 // const drawerWidth = 270;
 

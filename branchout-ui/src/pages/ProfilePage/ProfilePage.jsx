@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useUser, useClerk } from "@clerk/clerk-react";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from 'react-router-dom';
+import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+
 import {
   Box,
   Paper,
@@ -162,13 +166,12 @@ const ProfilePage = () => {
           background: "#111",
           color: "#fff",
           borderRadius: 4,
-          boxShadow: "0 0 24px 4px rgba(232,63,37,0.10)", // #E83F25
           p: 4,
           position: "relative",
           transition: "box-shadow 0.3s, background 0.3s",
-          "&:hover": {
-            boxShadow: "0 0 32px 8px rgba(232,63,37,0.18)", // #E83F25
-            background: "#111",
+          boxShadow: {
+            xs: "none",
+            sm: "0 0 24px 4px rgba(232,63,37,0.10)"
           },
         }}
       >
@@ -207,7 +210,7 @@ const ProfilePage = () => {
           </Avatar>
         </Box>
 
-        <Divider className="profile-divider" sx={{ borderColor: "#4c1255", mb: 2 }} />
+        <Divider className="profile-divider" sx={{mb: 2 }} />
 
         {/* Editable Name & Email Section */}
         <Box className="profile-edit-section" sx={{ mb: 3 }}>
@@ -245,10 +248,10 @@ const ProfilePage = () => {
                   }}
                 />
                 <Box sx={{ display: "flex", gap: 2 }}>
-                  <Button variant="contained" color="primary" onClick={handleSave}>
+                  <Button variant="contained" color="#e37106" onClick={handleSave}>
                     Save
                   </Button>
-                  <Button variant="outlined" onClick={() => setEditMode(false)}>
+                  <Button variant="outlined" color="#e37106" onClick={() => setEditMode(false)}>
                     Cancel
                   </Button>
                 </Box>
@@ -303,8 +306,27 @@ const ProfilePage = () => {
             <Divider sx={{ my: 2, borderColor: "#4c1255" }} />
           </>
         )}
+      <Divider/>
 
-      <Typography variant="subtitle1" sx={{  color: "", mt: 2, fontWeight:"600", paddingBottom:"10px" }}>Skill Level</Typography>
+      <Accordion
+        defaultExpanded
+        sx={{
+          backgroundColor:"transparent",
+          background:"none",
+          color: "#fff",
+          borderRadius: 2,
+          boxShadow: "none",
+          mt:2,
+          mb: 2,
+          "&:before": { display: "none" },
+        }}
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: "#fff" }} />}>
+          <Typography sx={{ fontWeight: 600 }}>Preferences</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+
+           <Typography variant="subtitle1" sx={{  color: "",  mt:-1, fontWeight:"500", paddingBottom:"10px", fontSize:"10pt" }}>Skill Level</Typography>
             <Stack
               direction="row"
               spacing={2}
@@ -313,7 +335,7 @@ const ProfilePage = () => {
               paddingBottom="10px"
               className="profile-stack"
               justifyContent="center"
-              alignItems="center"
+              alignItems="left"
             >
             {(display.skill && display.skill.length > 0)
             ? display.skill.map((skill) => (
@@ -328,17 +350,15 @@ const ProfilePage = () => {
                     border: "1.5px solid #E83F25",
                     fontWeight: 500,
                     background: "transparent",
-                    borderRadius: "10px", // <-- Change this value as you like
+                    borderRadius: "8px",
                     width: "100px",
-                    justifyContent:"center",
-                    textAlign:"center",
                   }}
                 />
               ))
-            : <Chip label="None" color="default" variant="outlined" sx={{ color: "#fff", border: "1.5px solid #E83F25", background: "transparent" }} />}
+            : <Chip label="None" color="default" variant="outlined" sx={{ color: "#fff", border: "1.5px solid gray", background: "transparent", borderRadius: "8px"}} />}
         </Stack>
-        <Divider className="profile-divider" sx={{ borderColor: "#4c1255", mb: 2 }} />
-        <Typography variant="subtitle1" sx={{ color: "", mt: 2, fontWeight:"600", paddingBottom:"10px" }}>Languages</Typography>
+        <Divider className="profile-divider" sx={{mb: 2 }} />
+        <Typography variant="subtitle1" sx={{ color: "", mt: 2, fontWeight:"500", paddingBottom:"10px", fontSize:"10pt"}}>Languages</Typography>
             <Stack
               direction="row"
               spacing={2}
@@ -360,18 +380,18 @@ const ProfilePage = () => {
                     border: "1.5px solid #E83F25",
                     fontWeight: 500,
                     background: "transparent",
-                    borderRadius: "10px", // <-- Change this value as you like
+                    borderRadius: "0px", // <-- Change this value as you like
                     width: "100px",
                     justifyContent:"center",
                     textAlign:"center",
                   }}
                 />
               ))
-            : <Chip label="None" color="default" variant="outlined" sx={{ color: "#fff", border: "1.5px solid #E83F25", background: "transparent" }} />}
+            : <Chip label="None" color="default" variant="outlined" sx={{ color: "#fff", border: "1.5px solid gray", background: "transparent", borderRadius: "8px" }} />}
         </Stack>
-        <Divider className="profile-divider" sx={{ borderColor: "#4c1255", mb: 2 }} />
+        <Divider className="profile-divider" sx={{mb: 2 }} />
 
-        <Typography variant="subtitle1" sx={{ color: "", mt: 2, fontWeight:"600", paddingBottom:"10px" }}>Tags</Typography>
+        <Typography variant="subtitle1" sx={{ color: "", mt: 2, fontWeight:"500", paddingBottom:"10px", fontSize:"10pt" }}>Tags</Typography>
 
           <Stack
             direction="row"
@@ -395,29 +415,33 @@ const ProfilePage = () => {
                     border: "1.5px solid #E83F25",
                     fontWeight: 500,
                     background: "transparent",
-                    borderRadius: "10px", // <-- Change this value as you like
+                    borderRadius: "8px", // <-- Change this value as you like
                     width: "135px",
                     justifyContent:"center",
                     textAlign:"center",
                   }}
                 />
               ))
-            : <Chip label="None" color="default" variant="outlined" sx={{ color: "#fff", border: "1.5px solid #E83F25", background: "transparent" }} />}
+            : <Chip label="None" color="default" variant="outlined" sx={{ color: "#fff", border: "1.5px solid gray", background: "transparent", borderRadius: "8px" }} />}
         </Stack>
+
+        </AccordionDetails>
+      </Accordion>
+
         <Box sx={{ p: 2, mt: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <ListItemButton className = "settingsButton"
             onClick={handleOpenModal}
             sx={{
               color: 'white',
               // borderColor: 'rgba(255, 255, 255, 0.3)',
-              backgroundColor: '#e37106',
+              backgroundColor: '#e34714',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               maxWidth: "200px",
               borderRadius: "7px"
             , '&:hover': {
-              backgroundColor: "#e34714",
+              backgroundColor: "#e37106",
               color: "black"
             }}}
           > Logout  

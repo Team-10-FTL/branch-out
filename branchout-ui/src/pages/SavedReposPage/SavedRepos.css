@@ -1,21 +1,43 @@
 .repo-list {
     display: flex;
     flex-flow: row wrap;
-    justify-content: center;
+    justify-content:center;
 }
 .saved-repos-page {
     width: 100%;
-    margin: 0 auto;
+    max-width:100vw;
+    /* margin: 0 auto; */
     box-sizing: border-box;
+    overflow-x:hidden;
+}
+
+.savedReposTitle{
+    margin-top:80px;
+    margin-bottom:20px;
+    text-align:center;
+    font-size:28pt;
+    line-height:1.2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .4rem;
+}
+
+.firstWord, .secondWord{
+    font-family: "Inter", sans-serif;
+    font-weight:600;
 }
 
 @media (max-width: 1300px ){
     .repo-list{
-        flex-flow: row wrap;
     }
 }
 @media(max-width:430px){
-    .repo-list{
-        margin-left:-22%;
+   .saved-repos-page{
     }
-}
+    .savedReposTitle{
+        text-align: left;
+        align-items:flex-start;
+        padding-left: calc((100vw - 300px) / 2);
+        flex-direction:column
+}}

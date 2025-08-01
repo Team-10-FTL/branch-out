@@ -8,7 +8,7 @@ export default function ToolTip({information, className}) {
   return (
     <Tooltip title={information}>
       <IconButton className={className}>
-        <InfoOutlineIcon />
+        <InfoOutlineIcon/>
       </IconButton>
     </Tooltip>
   );

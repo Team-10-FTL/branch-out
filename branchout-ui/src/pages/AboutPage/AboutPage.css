@@ -4,6 +4,7 @@
   grid-template-rows: auto auto;
   gap: 40px;
   text-align: center;
+  padding:10px;
 }
 
 .about-grid > div > p {
@@ -48,14 +49,17 @@
   padding-bottom: 30px;
   font-size: 40pt;
   font-weight:700;
+  text-align: center;
+
 }
 
 .founderContent{
   display: flex;
   flex-flow: row wrap;
   gap: 20px;
-  justify-content: space-between;
-  margin: auto;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
 }
 
 .founderContent img{

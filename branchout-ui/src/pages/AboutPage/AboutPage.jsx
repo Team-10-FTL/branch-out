@@ -9,7 +9,7 @@ function AboutPage() {
         <div className="about-grid">
             
             <div className="top-left">
-                <h1>our mission</h1>
+                <h1>Our Mission</h1>
             </div>
             <div className="top-right">
                 <p>
@@ -20,7 +20,7 @@ function AboutPage() {
         <hr className = "aboutLine"/>
         <div className="about-grid">
             <div className="bottom-right">
-                <h1>why branch out?</h1>
+                <h1>Why Branch Out?</h1>
             </div>
             <div className="bottom-left">
                 <p>
@@ -32,7 +32,7 @@ function AboutPage() {
             </div>
         </div>
         <hr className = "aboutLine"/>
-        <div className = "meetFounders">meet the founders</div>
+        <div className = "meetFounders">Meet the Founders</div>
         <div className = "founderContent">
             <a href = "https://www.linkedin.com/in/jackiejurado" target = "_blank">
             <div className = "jackie">
