@@ -100,7 +100,7 @@ function HomePage(){
         </div>
 
         <div className="mobileTop">
-            <div className="lilLogo">
+            <div className="lilLogo" onClick = {() => navigate('/discovery')}>
                 <img src={fullLogo} />
             </div>
             <div id="loginSignup">
