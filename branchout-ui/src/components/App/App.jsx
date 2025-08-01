@@ -79,21 +79,21 @@ function AppContent() {
           }   
         />
         <Route 
+          path="/home" 
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <HomePage />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }   
+        />
+        <Route 
           path="/preferences" 
           element={
             <ProtectedRoute>
               <ProtectedLayout>
                 <PreferencesPage />
-              </ProtectedLayout>
-            </ProtectedRoute>
-          } 
-        />
-         <Route 
-          path="/settings" 
-          element={
-            <ProtectedRoute>
-              <ProtectedLayout>
-                <SettingsPage />
               </ProtectedLayout>
             </ProtectedRoute>
           } 
@@ -131,7 +131,7 @@ function AppContent() {
           } 
         />
         <Route 
-          path="/SavedRepos" 
+          path="/savedrepos" 
           element={
             <ProtectedRoute>
               <ProtectedLayout>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, Menu, MenuItem, IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import fullLogo from "../../assets/logo/fullLogo.png"
 import miniLogo from "../../assets/logo/miniLogo.png"
 
@@ -17,13 +18,13 @@ import {
   Collapse,
   ListItemButton,
   Toolbar,
+  AppBar,
   Button
 } from '@mui/material';
 import SettingsAccessibilityIcon from '@mui/icons-material/SettingsAccessibility';
 import InfoIcon from '@mui/icons-material/Info';
 import {
   Home as HomeIcon,
-  Search as SearchIcon,
   Settings as SettingsIcon,
   Person as PersonIcon,
   Apps as AppsIcon,
@@ -34,7 +35,7 @@ import {
   Logout as LogoutIcon,
   AdminPanelSettings as AdminIcon
 } from '@mui/icons-material';
-import { useUser, useClerk } from '@clerk/clerk-react';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';import { useUser, useClerk } from '@clerk/clerk-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const drawerWidth = 180;
@@ -42,12 +43,17 @@ const drawerWidth = 180;
 export default function SideBar() {
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const { user: clerkUser } = useUser();
-  const isCollapsed = useMediaQuery('(max-width:1000px)');
+  const isMobile = useMediaQuery('(max-width:430px)');
+  const isTablet = useMediaQuery('(max-width:768px)');  
   const  {signOut}  = useClerk();
   const navigate = useNavigate();
   const location = useLocation();
   const isDiscoveryPage = location.pathname === '/discovery';
-
+  const [anchorEl, setAnchorEl] = useState(null);
+  const isMenuOpen = Boolean(anchorEl);
+  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
+  const isActive = (path) => location.pathname === path;
 
   // Check for local user
   const getLocalUser = () => {
@@ -67,23 +73,94 @@ export default function SideBar() {
   const handleSubmenuToggle = () => setSubmenuOpen(!submenuOpen);
 
   return (
+    <>
+    {isMobile ? (
+      <>
+        <AppBar position = "fixed" sx={{ bgcolor: 'black', zIndex:1300, boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+    borderBottom: '1px solid rgba(227, 71, 20, 0.3)'}}>
+            <Toolbar sx={{ justifyContent: 'space-between', px: 2, minHeight: '64px !important' }}>
+              <img 
+                src={miniLogo} 
+                alt="logo" 
+                style={{ width: 30, cursor: 'pointer' }}
+                onClick={() => navigate('/home')}
+              />
+              <IconButton onClick={handleMenuOpen} sx={{ color: 'white'}}>
+                <MenuIcon />
+              </IconButton>
+          </Toolbar>
+        </AppBar>
+
+
+        {/* Mobile Dropdown Menu */}
+        <Menu
+          open={isMenuOpen}
+          onClose={handleMenuClose}
+          anchorReference="anchorPosition"
+          anchorPosition={
+            anchorEl
+              ? { top: anchorEl.getBoundingClientRect().bottom + 8, left: anchorEl.getBoundingClientRect().right - 200 }
+              : undefined
+          }
+          sx={{
+            '& .MuiPaper-root': {
+              marginTop: 1,
+              minWidth: 200,
+            }
+          }}
+        >
+          <MenuItem onClick={() => { handleMenuClose(); navigate('/discovery'); }}>
+            <PersonSearchIcon sx={{ mr: 2 }} />
+            Discovery
+          </MenuItem>
+          <MenuItem onClick={() => { handleMenuClose(); navigate('/preferences'); }}>
+            <SettingsAccessibilityIcon sx={{ mr: 2 }} />
+            Preferences
+          </MenuItem>
+          <MenuItem onClick={() => { handleMenuClose(); navigate('/SavedRepos'); }}>
+            <ChatIcon sx={{ mr: 2 }} />
+            Saved Repos
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={() => { handleMenuClose(); navigate('/about'); }}>
+            <InfoIcon sx={{ mr: 2 }} />
+            About
+          </MenuItem>
+          {currentUser?.role === 'ADMIN' && (
+            <MenuItem onClick={() => { handleMenuClose(); navigate('/admin'); }}>
+              <AdminIcon sx={{ mr: 2 }} />
+              Admin Dashboard
+            </MenuItem>
+          )}
+          <MenuItem onClick={() => { handleMenuClose(); navigate('/settings'); }}>
+            <SettingsIcon sx={{ mr: 2 }} />
+            Settings
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={() => { handleMenuClose(); signOut(); }}>
+            <LogoutIcon sx={{ mr: 2 }} />
+            Logout
+          </MenuItem>
+        </Menu>
+      </>
+    ) : (
+      
     <Drawer
       variant="permanent"
       sx={{
-        width: isCollapsed ? 60 : drawerWidth,
+        width: isTablet ? 60 : drawerWidth,
         flexShrink: 0,
         [`& .MuiDrawer-paper`]: {
-          width: isCollapsed ? 60 : drawerWidth,
+          width: isTablet ? 60 : drawerWidth,
           boxSizing: 'border-box',
           backgroundColor: 'black',
-          display: 'flex',
           flexDirection: 'column',
            "&::after": {
             content: '""',
             position: 'absolute',
             top: 0,
             right: 0,
-            width: '4px', // thickness of the border
+            width: '4px',
             height: '100%',
             background: 'linear-gradient(to left, rgba(197, 111, 31, 0.7), rgba(227, 71, 20, 0.2), transparent)',              }
         },
@@ -93,30 +170,30 @@ export default function SideBar() {
         {/* Logo */}
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', position: 'relative' }}>
           {/* Full logo (visible only when not collapsed) */}
+          {isTablet ? (
+            <img
+            src={miniLogo}
+            alt="mini logo"
+            style={{
+              width: '30px',
+              opacity: isTablet ? 1 : 0,
+              transition: 'opacity 0.3s ease',
+              position: 'absolute',
+              pointerEvents: isTablet ? 'auto' : 'none',
+            }}
+            onClick={() => navigate('/home')}
+          />
+          ) : (
           <img
             src={fullLogo}
             alt="full logo"
             style={{
               width: '150px',
-              opacity: isCollapsed ? 0 : 1,
-              transition: 'opacity 0.3s ease',
-              position: 'absolute',
-              pointerEvents: isCollapsed ? 'none' : 'auto',
+              cursor:"pointer"
             }}
+            onClick={() => navigate('/home')}
           />
-
-          {/* Mini logo (visible only when collapsed) */}
-          <img
-            src={miniLogo}
-            alt="mini logo"
-            style={{
-              width: '30px',
-              opacity: isCollapsed ? 1 : 0,
-              transition: 'opacity 0.3s ease',
-              position: 'absolute',
-              pointerEvents: isCollapsed ? 'auto' : 'none',
-            }}
-          />
+          )}
         </Box>
       </Toolbar>
       <Divider />
@@ -124,11 +201,11 @@ export default function SideBar() {
       <Box
         sx={{
           p: 2,
-          paddingLeft: isCollapsed ? 2.25 : 1.5, 
+          paddingLeft: isTablet ? 2.25 : 1.5, 
           color: 'white',
           cursor: currentUser ? 'pointer' : 'not-allowed',
           display: 'flex',
-          justifyContent: isCollapsed ? 'center' : 'flex-start',
+          justifyContent: isTablet ? 'center' : 'flex-start',
           alignItems: 'center',
           '&:hover': { backgroundColor: currentUser ? 'rgba(255,255,255,0.05)' : 'inherit' }
         }}
@@ -145,7 +222,7 @@ export default function SideBar() {
             currentUser?.email?.charAt(0) ||
             'U').toUpperCase()}
         </Avatar>
-        {!isCollapsed && (
+        {!isTablet && (
           <Box sx={{ ml: 1 }}>
             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
               {clerkUser
@@ -175,14 +252,15 @@ export default function SideBar() {
             <ListItemButton
               href="/discovery"
               sx={{
-                paddingLeft: isCollapsed ? 2.25 : 1.5 ,
-                color: 'white',
+                paddingLeft: isTablet ? 2.25 : 1.5 ,
+                color: isActive('/discovery') ? '#e34714' : 'white',
+                backgroundColor: isActive('/discovery') ? 'rgba(227, 71, 20, 0.1)' : 'transparent',
                 justifyContent: 'center',
                 display: 'flex',
                 alignItems: 'center',
-                transition: 'color 0.3s ease',
+                transition: 'color 0.3s ease, background-color 0.3s ease',                
                 '& .MuiSvgIcon-root': {
-                  color: 'white', // Default icon color
+                  color: isActive('/discovery') ? '#e34714' : 'white',
                   transition: 'color 0.3s ease',
                 },
                 '&:hover': {
@@ -194,23 +272,24 @@ export default function SideBar() {
               }}
             >
               <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"5px", paddingRight:"5px"}}>
-                <HomeIcon sx={{ color: 'white' }} />
+                <PersonSearchIcon sx={{ color: 'white' }} />
               </ListItemIcon>
-              {!isCollapsed && <ListItemText primary="Discovery" />}
+              {!isTablet && <ListItemText primary="Discovery" />}
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
               href="/preferences"
               sx={{
-                paddingLeft: isCollapsed ? 2.25 : 1.5,
-                color: 'white',
+                paddingLeft: isTablet ? 2.25 : 1.5 ,
+                color: isActive('/preferences') ? '#e34714' : 'white',
+                backgroundColor: isActive('/preferences') ? 'rgba(227, 71, 20, 0.1)' : 'transparent',
                 justifyContent: 'center',
                 display: 'flex',
                 alignItems: 'center',
-                transition: 'color 0.3s ease',
+                transition: 'color 0.3s ease, background-color 0.3s ease',                
                 '& .MuiSvgIcon-root': {
-                  color: 'white', // Default icon color
+                  color: isActive('/preferences') ? '#e34714' : 'white',
                   transition: 'color 0.3s ease',
                 },
                 '&:hover': {
@@ -224,24 +303,24 @@ export default function SideBar() {
               <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"2px", paddingRight:"5px"}}>
                 <SettingsAccessibilityIcon sx={{ color: 'white' }} />
               </ListItemIcon>
-              {!isCollapsed && <ListItemText primary="Preferences" />}
+              {!isTablet && <ListItemText primary="Preferences" />}
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
                 component={Link}
-                to="/SavedRepos"
+                to="/savedrepos"
               sx={{
-                paddingLeft: isCollapsed ? 2.25 : 1.5 ,
-                color: 'white',
+                paddingLeft: isTablet ? 2.25 : 1.5 ,
+                color: isActive('/savedrepos') ? '#e34714' : 'white',
+                backgroundColor: isActive('/savedrepos') ? 'rgba(227, 71, 20, 0.1)' : 'transparent',
                 justifyContent: 'center',
                 display: 'flex',
                 alignItems: 'center',
-                transition: 'color 0.3s ease',
+                transition: 'color 0.3s ease, background-color 0.3s ease',                
                 '& .MuiSvgIcon-root': {
-                  color: 'white', // Default icon color
+                  color: isActive('/savedrepos') ? '#e34714' : 'white',
                   transition: 'color 0.3s ease',
-                  width: "20px"
                 },
                 '&:hover': {
                   color: '#e34714', // Text hover color
@@ -254,7 +333,7 @@ export default function SideBar() {
               <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingRight:"5px"}}>
                 <ChatIcon sx={{ color: 'white', marginLeft:"2px" }} />
               </ListItemIcon>
-              {!isCollapsed && <ListItemText primary="Saved Repos" />}
+              {!isTablet && <ListItemText primary="Saved Repos" />}
             </ListItemButton>
           </ListItem>
           <Divider sx ={{marginBottom:1, marginTop:2}}/>
@@ -270,45 +349,15 @@ export default function SideBar() {
             <ListItemButton
               href="/about"
               sx={{
-                paddingLeft: isCollapsed ? 2.25 : 1.5,
-                color: 'white',
+                paddingLeft: isTablet ? 2.25 : 1.5 ,
+                color: isActive('/about') ? '#e34714' : 'white',
+                backgroundColor: isActive('/about') ? 'rgba(227, 71, 20, 0.1)' : 'transparent',
                 justifyContent: 'center',
                 display: 'flex',
                 alignItems: 'center',
-                transition: 'color 0.3s ease',
-                paddingTop:"20px",
-              '& .MuiSvgIcon-root': {
-                color: 'white', // Default icon color
-                transition: 'color 0.3s ease',
-              },
-              '&:hover': {
-                color: '#e34714', // Text hover color
+                transition: 'color 0.3s ease, background-color 0.3s ease',                
                 '& .MuiSvgIcon-root': {
-                  color: '#e34714', // Icon hover color
-                },
-              },
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"5px", paddingRight:"5px" }}>
-                <InfoIcon sx={{ color: 'white' }} />
-              </ListItemIcon>
-                {!isCollapsed && <ListItemText primary="About" />}
-              </ListItemButton>
-            </ListItem>
-          {/* Admin Dashboard - only show if user is admin */}
-          {currentUser?.role === 'ADMIN' && (
-            <ListItem disablePadding>
-              <ListItemButton
-                href="/admin"
-                sx={{
-                  paddingLeft: isCollapsed ? 2.25 : 1.5 ,
-                  color: 'white',
-                  justifyContent: 'center',
-                  display: 'flex',
-                  alignItems: 'center',
-                  transition: 'color 0.3s ease',
-                '& .MuiSvgIcon-root': {
-                  color: 'white', // Default icon color
+                  color: isActive('/about') ? '#e34714' : 'white',
                   transition: 'color 0.3s ease',
                 },
                 '&:hover': {
@@ -317,26 +366,58 @@ export default function SideBar() {
                     color: '#e34714', // Icon hover color
                   },
                 },
-                }}
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"5px", paddingRight:"5px" }}>
+                <InfoIcon sx={{ color: 'white' }} />
+              </ListItemIcon>
+                {!isTablet && <ListItemText primary="About" />}
+              </ListItemButton>
+            </ListItem>
+          {/* Admin Dashboard - only show if user is admin */}
+          {currentUser?.role === 'ADMIN' && (
+            <ListItem disablePadding>
+              <ListItemButton
+                href="/admin"
+                sx={{
+                paddingLeft: isTablet ? 2.25 : 1.5 ,
+                color: isActive('/admin') ? '#e34714' : 'white',
+                backgroundColor: isActive('/admin') ? 'rgba(227, 71, 20, 0.1)' : 'transparent',
+                justifyContent: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                transition: 'color 0.3s ease, background-color 0.3s ease',                
+                '& .MuiSvgIcon-root': {
+                  color: isActive('/admin') ? '#e34714' : 'white',
+                  transition: 'color 0.3s ease',
+                },
+                '&:hover': {
+                  color: '#e34714', // Text hover color
+                  '& .MuiSvgIcon-root': {
+                    color: '#e34714', // Icon hover color
+                  },
+                },
+              }}
               >
                 <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"5px", paddingRight:"5px" }}>
                   <AdminIcon sx={{ color: 'white' }} />
                 </ListItemIcon>
-                {!isCollapsed && <ListItemText primary="Admin Dashboard" />}
+                {!isTablet && <ListItemText primary="Admin Dashboard" />}
               </ListItemButton>
             </ListItem>
           )}
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton
               sx={{
-                paddingLeft: isCollapsed ? 2.25 : 1.5 ,
-                color: 'white',
+                paddingLeft: isTablet ? 2.25 : 1.5 ,
+                color: isActive('/history') ? '#e34714' : 'white',
+                backgroundColor: isActive('/history') ? 'rgba(227, 71, 20, 0.1)' : 'transparent',
                 justifyContent: 'center',
                 display: 'flex',
                 alignItems: 'center',
-                transition: 'color 0.3s ease',
+                transition: 'color 0.3s ease, background-color 0.3s ease',                
                 '& .MuiSvgIcon-root': {
-                  color: 'white', // Default icon color
+                  color: isActive('/history') ? '#e34714' : 'white',
                   transition: 'color 0.3s ease',
                 },
                 '&:hover': {
@@ -350,20 +431,22 @@ export default function SideBar() {
               <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"5px", paddingRight:"5px" }}>
                 <CalendarIcon sx={{ color: 'white' }} />
               </ListItemIcon>
-              {!isCollapsed && <ListItemText primary="History" />}
+              {!isTablet && <ListItemText primary="History" />}
             </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
+          </ListItem> */}
+          {/* <ListItem disablePadding>
             <ListItemButton
+              onClick ={() => navigate("/settings")}
               sx={{
-                paddingLeft: isCollapsed ? 2.25 : 1.5 ,
-                color: 'white',
+                paddingLeft: isTablet ? 2.25 : 1.5 ,
+                color: isActive('/settings') ? '#e34714' : 'white',
+                backgroundColor: isActive('/settings') ? 'rgba(227, 71, 20, 0.1)' : 'transparent',
                 justifyContent: 'center',
                 display: 'flex',
                 alignItems: 'center',
-                transition: 'color 0.3s ease',
+                transition: 'color 0.3s ease, background-color 0.3s ease',                
                 '& .MuiSvgIcon-root': {
-                  color: 'white', // Default icon color
+                  color: isActive('/settings') ? '#e34714' : 'white',
                   transition: 'color 0.3s ease',
                 },
                 '&:hover': {
@@ -373,16 +456,17 @@ export default function SideBar() {
                   },
                 },
               }}
-              onClick ={() => navigate("/settings")}
             >
               <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"3px", paddingRight:"5px" }}>
                 <SettingsIcon sx={{ color: 'white' }} />
               </ListItemIcon>
-              {!isCollapsed && <ListItemText primary="Settings" />}
+              {!isTablet && <ListItemText primary="Settings" />}
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
         </List>
       </Box>
     </Drawer>
+    )}
+    </>
   );
 }

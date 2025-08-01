@@ -2,11 +2,20 @@
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
-
+}
+.saved-repos-page {
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 @media (max-width: 1300px ){
     .repo-list{
         flex-flow: row wrap;
+    }
+}
+@media(max-width:430px){
+    .repo-list{
+        margin-left:-22%;
     }
 }

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import RepoCard from '../../components/RepoCard/RepoCard';
 import CritiqueChips from '../../components/Feedback/CritiqueChips';
 import Chat from '../../components/ChatBox/Chat.jsx';
-import { Box, CssBaseline, Modal, Fade } from '@mui/material';
+import { Box, CssBaseline, Modal, Fade, useMediaQuery, useTheme } from '@mui/material';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import axios from "axios";
 
@@ -21,6 +21,9 @@ const DiscoveryPage = () => {
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [selectedRepo, setSelectedRepo] = useState(null);
   const { getToken } = useAuth();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md')); // <600px
+  const isLarge = useMediaQuery('(min-width:1130px)'); // custom breakpoint
 
   const localUser = (() => {
     try {
@@ -122,59 +125,61 @@ const DiscoveryPage = () => {
   };
 
   const getCardStyles = (styleClass) => {
-        const baseStyles = {
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-          pointerEvents: 'none',
-        };
+  const baseStyles = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    pointerEvents: 'none',
+  };
 
-        switch (styleClass) {
-          case 'active':
-            return {
-              ...baseStyles,
-              transform: 'translate(-50%, -50%) scale(1)',
-              opacity: 1,
-              zIndex: 10,
-              pointerEvents: 'auto',
-            };
-          case 'left':
-            return {
-              ...baseStyles,
-              transform: {
-                xs: 'translate(-100%, -50%) scale(0.5)',
-                sm: 'translate(-110%, -50%) scale(0.52)',
-                md: 'translate(-130%, -50%) scale(0.55)',
-              },
-              opacity: 0.3,
-              filter: 'blur(1px)',
-              zIndex: 5,
-            };
-          case 'right':
-            return {
-              ...baseStyles,
-              transform: {
-                xs: 'translate(-20%, -50%) scale(0.5)',
-                sm: 'translate(-10%, -50%) scale(0.52)',
-                md: 'translate(30%, -50%) scale(0.55)',
-              },
-              opacity: 0.3,
-              filter: 'blur(1px)',
-              zIndex: 5,
-            };
-          case 'far':
-            return {
-              ...baseStyles,
-              transform: 'translate(-50%, -50%) scale(0.5)',
-              opacity: 0,
-              zIndex: 1,
-              visibility: 'hidden',
-            };
-          default:
-            return baseStyles;
-        }
+  switch (styleClass) {
+    case 'active':
+      return {
+        ...baseStyles,
+      transform: 'translate(calc(-50% - 20px), -50%) scale(1)',
+        opacity: 1,
+        zIndex: 10,
+        pointerEvents: 'auto',
       };
+
+    case 'left':
+    case 'right':{
+      if (isMobile) {
+        return { display: 'none' };
+      }
+
+      const transform =
+        styleClass === 'left'
+          ? isLarge
+            ? 'translate(-120%, -50%) scale(0.52)'
+            : 'translate(-100%, -50%) scale(0.5)'
+          : isLarge
+          ? 'translate(20%, -50%) scale(0.52)'
+          : 'translate(0%, -50%) scale(0.5)';
+
+      return {
+        ...baseStyles,
+        transform,
+        opacity: 0.3,
+        filter: 'blur(1px)',
+        zIndex: 5,
+      };
+    }
+    case 'far':
+      return {
+        ...baseStyles,
+        transform: 'translate(-50%, -50%) scale(0.5)',
+        opacity: 0,
+        zIndex: 1,
+        visibility: 'hidden',
+      };
+
+    default:
+      return baseStyles;
+  }
+};
+
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -195,8 +200,6 @@ const DiscoveryPage = () => {
   return (
     <>
       <CssBaseline />
-      <h1>Discovery</h1>
-        <p>Swipe left to dislike, right to like!</p>
         {loading && <p>Loading recommendations...</p>}
       <Box
         component="main"
