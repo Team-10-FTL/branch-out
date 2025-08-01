@@ -20,7 +20,7 @@ import SettingsPage from "../../pages/Settings/SettingsPage.jsx"
 import AboutPage from "../../pages/AboutPage/AboutPage.jsx"
 import OnboardingSystem from "../../components/Onboarding/OnboardingSystem.jsx";
 import HomePage from "../../pages/HomePage/HomePage.jsx"
-
+import SearchPage from "../../pages/SearchPage/SearchPage.jsx";
 
 // const drawerWidth = 270;
 
@@ -76,6 +76,16 @@ function AppContent() {
             <ProtectedRoute>
               <ProtectedLayout>
                 <DiscoveryPage />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }   
+        />
+        <Route 
+          path="/search" 
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <SearchPage />
               </ProtectedLayout>
             </ProtectedRoute>
           }   
