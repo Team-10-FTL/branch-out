@@ -25,6 +25,8 @@ import OnboardingSystem from "../../components/Onboarding/OnboardingSystem.jsx";
 // Layout wrapper for protected pages
 const ProtectedLayout = ({ children }) => (
   <ProtectedRoute>
+    <OnboardingSystem />
+
     <Box sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'row' }}>
       <CssBaseline />
       <SideBar />
@@ -60,7 +62,6 @@ function AppContent() {
 
   return (
     <ThemeProvider theme={theme}>
-      <OnboardingSystem />
       <Routes>
         {/* Public routes - no sidebar */}
         <Route path="/login" element={<AuthComponent />} />

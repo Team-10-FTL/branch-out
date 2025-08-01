@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import OnboardingProgress from './OnboardingProgress';
-import OnboardingTooltip from './OnBoardingTooltip';
+import OnboardingTooltip from './OnboardingTooltip';
 import { useUser, useAuth } from '@clerk/clerk-react';
 
 // Onboarding steps configuration for your BranchOut app
