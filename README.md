@@ -1,4 +1,4 @@
-# 🚀 BranchOut
+# BranchOut
 
 **Discover your next favorite GitHub repository through personalized recommendations**
 
@@ -310,6 +310,6 @@ If you encounter any issues or have questions:
 
 ---
 
-**Happy coding! 🚀** 
+**Happy coding!** 
 
 Made with love by the BranchOut team
