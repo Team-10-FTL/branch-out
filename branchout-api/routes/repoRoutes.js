@@ -21,7 +21,7 @@ router.delete('/:id', authenticate, requireAdmin, repoController.delete);
 router.get('/:id', repoController.getByID);
 
 // User interaction endpoints
-router.post('/swipe', authenticate, repoController.handleSwipe);
+router.post('/swipe', repoController.handleSwipe);
 
 // Deprecated - keeping for backwards compatibility
 router.get('/filter', repoController.filterRepos);
