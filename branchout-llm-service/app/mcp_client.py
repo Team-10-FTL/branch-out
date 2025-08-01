@@ -1,14 +1,15 @@
-import os
-import asyncio
-from datetime import datetime
 from dotenv import load_dotenv
-import json
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from mcp import ClientSession
 from mcp.client.stdio import stdio_client
 from mcp import StdioServerParameters
+from datetime import datetime
 from google import genai
+from google.genai.types import Content, Part
+import asyncio
+import json
+import os
 
 load_dotenv()
 app = FastAPI()
@@ -29,31 +30,29 @@ server_params = StdioServerParameters(
     env={**os.environ, "PYTHONPATH": os.environ.get("PYTHONPATH", "") + ":/app"},
 )
 
-# Create server parameters for stdio connection
-server_params = StdioServerParameters(
-    command="python",  # Executable
-    args=["./app/mcp_server.py"],  # MCP Server
-    env={
-        **os.environ,
-        "PYTHONPATH": os.environ.get("PYTHONPATH", "") + ":/app"
-    },  # Optional environment variables
-)
-
 # gemini client
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=GEMINI_API_KEY)
 
-#   define form of communication frontend -> here
+# define form of communication frontend -> here
 @app.websocket("/ws/chat")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
+    conversation_history = []  # This will store the chat history for this websocket session
+
     try:
         while True:
             data = await websocket.receive_text()
-            print(f"Received: {data}")      #run params on whats passed in
+            print(f"Received: {data}") # run params on whats passed in
+
+            # Append user message to history
+            conversation_history.append({"role": "user", "parts": [data]})
 
             # run mcp client logic block here
-            response = await process_message(data)
+            response = await process_message(conversation_history)
+            # Append assistant response to history
+            conversation_history.append({"role": "model", "parts": [response]})
+            
             print(f"Response: {response}")
 
             await websocket.send_text(response)
@@ -61,95 +60,103 @@ async def websocket_endpoint(websocket: WebSocket):
         print("Client disconnected")
 
 # async def run(Message: str):
-async def process_message(message: str) -> str:
+async def process_message(conversation_history: list) -> str:
     async with stdio_client(server_params) as (read, write):
         async with ClientSession(read, write) as session:
             await session.initialize()
-            #prompt="Tell me about the user. This is the username JackieJrdo"
-            # get_repo_info prompt
-            #prompt= "Get me information about the repository 'IslandOps' owned by 'JackieJrdo'."
 
-            # code_search prompt
-            # prompt= "Search GitHub code for the keyword 'FastMCP'."
+            GROUNDING_PROMPT = """
+            You have access to the following tools that allow you to retrieve real-time GitHub information about repositories, users, organizations, issues, and code to support open source discovery and contribution. 
+            You should call these tools whenever the user’s request involves GitHub data.
 
-            # prmt = """
+            Here are the available API Tools:
 
-            # Use this tool to interact with the GitHub API to retrieve detailed information about repositories, users, and issues to support open source discovery and contribution.
-            # Use the API endpoints below to gather information about repositories, issues, users, and more to help users discover projects and contribution opportunities.
+            1. Fetch User Details (/users/{{username}})
+                - Provides details about a specific GitHub user.
+                - Use this to get information about a user, such as name, bio, avatar, and public repositories.
+                - Example LLM Query: "Show me details about the user torvalds."
 
+            2. Fetch User Organizations (/users/{{username}}/orgs)
+                - Lists organizations that a user belongs to.
+                - Example LLM Query: "What organizations is gaearon a part of?"
 
-            # """
-            
-            # issue_search prompt
-            # prompt = "Search GitHub for open issues regarding 'UI Fixes' that are suitable for contribution. "
+            3. Fetch User Repositories (/users/{{username}}/repos)
+                - Lists public repositories for a specific user.
+                - Example LLM Query: "What repositories does torvalds own?"
 
-            # Send request to the model with MCP function declarations
+            4. Fetch Repository Details (/repos/{{owner}}/{{repo}})
+                - Retrieves metadata about a repository (description, owner, stars, forks, etc.)
+                - Example LLM Query: "Get details for the freeCodeCamp repository."
 
+            5. Fetch Recent Commits in a Repository (/repos/{{owner}}/{{repo}}/commits)
+                - Retrieves the most recent commits (up to 3) in a repository.
+                - Example LLM Query: "What are the latest commits in the tensorflow repository?"
 
-            # call Gemini with MCP session (as a toooooool)
+            6. Fetch Repository Labels (/repos/{{owner}}/{{repo}}/labels)
+                - Lists all labels available in a repository.
+                - Example LLM Query: "What are the issue labels in the vuejs/vue repository?"
+
+            7. Fetch Repository Topics (/repos/{{owner}}/{{repo}}/topics)
+                - Retrieves the topics associated with a repository.
+                - Example LLM Query: "List topics for the nodejs/node repository."
+
+            8. Fetch Repository README (/repos/{{owner}}/{{repo}}/readme)
+                - Retrieves and decodes the README file of a repository.
+                - Example LLM Query: "Show me the README of the django repository."
+
+            9. Fetch CONTRIBUTING.md from a Repository (/repos/{{owner}}/{{repo}}/contents/CONTRIBUTING.md)
+                - Retrieves the contributing guidelines file if it exists.
+                - Example LLM Query: "Does the pytorch repository have a contributing guide?"
+
+            10. Fetch Good First Issues (/repos/{{owner}}/{{repo}}/issues?labels=good%20first%20issue,help%20wanted)
+                - Lists open beginner-friendly issues for a repository.
+                - Example LLM Query: "Find me good first issues in the kubernetes/kubernetes repository."
+
+            11. Search Code Snippets (/search/code?q={{query}})
+                - Searches for code snippets across repositories.
+                - Example LLM Query: "Search for the term 'GraphQL client' in GitHub code."
+
+            12. Search Issues (/search/issues?q={{query}})
+                - Searches for issues based on a query string.
+                - Example LLM Query: "Search for issues mentioning 'CI/CD pipeline' in GitHub."
+
+            13. Search Repositories (/search/repositories?q={{query}})
+                - Searches repositories based on a query string.
+                - Example LLM Query: "Find repositories with the keyword 'machine learning'."
+
+            14. Search Users (/search/users?q={{query}})
+                - Searches for users based on a query string.
+                - Example LLM Query: "Search for GitHub users named Alice."
+
+            15. Fetch Organization Details (/orgs/{{org}})
+                - Retrieves information about a GitHub organization.
+                - Example LLM Query: "Get details about the google organization on GitHub."
+
+            16. Fetch Organization Repositories (/orgs/{{org}}/repos)
+                - Lists public repositories of a GitHub organization.
+                - Example LLM Query: "What repositories does Microsoft own?"
+
+            17. Fetch Public Gists (/gists/public)
+                - Retrieves a list of recent public gists across GitHub.
+                - Example LLM Query: "Show me recent public gists on GitHub."
+            """
+
             response = await client.aio.models.generate_content(
                 model="gemini-2.5-flash",
-                contents=f"""
-                    You have access to the following tools that allow you to retrieve real-time GitHub information. You should call these tools whenever the user’s request involves GitHub data.
-
-                    Tools:
-
-                    get_user_info
-                    Description: Retrieves GitHub user profile information.
-                    Parameters:
-                    username (string): The GitHub username you want to look up.
-                    Example Call:
-                    get_user_info(username="JackieJrdo")
-
-                    get_repo_info
-                    Description: Retrieves information about a specific GitHub repository.
-                    Parameters:
-                    owner (string): The GitHub username or organization that owns the repository.
-                    repo (string): The name of the repository.
-                    Example Call:
-                    get_repo_info(owner="JackieJrdo", repo="branchout-llm-service")
-
-                    code_search
-                    Description: Searches for code snippets across GitHub repositories using a search query.
-                    Parameters:
-                    query (string): The search term to look for in GitHub code.
-                    Example Call:
-                    code_search(query="FastMCP")
-
-                    issue_search
-                    Description: Searches for GitHub issues (open or closed) using a search query.
-                    Parameters:
-                    query (string): The search term to look for in GitHub issues.
-                    Example Call:
-                    issue_search(query="login bug in repo:JackieJrdo/branchout-llm-service")
-
-                    Instructions:
-                    Whenever a user asks for GitHub-related information, use the appropriate tool.
-                    Make sure to use the correct parameter names and values as shown in the examples.
-                    Use get_user_info for user profiles.
-                    Use get_repo_info for specific repository details.
-                    Use code_search for searching code snippets.
-                    Use issue_search for finding GitHub issues.
-
-                    Example User Requests and Tool Calls:
-                    "Tell me about the GitHub user JackieJrdo." → Call get_user_info(username="JackieJrdo")
-                    "Get me info about the repository branchout-llm-service owned by JackieJrdo." → Call get_repo_info(owner="JackieJrdo", repo="branchout-llm-service")
-                    "Search for code related to OAuth in GitHub." → Call code_search(query="OAuth")
-                    "Find issues mentioning 'authentication failure' in the repo JackieJrdo/branchout-llm-service." → Call issue_search(query="authentication failure in repo:JackieJrdo/branchout-llm-service")
-
-
-                    This is the users message: {message}
-                """,
+                contents=[
+                    Content(role="model", parts=[Part(text=GROUNDING_PROMPT)]),
+                    *[
+                        Content(role=msg["role"], parts=[Part(text=part) for part in msg["parts"]])
+                        for msg in conversation_history
+                    ]
+                ],
                 config=genai.types.GenerateContentConfig(
                     temperature=0,
-                    tools=[session], #uses session but will automatically call the session
+                    tools=[session],
                 ),
             )
-            return response.text
-
-# Start the asyncio event loop and run the main function
-# asyncio.run(run("Can you tell me more about this repo: JackieJrdo/IslandOps"))
-
+            return response.candidates[0].content.parts[0].text
+        
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

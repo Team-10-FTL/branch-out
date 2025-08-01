@@ -1,41 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import {Paper, Grid, Divider, TextField, Typography, List, ListItem, ListItemText, Fab, Drawer, Box} from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import ChatIcon from '@mui/icons-material/Chat';
 
 const Chat = () => {
-    // ref: Ssali Jonathan "Building A Simple WebSocket Chat Application With FastAPI And JavaScript" YT link: https://www.youtube.com/watch?v=5o__C9wJHZA
-    const ws = useRef(null); // websocket reference
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([
-        // { from: 'AI', msg: 'Hey dev, Whats up! Ask me more about a repository, how you can contribute to that repository, ask about any open issues or about code snippets! The world is your oyster.', time: '10:00' },
+        { from: 'AI', msg: 'Hey dev, Whats up! Ask me more about a repository, how you can contribute to that repository, ask about any open issues or about code snippets! The world is your oyster.', time: '10:00' },
     ]);
-
-    // connecting to the websocket server
-    useEffect(() => {
-        ws.current = new WebSocket('ws://localhost:8000/ws/chat');
-
-        ws.current.onopen = () => {
-            console.log('WebSocket Connected');
-        };
-
-        ws.current.onmessage = (event) => {
-            const time = new Date().toLocaleTimeString().slice(0, 5);
-            setChat((prevChat) => [...prevChat, { from: 'Octocat', msg: event.data, time }]);
-            setTimeout(() => { // auto scroll to bottom 
-                const chatList = document.querySelector('.MuiList-root');
-                if (chatList) chatList.scrollTop = chatList.scrollHeight;
-            }, 100);
-        };
-
-        ws.current.onclose = () => {
-            console.log('WebSocket Disconnected');
-        };
-
-        return () => {
-            ws.current.close();
-        };
-    }, []);
 
     const [open, setOpen] = useState(false); // Drawer state
 
@@ -53,21 +25,11 @@ const Chat = () => {
         }
     }
 
-    function addMessage(from, msg) { 
+    function addMessage(from, msg) {
         if (msg.trim() === '') return;
-
         const time = new Date().toLocaleTimeString().slice(0, 5);
-        setChat((prevChat) => [...prevChat, { from, msg, time }]);
+        setChat([...chat, { from, msg, time }]);
         setMessage('');
-        setTimeout(() => { // auto scroll to bottom 
-            const chatList = document.querySelector('.MuiList-root');
-            if (chatList) chatList.scrollTop = chatList.scrollHeight;
-        }, 100);
-
-        // send  a msg to websocket server if from userr
-        if (from === 'ME' && ws.current.readyState === WebSocket.OPEN) {
-            ws.current.send(msg);
-        }
     }
 
     return (
@@ -86,7 +48,7 @@ const Chat = () => {
                 <Box sx={{ width: 350, height: '100vh' }}>
                     <Grid container>
                         <Grid item xs={12}>
-                            <Typography variant="h5" sx={{ m: 2 }}>Ask Octocat!</Typography>
+                            <Typography variant="h5" sx={{ m: 2 }}>ChatGPT Playground</Typography>
                         </Grid>
                     </Grid>
                     <Grid container component={Paper} sx={{ width: '100%', height: '80vh' }}>
@@ -96,10 +58,10 @@ const Chat = () => {
                                     <ListItem key={i}>
                                         <Grid container>
                                             <Grid item xs={12}>
-                                                <ListItemText align={c.from === 'Octocat' ? 'left' : 'right'} primary={c.msg} />
+                                                <ListItemText align={c.from === 'AI' ? 'left' : 'right'} primary={c.msg} />
                                             </Grid>
                                             <Grid item xs={12}>
-                                                <ListItemText align={c.from === 'Octocat' ? 'left' : 'right'} secondary={`${c.from} at ${c.time}`} />
+                                                <ListItemText align={c.from === 'AI' ? 'left' : 'right'} secondary={`${c.from} at ${c.time}`} />
                                             </Grid>
                                         </Grid>
                                     </ListItem>
