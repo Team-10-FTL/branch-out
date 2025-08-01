@@ -27,7 +27,7 @@ app.add_middleware(
 server_params = StdioServerParameters(
     command="python",
     args=["./app/mcp_server.py"],
-    env={**os.environ, "PYTHONPATH": os.environ.get("PYTHONPATH", "") + ":/app"},
+    env={**os.environ, "PYTHONPH": os.environ.get("PYTHONPATH", "") + ":/app"},
 )
 
 # gemini client
@@ -139,6 +139,8 @@ async def process_message(conversation_history: list) -> str:
             17. Fetch Public Gists (/gists/public)
                 - Retrieves a list of recent public gists across GitHub.
                 - Example LLM Query: "Show me recent public gists on GitHub."
+
+                IMPORTANT: Always return in raw markdown.
             """
 
             response = await client.aio.models.generate_content(
