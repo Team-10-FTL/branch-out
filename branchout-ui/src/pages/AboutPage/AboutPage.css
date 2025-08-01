@@ -5,6 +5,8 @@
   gap: 40px;
   text-align: center;
   padding:10px;
+  width:90%;
+  padding-left:10%;
 }
 
 .about-grid > div > p {
@@ -72,6 +74,7 @@
 }
 
 .aboutLine{
+  width:90%;
   border: none;
   height: 2px; 
   background-color: #4c1255;

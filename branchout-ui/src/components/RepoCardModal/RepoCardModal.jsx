@@ -30,9 +30,9 @@ export default function RepoCardModal({ open, handleClose, repo }) {
           maxHeight:"90vh",
           overflow:"auto",
           // bgcolor: theme.palette.background.paper,
-          bgcolor:"#29113cff",
+          bgcolor:"black",
           border:"1px solid #979796",
-          color: '#fff',
+          color: 'white',
           borderRadius: '10px',
           p: {
             xs:2,
@@ -60,10 +60,10 @@ export default function RepoCardModal({ open, handleClose, repo }) {
             cursor: 'pointer',
             fontSize: '1.4rem',
             fontWeight: 'bold',
-            color: '#aaa',
+            color: 'white',
             zIndex:10,
             '&:hover': {
-              color: '#fff',
+              color: 'white',
             }
           }}
         >
@@ -87,7 +87,7 @@ export default function RepoCardModal({ open, handleClose, repo }) {
             }}
           />
 
-          <Typography variant="h5" sx={{ color: "black", fontWeight: 500, mb: 1, px:1, textAlign:"center" }}>
+          <Typography variant="h5" sx={{ color: "white", fontWeight: 500, mb: 1, px:1, textAlign:"center" }}>
             {repo.name}
           </Typography>
 
@@ -101,7 +101,7 @@ export default function RepoCardModal({ open, handleClose, repo }) {
             flexWrap: 'wrap',
             justifyContent: 'center',
             alignItems: 'center',
-            color: 'black',
+            color: 'white',
             fontWeight: 500,
             fontSize: {
               xs:".85rem",
@@ -115,19 +115,19 @@ export default function RepoCardModal({ open, handleClose, repo }) {
             gap: 1,
             width:"100%"
           }}>
-            <Typography component="span" sx={{ color: "black", fontWeight: 600 }}>
+            <Typography component="span" sx={{ color: "white", fontWeight: 600, textAlign:"center" }}>
               by {repo.owner || "Unknown Owner"}
             </Typography>
 
             <Typography component="span" sx={{ mx: 1, color: "#666" }}>| |</Typography>
 
-            <Typography component="span" sx={{ color: "black", fontWeight: 600  }}>
+            <Typography component="span" sx={{ color: "white", fontWeight: 600  }}>
               ☆ {repo.stars || "N/A"}
             </Typography>
 
             <Typography component="span" sx={{ mx: 1, color: "#666" }}>| |</Typography>
 
-            <Link href={repo.repoLink} target="_blank" underline="always" sx={{ color: "black", fontWeight: 600 }}>
+            <Link href={repo.repoLink} target="_blank" underline="always" sx={{ color: "#e37106", fontWeight: 600 }}>
               View Repository
             </Link>
           </Box>

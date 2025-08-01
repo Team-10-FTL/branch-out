@@ -4,7 +4,7 @@
     justify-content:space-around;
     border-radius: 25px;
     background-color: #561c80;
-    width: 245px;
+    width: 385px;
     height:40px;
     padding-top:5px;
     padding-left:5px;
@@ -12,6 +12,10 @@
     padding-bottom:5px;
     margin: 0 auto;
     margin-top:20px;
+    position:fixed;
+    left:50%;
+    transform: translateX(-50%);
+    z-index:100;
 }
 
 .homeTab{
@@ -30,4 +34,332 @@
     display: block;
     margin: 0 auto;
     width: 60vw;
+}
+.lilLogo img{
+    width: 200px;
+    position: absolute;
+    margin-top:5px;
+    margin-left:5px;
+}
+
+.home-container{
+    position:relative;
+}
+
+#homeHome{
+    height:10vh;
+}
+#homeAbout{
+}
+#homeWhy{
+}
+
+#loginSignup {
+    position: absolute;
+    top: 3px;
+    right: 10px;
+    z-index: 10;
+    margin-top:20px;
+
+}
+
+#loginSignup button {
+    font-size:10pt;
+    padding: 8px 8px;
+    border-radius: 15px;
+    background-color: #561c80;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+#loginSignup button:hover{
+    background-color: #daa7e2;
+    color: black;
+}
+
+.features-container {
+  /* background-color: #180a1e; */
+  color: white;
+  padding: 50px;
+  border-radius: 20px;
+  max-width: 90%;
+  margin: auto;
+}
+
+.features-header {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto 40px auto;
+  padding: 0 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.features-header h1 {
+  font-size: 2.7rem;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.features-header p {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 700px;
+  color: #e0e0e0;
+  margin: 0;
+}
+
+.features-tag {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  display: inline-block;
+}
+
+.features-content {
+  display: flex;
+  flex-wrap: wrap;
+  width:80%;
+  margin-left:20%;
+  gap: 20px;
+  align-items: flex-start;
+}
+.features-split-container {
+  display: flex;
+  gap: 30px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.features-image {
+    width: 100%;
+    flex: 1;
+    max-width: 500px;
+    min-width: 300px;
+    border-radius: 10px;
+    overflow:hidden;
+    aspect-ratio:3/3;
+    object-fit: contain;
+    object-position: center; 
+}
+
+.features-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px;
+  align-items:stretch;
+}
+
+.feature-card {
+  background: #2c1c2e;
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor:pointer;
+  transition: transform 0.3s ease;
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
+.feature-card h3{
+    font-weight:600;
+}
+
+.feature-card.highlight {
+  background: #e3a9f3;
+  color: black;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+}
+
+
+@media (max-width: 900px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .features-header {
+        padding: 0 16px;
+    }
+    
+    .features-header h1 {
+        align-self: center;
+        text-align: center;
+        font-size:25pt;
+        margin-bottom: 15px;
+    }
+    
+    .features-header p {
+        align-self: center;
+        max-width: 100%;
+        text-align: center;
+    }
+}
+
+@media (min-width: 736px) and (max-width: 1100px) {
+    .features-split-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .features-image {
+        align-self: center;
+        margin: 0 auto;
+    }
+}
+
+@media (min-width: 700px) and (max-width: 850px) {
+    .lilLogo img{
+        margin-top:15px;
+        width: 150px;
+    }
+}
+
+@media (max-width: 768px) {
+    .lilLogo{
+        visibility:hidden;
+    }
+    #homeMenu {
+        width: 85%;
+        height: 35px;
+        font-size: 12px;
+    }
+    
+    .homeTab {
+        font-size: 12px;
+        padding: 5px 20px;
+    }
+
+    .top-row-wrapper {
+        position: static;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10px;
+    }
+        .mobileTop {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    
+    .lilLogo,
+    #loginSignup {
+        position: static !important;
+        margin-top: 40px;
+    }
+
+    #loginSignup button {
+        font-size: 10pt;
+        padding: 6px 12px;
+    }
+    
+    .features-container {
+        padding: 20px;
+    }
+    
+    .features-split-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .features-image {
+        max-width: 100%;
+    }
+    
+    .feature-card {
+        padding: 15px;
+    }
+    
+    .feature-card h3 {
+        font-size: 16px;
+    }
+    
+    .feature-card p {
+        font-size: 14px;
+    }
+    
+    /* Make logo and login/signup responsive */
+    .lilLogo {
+        position: relative;
+        text-align: center;
+        margin: 10px 0;
+    }
+    
+    .lilLogo img {
+        width: 120px;
+        position: static;
+        margin: 0;
+    }
+    
+    #loginSignup {
+        position: static;
+        text-align: center;
+        margin: 10px 0;
+    }
+    
+    #loginSignup button {
+        font-size: 12px;
+        padding: 10px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    #homeMenu {
+        width: 85%;
+        height: 32px;
+        font-size: 11px;
+    }
+    
+    .homeTab {
+        font-size: 11px;
+        padding: 3px 10px;
+    }
+    
+    .lilLogo img {
+        width: 100px;
+    }
+    
+    .features-header {
+        margin-bottom: 20px;
+    }
+    
+    .features-header h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .features-header p {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    
+    .features-container {
+        padding: 15px;
+    }
+    
+    .feature-card {
+        padding: 12px;
+    }
+    
+    .feature-card h3 {
+        font-size: 14px;
+    }
+    
+    .feature-card p {
+        font-size: 12px;
+    }
+    #loginSignup button {
+        font-size: 11px;
+        padding: 10px 15px;
+    }
 }
