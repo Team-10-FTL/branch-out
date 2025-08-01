@@ -124,6 +124,11 @@ export default function SideBar() {
             Discovery
           </MenuItem>
           <Divider />
+          <MenuItem onClick={() => { handleMenuClose(); navigate('/search'); }}sx = {{color: isActive("/search") ? "#e34714" : "white"}}>
+            <AppsIcon sx={{ mr: 2}} />
+            Search
+          </MenuItem>
+          <Divider />
           <MenuItem onClick={() => { handleMenuClose(); navigate('/preferences'); }}sx = {{color: isActive("/preferences") ? "#e34714" : "white"}}>
             <SettingsAccessibilityIcon sx={{ mr: 2}} />
             Preferences
@@ -282,6 +287,35 @@ export default function SideBar() {
                 <PersonSearchIcon sx={{ color: 'white' }} />
               </ListItemIcon>
               {!isTablet && <ListItemText primary="Discovery" />}
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton
+              href="/search"
+              sx={{
+                paddingLeft: isTablet ? 2.25 : 1.5 ,
+                color: isActive('/search') ? '#e34714' : 'white',
+                backgroundColor: isActive('/search') ? 'rgba(227, 71, 20, 0.1)' : 'transparent',
+                justifyContent: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                transition: 'color 0.3s ease, background-color 0.3s ease',                
+                '& .MuiSvgIcon-root': {
+                  color: isActive('/search') ? '#e34714' : 'white',
+                  transition: 'color 0.3s ease',
+                },
+                '&:hover': {
+                  color: '#e34714', // Text hover color
+                  '& .MuiSvgIcon-root': {
+                    color: '#e34714', // Icon hover color
+                  },
+                },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"5px", paddingRight:"5px"}}>
+                <AppsIcon sx={{ color: 'white' }} />
+              </ListItemIcon>
+              {!isTablet && <ListItemText primary="Search" />}
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
