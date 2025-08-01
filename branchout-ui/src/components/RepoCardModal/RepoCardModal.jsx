@@ -30,7 +30,7 @@ export default function RepoCardModal({ open, handleClose, repo }) {
           maxHeight:"90vh",
           overflow:"auto",
           // bgcolor: theme.palette.background.paper,
-          bgcolor:"#d6d6d5",
+          bgcolor:"#29113cff",
           border:"1px solid #979796",
           color: '#fff',
           borderRadius: '10px',

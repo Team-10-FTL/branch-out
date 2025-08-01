@@ -61,7 +61,10 @@ function SavedReposPage() {
   }
   return (
     <div className="saved-repos-page">
-      <h1>Saved Repositories</h1>
+      <div className = "savedReposTitle">
+        <div className = "firstWord">Saved</div>
+        <div className = "secondWord">Repositories</div>
+        </div>
       <div className="repo-list" >
         {repos.map((repo) => (
           <SavedRepoCard key={repo.id} repo={repo} />

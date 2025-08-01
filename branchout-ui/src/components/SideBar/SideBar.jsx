@@ -47,13 +47,17 @@ export default function SideBar() {
   const isTablet = useMediaQuery('(max-width:768px)');  
   const  {signOut}  = useClerk();
   const navigate = useNavigate();
-  const location = useLocation();
-  const isDiscoveryPage = location.pathname === '/discovery';
+  // const isDiscoveryPage = location.pathname === '/discovery';
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
   const isActive = (path) => location.pathname === path;
+  
+  const location = useLocation();
+  const hideSidebar = location.pathname === '/home';
+  if (hideSidebar) return null;
+
 
   // Check for local user
   const getLocalUser = () => {
@@ -99,48 +103,51 @@ export default function SideBar() {
           anchorReference="anchorPosition"
           anchorPosition={
             anchorEl
-              ? { top: anchorEl.getBoundingClientRect().bottom + 8, left: anchorEl.getBoundingClientRect().right - 200 }
+              ? { top: anchorEl.getBoundingClientRect().bottom -20, left: anchorEl.getBoundingClientRect().right - 180 }
               : undefined
           }
           sx={{
             '& .MuiPaper-root': {
               marginTop: 1,
-              minWidth: 200,
+              minWidth: 160,
+              backgroundColor:"black",
             }
           }}
         >
-          <MenuItem onClick={() => { handleMenuClose(); navigate('/discovery'); }}>
-            <PersonSearchIcon sx={{ mr: 2 }} />
+          <MenuItem onClick={() => { handleMenuClose(); navigate('/profile')}} sx = {{color: isActive("/profile") ? "#e34714" : "white"}}>
+            <PersonIcon sx={{ mr: 2}} />
+            Profile
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={() => { handleMenuClose(); navigate('/discovery'); }}sx = {{color: isActive("/discovery") ? "#e34714" : "white"}}>
+            <PersonSearchIcon sx={{ mr: 2}} />
             Discovery
           </MenuItem>
-          <MenuItem onClick={() => { handleMenuClose(); navigate('/preferences'); }}>
-            <SettingsAccessibilityIcon sx={{ mr: 2 }} />
+          <Divider />
+          <MenuItem onClick={() => { handleMenuClose(); navigate('/preferences'); }}sx = {{color: isActive("/preferences") ? "#e34714" : "white"}}>
+            <SettingsAccessibilityIcon sx={{ mr: 2}} />
             Preferences
           </MenuItem>
-          <MenuItem onClick={() => { handleMenuClose(); navigate('/SavedRepos'); }}>
-            <ChatIcon sx={{ mr: 2 }} />
+          <Divider />
+          <MenuItem onClick={() => { handleMenuClose(); navigate('/savedrepos'); }}sx = {{color: isActive("/savedrepos") ? "#e34714" : "white"}}>
+            <ChatIcon sx={{ mr: 2}} />
             Saved Repos
           </MenuItem>
           <Divider />
-          <MenuItem onClick={() => { handleMenuClose(); navigate('/about'); }}>
-            <InfoIcon sx={{ mr: 2 }} />
+          <MenuItem onClick={() => { handleMenuClose(); navigate('/about'); }}sx = {{color: isActive("/about") ? "#e34714" : "white"}}>
+            <InfoIcon sx={{ mr: 2}} />
             About
           </MenuItem>
+          {/* <MenuItem onClick={async() => { handleMenuClose(); await signOut();navigate("/signup") }}>
+            <InfoIcon sx={{ mr: 2 }} />
+            Logout
+          </MenuItem> */}
           {currentUser?.role === 'ADMIN' && (
             <MenuItem onClick={() => { handleMenuClose(); navigate('/admin'); }}>
-              <AdminIcon sx={{ mr: 2 }} />
+              <AdminIcon sx={{ mr: 2}} />
               Admin Dashboard
             </MenuItem>
           )}
-          <MenuItem onClick={() => { handleMenuClose(); navigate('/settings'); }}>
-            <SettingsIcon sx={{ mr: 2 }} />
-            Settings
-          </MenuItem>
-          <Divider />
-          <MenuItem onClick={() => { handleMenuClose(); signOut(); }}>
-            <LogoutIcon sx={{ mr: 2 }} />
-            Logout
-          </MenuItem>
         </Menu>
       </>
     ) : (
@@ -336,7 +343,6 @@ export default function SideBar() {
               {!isTablet && <ListItemText primary="Saved Repos" />}
             </ListItemButton>
           </ListItem>
-          <Divider sx ={{marginBottom:1, marginTop:2}}/>
           {/* NAVIGATION Section */}
         {/* {!isCollapsed && (
           <Typography 

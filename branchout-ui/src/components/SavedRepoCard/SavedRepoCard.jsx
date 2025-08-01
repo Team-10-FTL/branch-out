@@ -18,21 +18,20 @@ return (
     <RepoCardModal open={open} handleClose={handleClose} repo={repo} />
     <Card
        sx={{
-          margin: 2,
+          margin: 1,
           width: 300,
           height:130,
           borderRadius: 2,
-          border: "1px solid #979796",
-          boxShadow: "0 4px 12px rgba(255,255,255,0.04)",
+          border: "1px solid #281b2aff",
           // Force override MUI's default background
-          backgroundColor: "#d6d6d5 !important",
+          backgroundColor: "#261629ff !important",
           backgroundImage: "none !important",
-          color: "#111 !important",
+          color: "white !important",
           // Override the Paper component's CSS variables
-          "--Paper-shadow": "0 4px 12px rgba(255,255,255,0.04) !important",
+          "--Paper-shadow": "0 4px 12px rgba(100, 83, 83, 0.04) !important",
           "--Paper-overlay": "none !important",
           "&:hover": {
-            boxShadow: "0 0 5px rgba(215, 57, 33, 0.3)",
+            boxShadow: "0 0 5px rgba(193, 127, 116, 0.2)",
             transform: "scale(1.01)",
           },
           cursor: "pointer",
@@ -71,7 +70,7 @@ return (
             </Typography>
             <Typography
             variant="body2"
-            sx={{ fontFamily: "Inter, sans-serif", fontSize:"12px", color: "#393939", mb: 1, display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden", lineHeight:1.3, fontWeight:300
+            sx={{ fontFamily: "Inter, sans-serif", fontSize:"12px", color: "#b3aaaaff", mb: 1, display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden", lineHeight:1.3, fontWeight:300
             }}
             >
             {repo.description || "No description available"}
@@ -82,7 +81,7 @@ return (
                 <Typography 
                   variant="caption" 
                   sx={{ 
-                    color: "gray",
+                    color: "#b3aaaaff",
                     fontSize: "11px",
                     fontWeight: 400,
                     position:"relative",

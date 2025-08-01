@@ -276,7 +276,7 @@ const DiscoveryPage = () => {
             p: 4,
           }}>
             
-            <CritiqueChips onSelect={handleCritiqueSelect} />
+            <CritiqueChips onSelect={handleCritiqueSelect} handleClose={() => setShowFeedbackModal(false)}/>
           </Box>
         </Fade>
       </Modal>

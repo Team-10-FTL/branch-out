@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { useUser } from "@clerk/clerk-react";
 import { Container, Divider, Chip, Box, Paper, Typography, Stack, Accordion, AccordionSummary, AccordionDetails, useMediaQuery  } from '@mui/material';
 import './PreferencesPage.css';
 import ToolTip from '../../components/ToolTip/ToolTip';
@@ -29,6 +30,20 @@ function PreferencesPage() {
   const [selectedLanguages, setSelectedLanguages] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const isMobile = useMediaQuery('(max-width:430px)');
+  const { user: clerkUser } = useUser();
+
+  const localUser = (() => {
+    try {
+      const userData = localStorage.getItem("userData");
+      return userData ? JSON.parse(userData) : null;
+    } catch {
+      return null;
+    }
+  })();
+
+  const user = clerkUser || localUser;
+
+
 
   const VITE_URL = import.meta.env.VITE_DATABASE_URL
 
@@ -85,37 +100,41 @@ function PreferencesPage() {
   };
 
 return (
-    <Box sx={{ width: "100vw", minHeight:"100vh", pt: isMobile ? 2 : 8, px: 2 }}>
+    <Box sx={{ minWidth: "100vw", minHeight:"100vh", pt: isMobile ? 2 : 8}}>
       <Paper
         className="preferences-container"
         sx={{
           width: "100%",
-          maxWidth: "100%",
-          background: "#111",
-          color: "#fff",
+          maxWidth: isMobile ? "100%" : "70%",
+          marginLeft: isMobile ? "0" : "10%",
+          background: "transparent",
           borderRadius: 4,
           boxSizing: "border-box",
           p: isMobile ? 2 : 4,
+          boxShadow:"none",
           position: "relative",
-          transition: "box-shadow 0.3s, background 0.3s",
-          "&:hover": {
-            background: "#111",
-          },
         }}
       >
         <Typography 
-          variant={isMobile ? "h4" : "h5"} 
+          variant="h4"
           gutterBottom 
           sx={{ 
+            fontFamily: "Inter, sans-serif",
             fontWeight: 700, 
             letterSpacing: 1, 
-            fontFamily: "Inter, sans-serif",
             textAlign: "left"
           }}
-        >
-          Select
-          <br/>
-          Preferences
+        > 
+        {!isMobile ? (
+          <span className="oneLineTitle">
+            {user?.username}'s
+            Preferences</span>
+        ) : (
+          <>
+          <div className="select">{user?.username}'s</div>
+          <div className="preferences">Preferences</div>
+          </>
+        )}
         </Typography>
         <Divider className="preferences-divider" sx={{ borderColor: "#222", mb: 2 }} />
 
@@ -134,7 +153,7 @@ return (
                 <Typography variant = {isMobile ? "h6":"h5"} sx={{ fontFamily: "Inter, sans-serif", fontWeight: 600 }}>
                   Skill Level
                   <div style={{fontSize:"10px"}}>
-                    Choose a school year to match repo difficulty.
+                    School year = repo difficulty.
                   </div>
                 </Typography>
                 {selectedLevels.length > 0 && (
@@ -185,7 +204,7 @@ return (
                 <Typography variant = {isMobile ? "h6":"h5"} sx={{ fontFamily: "Inter, sans-serif", fontWeight: 600 }}>
                   Languages
                   <div style={{fontSize:"10px"}}>
-                    Select programming languages to focus on.
+                    Programming languages to focus on.
                   </div>
                 </Typography>
                 {selectedLanguages.length > 0 && (
@@ -233,7 +252,7 @@ return (
                 <Typography variant = {isMobile ? "h6":"h5"} sx={{ fontFamily: "Inter, sans-serif", fontWeight: 600 }}>
                   Tags
                   <div style={{fontSize:"10px"}}>
-                    Pick tech you're interested in exploring.
+                    Tech you're interested in exploring.
                   </div>
                 </Typography>
                 {selectedTags.length > 0 && (
@@ -269,10 +288,10 @@ return (
         ) : (
           // Desktop Layout - Keep your existing code here
           <>
-            <Typography variant="h6" sx={{ color: "#0ff", mt: 2, fontFamily: "Inter, sans-serif" }}>
-              Skill Level <ToolTip className="ToolTip" information={"Set your school level - think of 1st as freshman and 4th as senior! This will correlate to the level repositories you get in your feed."} />
+            <Typography variant="h6" sx={{ color: "white", mt: 2, mb:1, fontFamily: "Inter, sans-serif"}}>
+              Skill Level <ToolTip className="ToolTip" information={"Set your school level - think of 1st as freshman and 4th as senior! This will correlate to the level repositories you get in your feed."}/>
             </Typography>
-            <Stack direction="row" spacing={1} rowGap={1} flexWrap="wrap" className="preferences-stack" justifyContent="center" alignItems="center">
+            <Stack direction="row" gap = "8px" flexWrap="wrap" className="preferences-stack" justifyContent="left" alignItems="center">
               {LEVELS.map((level) => (
                 <Chip
                   key={level}
@@ -283,15 +302,12 @@ return (
                   clickable
                   sx={{
                     background: selectedLevels.includes(level) ? "#222" : "#111",
-                    color: "#fff",
-                    border: "1px solid #0ff",
                     fontWeight: 500,
                     marginRight: 1,
                     marginBottom: 1,
                     borderRadius: "10px",
                     width: "100px",
-                    justifyContent: "center",
-                    textAlign: "center",
+                    textAlign: "left",
                   }}
                 />
               ))}
@@ -299,10 +315,10 @@ return (
 
             <Divider sx={{ borderColor: "#222", my: 2 }} />
 
-            <Typography variant="h6" sx={{ color: "#0ff", mt: 2, fontFamily: "Inter, sans-serif" }}>
+            <Typography variant="h6" sx={{ color: "#0ff", mt: 2, mb:1, fontFamily: "Inter, sans-serif" }}>
               Languages <ToolTip className="ToolTip" information={"Set any languages you know (or want to know) here"} />
             </Typography>
-            <Stack direction="row" spacing={1} rowGap={1} flexWrap="wrap" className="preferences-stack" justifyContent="center" alignItems="center">         
+            <Stack direction="row"rowGap={.5} flexWrap="wrap" className="preferences-stack" justifyContent="left" alignItems="center">         
               {LANGUAGES.map((lang) => (
                 <Chip
                   key={lang}
@@ -329,10 +345,10 @@ return (
 
             <Divider sx={{ borderColor: "#222", my: 2 }} />
 
-            <Typography variant="h6" sx={{ color: "#0ff", mt: 2, fontFamily: "Inter, sans-serif" }}>
+            <Typography variant="h6" sx={{ color: "#0ff", mt: 2, mb:1, fontFamily: "Inter, sans-serif" }}>
               Tags <ToolTip className="ToolTip" information={"Set any tags of topics that you know or want to know here"} />
             </Typography>
-            <Stack direction="row" spacing={1} rowGap={1} flexWrap="wrap" className="preferences-stack" justifyContent="center" alignItems="center"> 
+            <Stack direction="row" rowGap={.5} flexWrap="wrap" className="preferences-stack" justifyContent="left" alignItems="center"> 
               {TAGS.map(tag => (
                 <Chip
                   key={tag}
@@ -366,8 +382,8 @@ return (
           className="preferences-save-btn"
           style={{
             width: isMobile ? "90%" : "auto",
-            marginLeft: isMobile ? "5%" : "none",
-            borderRadius:"5px"
+            marginLeft: isMobile ? "5%" : "0",
+            borderRadius:"5px",
           }}
         >
           <div className='preferences-save-btn-content'>Save Preferences</div>

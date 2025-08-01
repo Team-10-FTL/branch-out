@@ -1,0 +1,33 @@
+#homeMenu {
+    display:flex;
+    flex-direction: row;
+    justify-content:space-around;
+    border-radius: 25px;
+    background-color: #561c80;
+    width: 245px;
+    height:40px;
+    padding-top:5px;
+    padding-left:5px;
+    padding-right:5px;
+    padding-bottom:5px;
+    margin: 0 auto;
+    margin-top:20px;
+}
+
+.homeTab{
+    color: "white";
+    text-align: center;
+    cursor: pointer;
+    border-radius:25px;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top:2px;
+    padding-bottom:2px;
+    height:100%;
+}
+
+.homeLogo img {
+    display: block;
+    margin: 0 auto;
+    width: 60vw;
+}
