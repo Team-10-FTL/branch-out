@@ -25,4 +25,4 @@ async def recommend(request: Request):
     )
     top_idx = np.argsort(scores)[::-1][:10]
     top_repo_ids = [repo_ids[i] for i in top_idx]
-    return {"recommendations": top_repo_ids}
+    return {"recommendations": top_repo_ids, "confidence": [float(scores[i]) for i in top_idx]}

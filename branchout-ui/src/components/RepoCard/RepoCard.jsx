@@ -13,7 +13,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
-export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
+export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight }) {
   const [startX, setStartX] = useState(0);
   const [currentX, setCurrentX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -257,6 +257,9 @@ export default function RepoCard({ repo, onSwipeLeft, onSwipeRight }) {
                 </Typography>
                 <Typography variant="body2" sx={{ color: "#ddd", mt: 0.5, fontSize:{xs:".8rem", md:".875rem"} }}>
                 ☆ {repo.stars || "N/A"}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "#ddd", mt: 0.5, fontSize:{xs:".8rem", md:".875rem"} }}>
+                  {confidence ? `Confidence: ${confidence.toFixed(2)*100}%` : "Confidence: N/A"}
                 </Typography>
               </Box>
             </Box>

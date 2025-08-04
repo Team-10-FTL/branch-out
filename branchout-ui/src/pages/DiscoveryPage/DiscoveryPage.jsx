@@ -20,6 +20,7 @@ const DiscoveryPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [selectedRepo, setSelectedRepo] = useState(null);
+  const [confidenceScores, setConfidenceScores] = useState([]);
   const { getToken } = useAuth();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md')); // <600px
@@ -50,6 +51,7 @@ const DiscoveryPage = () => {
         });
         // Use the ordered repo objects directly
         setRepos(response.data.recommendations || []);
+        setConfidenceScores(response.data.confidence || []);
       } catch (err) {
         setLoading(false);
         console.log("Error:", err)
@@ -68,6 +70,7 @@ const DiscoveryPage = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRepos(response.data.recommendations || []);
+      setConfidenceScores(response.data.confidence || []);
     } catch (err) {
       setLoading(false);
       console.log("Error:", err)
@@ -247,6 +250,7 @@ const DiscoveryPage = () => {
                     repo={repo}
                     onSwipeLeft={handleSwipeLeft}
                     onSwipeRight={handleSwipeRight}
+                    confidence={confidenceScores[i] || 0}
                   />
                 </Box>
               );
