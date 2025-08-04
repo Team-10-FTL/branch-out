@@ -41,7 +41,7 @@ const Chat = () => {
     </style>
 
     useEffect(() => {
-        wsRef.current = new WebSocket('ws://localhost:8000/ws/chat');
+        wsRef.current = new WebSocket('ws://localhost:8001/ws/chat');
 
         wsRef.current.onopen = () => {
             console.log('WebSocket Connected');
@@ -107,7 +107,7 @@ const Chat = () => {
                     }
                     return nextText;
                 });
-            }, 30);
+            }, 20);
         }
     }
     
