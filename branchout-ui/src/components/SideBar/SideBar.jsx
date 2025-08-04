@@ -90,9 +90,14 @@ export default function SideBar() {
                 alt="logo" 
                 style={{ width: 30, cursor: 'pointer' }}
               />
-              <IconButton onClick={handleMenuOpen} sx={{ color: 'white'}}>
-                <MenuIcon />
-              </IconButton>
+            <IconButton 
+              onClick={handleMenuOpen} 
+              sx={{ color: 'white'}}
+              aria-label="menu" // This helps with onboarding targeting
+              className="mobile-menu-button" // Add this class for onboarding
+            >
+              <MenuIcon />
+            </IconButton>
           </Toolbar>
         </AppBar>
 
@@ -107,6 +112,7 @@ export default function SideBar() {
               ? { top: anchorEl.getBoundingClientRect().bottom -20, left: anchorEl.getBoundingClientRect().right - 180 }
               : undefined
           }
+          className="mobile-navigation-menu" // Add this class
           sx={{
             '& .MuiPaper-root': {
               marginTop: 1,
@@ -115,37 +121,70 @@ export default function SideBar() {
             }
           }}
         >
-          <MenuItem onClick={() => { handleMenuClose(); navigate('/profile')}} sx = {{color: isActive("/profile") ? "#e34714" : "white"}}>
+          <MenuItem 
+            onClick={() => { handleMenuClose(); navigate('/profile')}} 
+            sx = {{color: isActive("/profile") ? "#e34714" : "white"}}
+            className="nav-item-profile" // Add this class
+            data-nav="profile" // Add this attribute
+          >
             <PersonIcon sx={{ mr: 2}} />
             Profile
           </MenuItem>
+          
           <Divider />
-          <MenuItem onClick={() => { handleMenuClose(); navigate('/discovery'); }}sx = {{color: isActive("/discovery") ? "#e34714" : "white"}}>
+          
+          <MenuItem 
+            onClick={() => { handleMenuClose(); navigate('/discovery'); }}
+            sx = {{color: isActive("/discovery") ? "#e34714" : "white"}}
+            className="nav-item-discovery" // Add this class
+            data-nav="discovery" // Add this attribute
+          >
             <ExploreIcon sx={{ mr: 2}} />
             Discovery
           </MenuItem>
+          
           <Divider />
-          <MenuItem onClick={() => { handleMenuClose(); navigate('/search'); }}sx = {{color: isActive("/search") ? "#e34714" : "white"}}>
+          
+          <MenuItem 
+            onClick={() => { handleMenuClose(); navigate('/search'); }}
+            sx = {{color: isActive("/search") ? "#e34714" : "white"}}
+            className="nav-item-search" // Add this class
+            data-nav="search" // Add this attribute
+          >
             <ManageSearchIcon sx={{ mr: 2}} />
             Search
           </MenuItem>
+          
           <Divider />
-          <MenuItem onClick={() => { handleMenuClose(); navigate('/preferences'); }}sx = {{color: isActive("/preferences") ? "#e34714" : "white"}}>
+          
+          <MenuItem 
+            onClick={() => { handleMenuClose(); navigate('/preferences'); }}
+            sx = {{color: isActive("/preferences") ? "#e34714" : "white"}}
+            className="nav-item-preferences" // Add this class
+            data-nav="preferences" // Add this attribute
+          >
             <SettingsAccessibilityIcon sx={{ mr: 2}} />
             Preferences
           </MenuItem>
+          
           <Divider />
-          <MenuItem onClick={() => { handleMenuClose(); navigate('/savedrepos'); }}sx = {{color: isActive("/savedrepos") ? "#e34714" : "white"}}>
+          
+          <MenuItem 
+            onClick={() => { handleMenuClose(); navigate('/savedrepos'); }}
+            sx = {{color: isActive("/savedrepos") ? "#e34714" : "white"}}
+            className="nav-item-saved" // Add this class
+            data-nav="saved" // Add this attribute
+          >
             <ChatIcon sx={{ mr: 2}} />
             Saved Repos
           </MenuItem>
           
-          {/* <MenuItem onClick={async() => { handleMenuClose(); await signOut();navigate("/signup") }}>
-            <InfoIcon sx={{ mr: 2 }} />
-            Logout
-          </MenuItem> */}
           {currentUser?.role === 'ADMIN' && (
-            <MenuItem onClick={() => { handleMenuClose(); navigate('/admin'); }}>
+            <MenuItem 
+              onClick={() => { handleMenuClose(); navigate('/admin'); }}
+              className="nav-item-admin" // Add this class
+              data-nav="admin" // Add this attribute
+            >
               <AdminIcon sx={{ mr: 2}} />
               Admin Dashboard
             </MenuItem>
@@ -223,12 +262,16 @@ export default function SideBar() {
         }}
       >
         {/* Logo */}
-        <Avatar className="profile-avatar" sx={{ width: 32, height: 32, bgcolor: '#daa7e2' }}>
+        <Avatar 
+          className="profile-avatar" // Keep this class - it's already correct
+          sx={{ width: 32, height: 32, bgcolor: '#daa7e2' }}
+        >
           {(clerkUser?.firstName?.charAt(0) ||
             currentUser?.username?.charAt(0) ||
             currentUser?.email?.charAt(0) ||
             'U').toUpperCase()}
         </Avatar>
+
         {!isTablet && (
           <Box sx={{ ml: 1 }}>
             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
