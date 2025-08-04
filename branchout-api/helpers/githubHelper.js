@@ -7,7 +7,7 @@ async function fetchReposWithFilters({ startDate, endDate }) {
     const query = `license:mit good-first-issues:>0 created:${startDate}..${endDate}`;
 
     // actual full search API URL - encoded component hides the full url
-    const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=20`;
+    const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=30`;
 
     const response = await axios.get(url, {
         headers: {

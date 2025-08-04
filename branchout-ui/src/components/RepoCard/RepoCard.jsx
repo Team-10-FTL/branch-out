@@ -254,7 +254,7 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
                 ☆ {repo.stars || "N/A"}
                 </Typography>
                 <Typography variant="body2" sx={{ color: "#ddd", mt: 0.5, fontSize:{xs:".8rem", md:".875rem"} }}>
-                  {confidence ? `Confidence: ${confidence.toFixed(2)*100}%` : "Confidence: N/A"}
+                  {confidence ? `Confidence: ${Math.round(confidence.toFixed(2)*100)}%` : "Confidence: N/A"}
                 </Typography>
               </Box>
             </Box>
