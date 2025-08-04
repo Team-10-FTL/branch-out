@@ -91,6 +91,8 @@ exports.getRecommendations = async (req, res) => {
     });
     console.log("fast api", fastapiRes.data)
     const recommendedRepoIds = fastapiRes.data.recommendations || [];
+    const confidenceScores = fastapiRes.data.confidence || [];
+
 
     // After getting recommendedRepoIds
     const recommendedRepos = recommendedRepoIds.length
@@ -103,7 +105,9 @@ exports.getRecommendations = async (req, res) => {
       recommendedRepos.find(repo => repo.id === Number(id))
     ).filter(Boolean);
 
-    res.json({ recommendations: orderedRepos });
+
+
+    res.json({ recommendations: orderedRepos , confidence: confidenceScores });
   } catch (error) {
     console.error("Recommendation error:", error.message);
     res.status(500).json({ recommendations: [], error: error.message });

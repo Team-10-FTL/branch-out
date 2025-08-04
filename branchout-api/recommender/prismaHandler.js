@@ -77,10 +77,13 @@ exports.getRecommendations = async (req, res) => {
         repos: repoPayload
     });
 
-
     const recommendedRepoIds = fastapiRes.data.recommendations || [];
+    const confidenceScores = fastapiRes.data.confidence || [];
 
-    res.json({ recommendations: recommendedRepoIds });
+    res.json({ 
+      recommendations: recommendedRepoIds,
+      confidence: confidenceScores 
+    });
 
   } catch (error) {
     console.error("Recommendation error:", error.message);
