@@ -23,6 +23,7 @@ import {
 } from '@mui/material';
 import SettingsAccessibilityIcon from '@mui/icons-material/SettingsAccessibility';
 import InfoIcon from '@mui/icons-material/Info';
+import ExploreIcon from '@mui/icons-material/Explore';
 import {
   Home as HomeIcon,
   Settings as SettingsIcon,
@@ -35,7 +36,8 @@ import {
   Logout as LogoutIcon,
   AdminPanelSettings as AdminIcon
 } from '@mui/icons-material';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';import { useUser, useClerk } from '@clerk/clerk-react';
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
+import { useUser, useClerk } from '@clerk/clerk-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const drawerWidth = 180;
@@ -119,12 +121,12 @@ export default function SideBar() {
           </MenuItem>
           <Divider />
           <MenuItem onClick={() => { handleMenuClose(); navigate('/discovery'); }}sx = {{color: isActive("/discovery") ? "#e34714" : "white"}}>
-            <PersonSearchIcon sx={{ mr: 2}} />
+            <ExploreIcon sx={{ mr: 2}} />
             Discovery
           </MenuItem>
           <Divider />
           <MenuItem onClick={() => { handleMenuClose(); navigate('/search'); }}sx = {{color: isActive("/search") ? "#e34714" : "white"}}>
-            <AppsIcon sx={{ mr: 2}} />
+            <ManageSearchIcon sx={{ mr: 2}} />
             Search
           </MenuItem>
           <Divider />
@@ -281,7 +283,7 @@ export default function SideBar() {
               }}
             >
               <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"5px", paddingRight:"5px"}}>
-                <PersonSearchIcon sx={{ color: 'white' }} />
+                <ExploreIcon sx={{ color: 'white' }} />
               </ListItemIcon>
               {!isTablet && <ListItemText primary="Discovery" />}
             </ListItemButton>
@@ -310,7 +312,7 @@ export default function SideBar() {
               }}
             >
               <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', display: 'flex', paddingBottom:"5px", paddingRight:"5px"}}>
-                <AppsIcon sx={{ color: 'white' }} />
+                <ManageSearchIcon sx={{ color: 'white' }} />
               </ListItemIcon>
               {!isTablet && <ListItemText primary="Search" />}
             </ListItemButton>

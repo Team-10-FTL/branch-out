@@ -201,15 +201,9 @@ const DiscoveryPage = () => {
       const currentRepo = repos[currentIndex];
       if (!currentRepo) return;
 
-<<<<<<< Updated upstream
       if(e.key === "ArrowLeft"){
         handleSwipeLeft(currentRepo);
       } else if(e.key === "ArrowRight"){
-=======
-      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
-        handleSwipeLeft(currentRepo);
-      } else if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
->>>>>>> Stashed changes
         handleSwipeRight(currentRepo);
       }
     };
