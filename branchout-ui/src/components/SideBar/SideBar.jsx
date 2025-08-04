@@ -82,8 +82,8 @@ export default function SideBar() {
     <>
     {isMobile ? (
       <>
-        <AppBar position = "fixed" sx={{ bgcolor: 'black', zIndex:1300, boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-    borderBottom: '1px solid rgba(227, 71, 20, 0.3)'}}>
+        <AppBar position = "fixed" sx={{ bgcolor: 'black', zIndex:1300, boxShadow: 'none', backgroundImage:"none",
+    borderBottom: '1px solid rgba(169, 81, 19, 0.6)'}}>
             <Toolbar sx={{ justifyContent: 'space-between', px: 2, minHeight: '64px !important' }}>
               <img 
                 src={miniLogo} 
@@ -139,11 +139,7 @@ export default function SideBar() {
             <ChatIcon sx={{ mr: 2}} />
             Saved Repos
           </MenuItem>
-          <Divider />
-          <MenuItem onClick={() => { handleMenuClose(); navigate('/about'); }}sx = {{color: isActive("/about") ? "#e34714" : "white"}}>
-            <InfoIcon sx={{ mr: 2}} />
-            About
-          </MenuItem>
+          
           {/* <MenuItem onClick={async() => { handleMenuClose(); await signOut();navigate("/signup") }}>
             <InfoIcon sx={{ mr: 2 }} />
             Logout
@@ -175,7 +171,7 @@ export default function SideBar() {
             right: 0,
             width: '4px',
             height: '100%',
-            background: 'linear-gradient(to left, rgba(197, 111, 31, 0.7), rgba(227, 71, 20, 0.2), transparent)',              }
+            background: 'linear-gradient(to left, rgba(197, 111, 31, 0.6), rgba(227, 71, 20, 0.2), transparent)',              }
         },
       }}
     >
@@ -384,7 +380,7 @@ export default function SideBar() {
             NAVIGATION
           </Typography>
         )} */}
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton
               href="/about"
               sx={{
@@ -412,7 +408,7 @@ export default function SideBar() {
               </ListItemIcon>
                 {!isTablet && <ListItemText primary="About" />}
               </ListItemButton>
-            </ListItem>
+            </ListItem> */}
           {/* Admin Dashboard - only show if user is admin */}
           {currentUser?.role === 'ADMIN' && (
             <ListItem disablePadding>

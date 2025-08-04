@@ -22,17 +22,19 @@ return (
           width: 300,
           height:130,
           borderRadius: 2,
-          border: "1px solid #281b2aff",
+          border: "1px solid #292629ff",
           // Force override MUI's default background
-          backgroundColor: "#261629ff !important",
-          backgroundImage: "none !important",
-          color: "white !important",
+          backgroundColor: "#1c1b1e",
+          backgroundImage: "none",
+          color: "white",
+          boxShadow: "0 0 6px rgba(255, 255, 255, 0.3)",
           // Override the Paper component's CSS variables
-          "--Paper-shadow": "0 4px 12px rgba(100, 83, 83, 0.04) !important",
-          "--Paper-overlay": "none !important",
+          "--Paper-shadow": "0 4px 12px rgba(100, 83, 83, 0.04)",
+          "--Paper-overlay": "none",
           "&:hover": {
-            boxShadow: "0 0 5px rgba(193, 127, 116, 0.2)",
+            boxShadow: "0 0 8px rgba(255, 255, 255, 0.5)",
             transform: "scale(1.01)",
+            backgroundColor: "#2a292dff",
           },
           cursor: "pointer",
           transition: "all 0.2s ease-in-out",
@@ -41,7 +43,7 @@ return (
             backgroundColor: "transparent",
           },
           "& .MuiCardActionArea-root": {
-            backgroundColor: "transparent !important",
+            backgroundColor: "transparent",
           },
         }}
         onClick={() => setOpen(true)}
