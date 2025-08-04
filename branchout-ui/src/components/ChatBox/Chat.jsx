@@ -5,7 +5,6 @@ import SendIcon from '@mui/icons-material/Send';
 import ChatIcon from '@mui/icons-material/Chat';
 import CloseIcon from '@mui/icons-material/Close';
 
-
 const Chat = () => {
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false); // loading animation
@@ -16,7 +15,7 @@ const Chat = () => {
     const [showLoadingDots, setShowLoadingDots] = useState(false);
 
     const [chat, setChat] = useState([
-        { from: 'AI', msg: 'Hey dev, Whats up! Ask me more about a repository, how you can contribute to that repository, ask about any open issues or about code snippets! The world is your oyster.', time: '10:00' },
+        { from: 'Octocat', msg: 'Hey dev, whats up! Ask me more about a repository like stats, and how you can contribute, or ask about open issues & code snippets! Learn how to commit to what matters.', time: '10:00' },
     ]);
 
     const wsRef = useRef(null);
@@ -101,7 +100,7 @@ const Chat = () => {
                     if (i >= responseFromBackend.length) {
                         clearInterval(typingInterval);
                         const responseTime = new Date().toLocaleTimeString().slice(0, 5);
-                        setChat((prevChat) => [...prevChat, { from: 'AI', msg: responseFromBackend, time: responseTime }]);
+                        setChat((prevChat) => [...prevChat, { from: 'Octocat', msg: responseFromBackend, time: responseTime }]);
                         setDisplayedMsg('');
                         setIsTyping(false);
                     }
@@ -151,15 +150,9 @@ const Chat = () => {
                 </Fab>
             )}
 
-
             {/* Slide-in Drawer from Right */}
             <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-            <Box sx={{ width: 350, height: '100vh', display: 'flex', flexDirection: 'column', p: 0, m: 0 }}>
-            {/* <Grid container>
-                        <Grid item xs={12}>
-                            <Typography variant="h5" sx={{ m: 2 }}>Ask Octocat!</Typography>
-                        </Grid>
-                    </Grid> */}
+            <Box sx={{ width: 420, height: '100vh', display: 'flex', flexDirection: 'column', p: 0, m: 0 }}>
                     <Grid container alignItems="center" justifyContent="space-between" sx={{ m: 2 }}>
                         <Typography variant="h5">Ask Octocat!</Typography>
                         <Fab size="small" color="error" onClick={toggleDrawer(false)}>
@@ -167,40 +160,42 @@ const Chat = () => {
                         </Fab>
                     </Grid>
 
-                    <Grid container component={Paper} sx={{ width: '100%', height: '80vh' }}>
+                    <Grid container component={Paper} sx={{ width: '100%' }}>
                         <Grid item xs={12}>
-                            <List sx={{ height: '70vh', overflowY: 'auto' }}>
+                            <List sx={{ height: '88vh', overflowY: 'auto' }}>
                                 {chat.map((c, i) => (
-                                    <ListItem key={i} sx={{ justifyContent: c.from === 'AI' ? 'flex-start' : 'flex-end' }}>
+                                    <ListItem key={i} sx={{ justifyContent: c.from === 'Octocat' ? 'flex-start' : 'flex-end' }}>
                                         <Paper elevation={3} sx={{
                                             p: 1.5,
                                             maxWidth: '70%',
-                                            bgcolor: c.from === 'AI' ? 'linear-gradient(135deg, #f3f3f3 0%, #e0e0e0 100%)' : 'primary.main',
-                                            color: c.from === 'AI' ? 'white' : 'white',
-                                            borderRadius: c.from === 'AI' ? '12px' : '20px',
+                                            bgcolor: c.from === 'Octocat' ? 'linear-gradient(135deg, #f3f3f3 0%, #e0e0e0 100%)' : 'primary.main',
+                                            color: c.from === 'Octocat' ? 'white' : 'white',
+                                            borderRadius: c.from === 'Octocat' ? '12px' : '20px',
                                         }}>
-                                            {c.from === 'AI' ? (
+                                            {c.from === 'Octocat' ? (
                                                 <ReactMarkdown>{c.msg}</ReactMarkdown>
                                             ) : (
-                                                <Typography variant="body1">{c.msg}</Typography>
+                                                <ReactMarkdown >{c.msg}</ReactMarkdown>
                                             )}
-                                            <Typography variant="caption" sx={{ display: 'block', textAlign: c.from === 'AI' ? 'left' : 'right' }}>
+                                            <Typography variant="caption" sx={{ display: 'block', textAlign: c.from === 'Octocat' ? 'left' : 'right' }}>
                                                 {c.from} at {c.time}
                                             </Typography>
                                         </Paper>
                                     </ListItem>
                                 ))}
-
                                 {isTyping && (
                                     <ListItem sx={{ justifyContent: 'flex-start' }}>
                                         <Paper elevation={3} sx={{
                                             p: 1.5,
                                             maxWidth: '70%',
-                                            bgcolor: 'gray',
+                                            bgcolor: 'linear-gradient(135deg, #f3f3f3 0%, #e0e0e0 100%)',
                                             color: 'white',
                                             borderRadius: '12px',
                                         }}>
-                                            <Typography variant="body1">{displayedMsg}</Typography>
+                                            <ReactMarkdown>{displayedMsg}</ReactMarkdown>
+                                            <Typography variant="caption" sx={{ display: 'block', textAlign: 'left' }}>
+                                                Octocat is typing...
+                                            </Typography>
                                         </Paper>
                                     </ListItem>
                                 )}
@@ -221,26 +216,32 @@ const Chat = () => {
                                         </Paper>
                                     </ListItem>
                                 )}
-
                                 <div ref={bottomRef} />
                             </List>
                             <Divider />
-                            <Grid container sx={{ padding: '20px', p:2 }}>
-                                <Grid item xs={11} sx={{ pr: 1 }}>
+                            <Grid container alignItems="flex-end" sx={{ padding: '20px', p: 2 }}>
+                                <Box sx={{ flexGrow: 1, pr: 1 }}>
                                     <TextField
-                                        variant="outlined"
                                         onChange={handleChange}
                                         onKeyDown={keyPress}
                                         value={message}
-                                        placeholder="Type your message..."
+                                        placeholder="Ask Octocat Something..."
                                         fullWidth
-                                        sx={{ bgcolor: 'gray', borderRadius: '20px', px: 2, boxShadow: 1 }}
+                                        multiline
+                                        minRows={1}
+                                        maxRows={6}
+                                        sx={{
+                                            bgcolor: 'gray',
+                                            borderRadius: '20px',
+                                            px: 2,
+                                            boxShadow: 1,
+                                            '& .MuiInputBase-root': {
+                                                padding: '8px 16px'
+                                            }
+                                        }}
                                     />
-                                </Grid>
-                                <Grid item xs={1} sx={{ textAlign: 'right' }}>
-                                    {/* <Fab color="secondary" onClick={() => addMessage('ME', message)} aria-label="send" size="small">
-                                        <SendIcon />
-                                    </Fab> */}
+                                </Box>
+                                <Box sx={{ flexShrink: 0 }}>
                                     <Fab
                                         color="secondary"
                                         onClick={() => addMessage('ME', message)}
@@ -250,8 +251,9 @@ const Chat = () => {
                                     >
                                         <SendIcon />
                                     </Fab>
-                                </Grid>
+                                </Box>
                             </Grid>
+
                         </Grid>
                     </Grid>
                 </Box>

@@ -140,7 +140,10 @@ async def process_message(conversation_history: list) -> str:
                 - Retrieves a list of recent public gists across GitHub.
                 - Example LLM Query: "Show me recent public gists on GitHub."
 
-                IMPORTANT: Always return in raw markdown.
+                IMPORTANT INSTRUCTIONS: 
+                - Always return in raw markdown.
+                - Keep responses concise and informative. Avoid lengthy explanations or rambling.
+                - Limit responses to **150-200 words maximum**, unless explicitly asked for a detailed explanation.
             """
 
             response = await client.aio.models.generate_content(
