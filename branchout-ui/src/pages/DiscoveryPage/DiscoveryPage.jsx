@@ -189,9 +189,9 @@ const DiscoveryPage = () => {
       const currentRepo = repos[currentIndex];
       if (!currentRepo) return;
 
-      if(e.key === "ArrowLeft" || e.key.toLowerCase() === "a"){
+      if(e.key === "ArrowLeft"){
         handleSwipeLeft(currentRepo);
-      } else if(e.key === "ArrowRight" || e.key.toLowerCase() === "d"){
+      } else if(e.key === "ArrowRight"){
         handleSwipeRight(currentRepo);
       }
     };
