@@ -159,11 +159,6 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
             sm:"75vh",
             md:"800px"
           },
-          height:{
-            xs:"70vh",
-            sm:"75vh",
-            md:"800px"
-          },
           minHeight:{
             xs:500,
             md:800
@@ -385,11 +380,14 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
               },
               transform: "translateY(-50%)",
               color: "#E34714",
+              fontSize: {
+                xs: "20px",
+                md: "24px"
+              },
               opacity: isDragging ? (currentX < -50 ? 1 : 0.3) : 1,
               transition: "opacity 0.2s",
               cursor: "pointer",
               zIndex: 1000,
-              fontSize: "24px",
               "&:hover": {
                   opacity: 1,
                   transform: isMobile 
@@ -401,15 +399,15 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
           >
-            <CancelIcon fontSize="large" />
+            <CancelIcon fontSize={isMobile ? "medium" : "large"}/>
           </Box>
           <Box
             sx={{
               position: "absolute",
               top: "50%",
               right: {
-                xs: "5px",
-                md: "10px"
+                xs: "-20px",
+                md: "24px"
               },
               transform: "translateY(-50%)",
               color: "green",
