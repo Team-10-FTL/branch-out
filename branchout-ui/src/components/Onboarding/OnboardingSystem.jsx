@@ -2,15 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import OnboardingProgress from './OnboardingProgress';
 import OnboardingTooltip from './OnboardingTooltip';
 import { useUser, useAuth } from '@clerk/clerk-react';
+import { useMediaQuery } from '@mui/material';
 
-// Onboarding steps configuration for your BranchOut app
-const ONBOARDING_STEPS = [
+// Mobile and Desktop onboarding steps
+const DESKTOP_ONBOARDING_STEPS = [
   {
     id: 'welcome',
     title: 'Welcome to BranchOut!',
     content: 'Let\'s take a quick tour to help you discover amazing repositories tailored to your interests.',
     target: null,
     position: 'center'
+  },
+    {
+    id: 'profile',
+    title: 'Your Profile',
+    content: 'Click here to manage your account information and view your current preferences.',
+    target: '.profile-avatar',
+    position: 'right'
   },
   {
     id: 'discovery',
@@ -34,18 +42,77 @@ const ONBOARDING_STEPS = [
     position: 'right'
   },
   {
-    id: 'profile',
-    title: 'Your Profile',
-    content: 'Click here to manage your account information and view your current preferences.',
-    target: '.profile-avatar',
-    position: 'right'
-  },
-  {
     id: 'repo-interaction',
     title: 'Repository Cards',
     content: 'Swipe left to dislike, right to save. Click on cards for detailed information. Use keyboard arrows or A/D keys too!',
     target: '.repo-card',
     position: 'left'
+  }
+];
+
+const MOBILE_ONBOARDING_STEPS = [
+  {
+    id: 'welcome',
+    title: 'Welcome to BranchOut!',
+    content: 'Let\'s take a quick tour to help you discover amazing repositories tailored to your interests.',
+    target: null,
+    position: 'center'
+  },
+  {
+    id: 'mobile-menu',
+    title: 'Navigation Menu',
+    content: 'Tap the menu button in the top-right corner to access navigation options.',
+    target: '.mobile-menu-button, button[aria-label="menu"]',
+    position: 'bottom',
+    requiresMenuOpen: false,
+    action: 'openMenu'
+  },
+    {
+    id: 'profile-mobile',
+    title: 'Your Profile',
+    content: 'Manage your account information and view your current preferences.',
+    target: '.nav-item-profile, [data-nav="profile"]',
+    position: 'left',
+    requiresMenuOpen: true
+  },
+  {
+    id: 'discovery-mobile',
+    title: 'Discovery Page',
+    content: 'Find personalized repository recommendations here. On mobile, swipe or tap the icons to interact with repos.',
+    target: '.nav-item-discovery, [data-nav="discovery"]',
+    position: 'left',
+    requiresMenuOpen: true
+  },
+  {
+    id: 'search-mobile',
+    title: 'Search Repos',
+    content: 'Search for specific repositories using filters and keywords.',
+    target: '.nav-item-search, [data-nav="search"]',
+    position: 'left',
+    requiresMenuOpen: true
+  },
+  {
+    id: 'preferences-mobile',
+    title: 'Your Preferences',
+    content: 'Set your skill level, preferred languages, and topics for better recommendations.',
+    target: '.nav-item-preferences, [data-nav="preferences"]',
+    position: 'left',
+    requiresMenuOpen: true
+  },
+  {
+    id: 'saved-repos-mobile',
+    title: 'Saved Repositories',
+    content: 'Access all your liked repositories from here.',
+    target: '.nav-item-saved, [data-nav="saved"]',
+    position: 'left',
+    requiresMenuOpen: true
+  },
+  {
+    id: 'repo-interaction-mobile',
+    title: 'Repository Cards',
+    content: 'Swipe left to dislike, right to save. Tap cards for more details. On mobile, you can also use the action buttons!',
+    target: '.repo-card',
+    position: 'top'
   }
 ];
 
@@ -55,6 +122,11 @@ const OnboardingSystem = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [hasCheckedOnboarding, setHasCheckedOnboarding] = useState(false);
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
+  
+  // Responsive detection
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const ONBOARDING_STEPS = isMobile ? MOBILE_ONBOARDING_STEPS : DESKTOP_ONBOARDING_STEPS;
   const currentStep = ONBOARDING_STEPS[currentStepIndex];
   
   const { user: clerkUser } = useUser();
@@ -73,9 +145,55 @@ const OnboardingSystem = () => {
   const user = clerkUser || localUser;
   const userId = user?.id;
 
+  // Handle menu state for mobile onboarding
+const handleMenuAction = (action) => {
+  if (action === 'openMenu') {
+    const menuButton = document.querySelector('button[aria-label="menu"]') || 
+                      document.querySelector('.MuiIconButton-root');
+    if (menuButton && window.innerWidth <= 430) {
+      menuButton.click();
+      setMenuIsOpen(true);
+    }
+  } else if (action === 'closeMenu') {
+    // Click outside the menu to close it
+    const backdrop = document.querySelector('.MuiBackdrop-root');
+    if (backdrop) {
+      backdrop.click();
+    } else {
+      // Alternative: press escape key
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    }
+    setMenuIsOpen(false);
+  }
+};
+
+  // Check if current step requires menu to be open and handle it
+  useEffect(() => {
+    if (!isActive || !currentStep) return;
+
+    if (currentStep.action) {
+      setTimeout(() => {
+        handleMenuAction(currentStep.action);
+      }, 500);
+    }
+
+    // For steps that require menu to be open, ensure it's open
+    if (currentStep.requiresMenuOpen && !menuIsOpen) {
+      setTimeout(() => {
+        handleMenuAction('openMenu');
+      }, 300);
+    }
+
+    // For steps that require menu to be closed, ensure it's closed
+    if (currentStep.requiresMenuOpen === false && menuIsOpen) {
+      setTimeout(() => {
+        handleMenuAction('closeMenu');
+      }, 300);
+    }
+  }, [currentStepIndex, isActive, currentStep]);
+
   useEffect(() => {
     const checkOnboardingStatus = async () => {
-      // Don't run if no user or already checked
       if (!user || !userId || hasCheckedOnboarding) {
         setIsLoading(false);
         return;
@@ -84,7 +202,6 @@ const OnboardingSystem = () => {
       setIsLoading(true);
       
       try {
-        // Get token (works for both Clerk and localStorage auth)
         const token = clerkUser ? await getToken() : localStorage.getItem("authToken");
         
         if (!token) {
@@ -106,28 +223,21 @@ const OnboardingSystem = () => {
         
         const userData = await response.json();
         
-        console.log('User data received:', userData); // Debug log
-        
-        // Check if onboarding is completed - handle different response structures
         const hasCompleted = userData?.hasCompletedOnboarding || 
                            userData?.user?.hasCompletedOnboarding || 
                            false;
         
-        console.log('Has completed onboarding:', hasCompleted); // Debug log
-        
         setHasCheckedOnboarding(true);
         
-        // Only show onboarding if user hasn't completed it
         if (!hasCompleted) {
-          console.log('Starting onboarding tour...'); // Debug log
+          console.log(`Starting ${isMobile ? 'mobile' : 'desktop'} onboarding tour...`);
           setTimeout(() => setIsActive(true), 1500);
         } else {
-          console.log('Onboarding already completed, skipping tour'); // Debug log
+          console.log('Onboarding already completed, skipping tour');
         }
         
       } catch (error) {
         console.error('Error checking onboarding status:', error);
-        // On error, don't show onboarding to avoid annoying users
         setHasCheckedOnboarding(true);
       } finally {
         setIsLoading(false);
@@ -135,10 +245,12 @@ const OnboardingSystem = () => {
     };
 
     checkOnboardingStatus();
-  }, [user, userId, clerkUser, getToken, hasCheckedOnboarding]);
+  }, [user, userId, clerkUser, getToken, hasCheckedOnboarding, isMobile]);
 
-  // Handle keyboard navigation
+  // Handle keyboard navigation (disable on mobile for touch interactions)
   useEffect(() => {
+    if (isMobile) return; // Disable keyboard navigation on mobile
+    
     const handleKeyDown = (e) => {
       if (!isActive) return;
       
@@ -153,15 +265,21 @@ const OnboardingSystem = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isActive, currentStepIndex]);
+  }, [isActive, currentStepIndex, isMobile]);
 
-  const handleNext = () => {
-    if (currentStepIndex < ONBOARDING_STEPS.length - 1) {
-      setCurrentStepIndex(prev => prev + 1);
-    } else {
-      handleComplete();
-    }
-  };
+const handleNext = () => {
+  // Close menu before showing repo card step
+  if (currentStep?.id === 'close-menu' || 
+      (currentStepIndex === ONBOARDING_STEPS.length - 2 && isMobile)) {
+    handleMenuAction('closeMenu');
+  }
+  
+  if (currentStepIndex < ONBOARDING_STEPS.length - 1) {
+    setCurrentStepIndex(prev => prev + 1);
+  } else {
+    handleComplete();
+  }
+};
 
   const handlePrev = () => {
     if (currentStepIndex > 0) {
@@ -170,15 +288,28 @@ const OnboardingSystem = () => {
   };
 
   const handleSkip = () => {
+    // Close mobile menu if open before completing
+    if (isMobile && menuIsOpen) {
+      handleMenuAction('closeMenu');
+    }
     handleComplete();
   };
 
   const handleClose = () => {
+    // Close mobile menu if open before completing
+    if (isMobile && menuIsOpen) {
+      handleMenuAction('closeMenu');
+    }
     handleComplete();
   };
 
   const handleComplete = async () => {
     setIsActive(false);
+    
+    // Close mobile menu if it's open
+    if (isMobile && menuIsOpen) {
+      handleMenuAction('closeMenu');
+    }
     
     // Update backend to mark onboarding as completed
     try {
@@ -189,24 +320,14 @@ const OnboardingSystem = () => {
         return;
       }
 
-      console.log('Attempting to update onboarding status...'); // Debug log
-      console.log('User ID:', userId); // Debug log
-      console.log('Token exists:', !!token); // Debug log
-
-      const requestBody = { hasCompletedOnboarding: true };
-      console.log('Request body:', requestBody); // Debug log
-
       const response = await fetch(`${import.meta.env.VITE_DATABASE_URL}/user/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify({ hasCompletedOnboarding: true })
       });
-
-      console.log('Response status:', response.status); // Debug log
-      console.log('Response ok:', response.ok); // Debug log
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -215,39 +336,8 @@ const OnboardingSystem = () => {
       }
 
       const result = await response.json();
-      console.log('Onboarding status updated successfully:', result); // Debug log
-      
-      // Check if the immediate response contains the updated field
-      const immediateCheck = result?.hasCompletedOnboarding || result?.user?.hasCompletedOnboarding;
-      console.log('Immediate response hasCompletedOnboarding:', immediateCheck);
-      
-      // Mark as checked so it won't run again in this session
+      console.log('Onboarding status updated successfully:', result);
       setHasCheckedOnboarding(true);
-      
-      // Verify the update worked by checking the profile again
-      setTimeout(async () => {
-        try {
-          const verifyResponse = await fetch(`${import.meta.env.VITE_DATABASE_URL}/user/profile`, {
-            headers: { 
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          });
-          const verifyData = await verifyResponse.json();
-          console.log('Verification - Updated user data:', verifyData);
-          console.log('Verification - hasCompletedOnboarding is now:', verifyData?.hasCompletedOnboarding || verifyData?.user?.hasCompletedOnboarding);
-          
-          // Check all possible locations where the field might be
-          console.log('Field locations check:');
-          console.log('- verifyData.hasCompletedOnboarding:', verifyData.hasCompletedOnboarding);
-          console.log('- verifyData.user?.hasCompletedOnboarding:', verifyData.user?.hasCompletedOnboarding);
-          console.log('- verifyData.profile?.hasCompletedOnboarding:', verifyData.profile?.hasCompletedOnboarding);
-          console.log('- verifyData.data?.hasCompletedOnboarding:', verifyData.data?.hasCompletedOnboarding);
-          
-        } catch (verifyError) {
-          console.error('Error verifying update:', verifyError);
-        }
-      }, 1000);
       
     } catch (error) {
       console.error('Error updating onboarding status:', error);
@@ -260,13 +350,10 @@ const OnboardingSystem = () => {
   };
 
   const resetOnboarding = async () => {
-    // Reset onboarding status in database
     try {
       const token = clerkUser ? await getToken() : localStorage.getItem("authToken");
       
       if (token) {
-        console.log('Resetting onboarding status in database...');
-        
         const response = await fetch(`${import.meta.env.VITE_DATABASE_URL}/user/profile`, {
           method: 'PUT',
           headers: {
@@ -277,24 +364,18 @@ const OnboardingSystem = () => {
         });
 
         if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Reset response error:', errorText);
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-
-        const result = await response.json();
-        console.log('Onboarding status reset:', result);
       }
     } catch (error) {
       console.error('Error resetting onboarding status:', error);
     }
     
-    // Reset local state
     setHasCheckedOnboarding(false);
+    setMenuIsOpen(false);
     startOnboarding();
   };
 
-  // Don't render anything while loading
   if (isLoading) {
     return null;
   }
@@ -309,7 +390,8 @@ const OnboardingSystem = () => {
           left: '20px',
           zIndex: 1000,
           display: 'flex',
-          gap: '8px'
+          gap: '8px',
+          flexDirection: isMobile ? 'column' : 'row'
         }}>
           {/* <button
             onClick={startOnboarding}
@@ -324,9 +406,9 @@ const OnboardingSystem = () => {
               fontWeight: '600'
             }}
           >
-            Start Tour
-          </button>
-          <button
+            Start {isMobile ? 'Mobile' : 'Desktop'} Tour
+          </button> */}
+          {/* <button
             onClick={resetOnboarding}
             style={{
               padding: '12px 16px',
@@ -356,6 +438,7 @@ const OnboardingSystem = () => {
         onSkip={handleSkip}
         onClose={handleClose}
         isVisible={isActive}
+        isMobile={isMobile}
       />
     </>
   );
