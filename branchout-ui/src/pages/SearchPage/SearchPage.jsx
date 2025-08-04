@@ -21,6 +21,7 @@ import {
   Star as StarIcon,
   Code as CodeIcon,
   Person as PersonIcon,
+  Score as ScoreIcon,
   Tag as TagIcon,
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
@@ -53,6 +54,9 @@ const SearchPage = () => {
   const [dataLoading, setDataLoading] = useState(true);
   const [error, setError] = useState('');
   const [savedRepos, setSavedRepos] = useState(new Set());
+  const [showLanguages, setShowLanguages] = useState(false);
+  const [showTags, setShowTags] = useState(false);
+  const [showSkillLevel, setShowSkillLevel] = useState(false);
 
   // Get current user for saved repos
   const getCurrentUser = () => {
@@ -235,21 +239,41 @@ const SearchPage = () => {
     );
   }
 
-  return (
-    <Box sx={{ maxWidth: 1200, mx: 'auto', p: 3 }}>
+return (
+    <Box sx={{ 
+      maxWidth: { xs: '100%', sm: 600, md: 800, lg: 1200 }, 
+      mx: 'auto', 
+      p: { xs: 1, sm: 2, md: 3 },
+      minHeight: '100vh'
+    }}>
       {/* Header */}
-      <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold', textAlign: 'center' }}>
+      <Typography variant="h4" sx={{ 
+        mb: { xs: 2, md: 3 }, 
+        fontWeight: 'bold', 
+        textAlign: 'center',
+        fontSize: { xs: '1.75rem', sm: '2rem', md: '2.125rem' }
+      }}>
         Repository Search
       </Typography>
 
       {/* Search Form */}
-      <Paper sx={{ p: 3, mb: 3, backgroundColor: '#111', color: 'white' }}>
+      <Paper sx={{ 
+        p: { xs: 2, sm: 3 }, 
+        mb: { xs: 2, md: 3 }, 
+        backgroundColor: '#111', 
+        color: 'white' 
+      }}>
         {/* Main Search Bar */}
-        <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', sm: 'row' },
+          gap: 2, 
+          mb: 3 
+        }}>
           <TextField
             fullWidth
             variant="outlined"
-            placeholder="Search repositories by name or description..."
+            placeholder="Search repositories..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -272,7 +296,8 @@ const SearchPage = () => {
             sx={{
               backgroundColor: '#E34714',
               '&:hover': { backgroundColor: '#d63919' },
-              minWidth: '120px'
+              minWidth: { xs: '100%', sm: '120px' },
+              height: '56px'
             }}
           >
             {loading ? <CircularProgress size={24} /> : 'Search'}
@@ -281,12 +306,13 @@ const SearchPage = () => {
 
         {/* Quick Filters */}
         <Grid container spacing={2} sx={{ mb: 2 }}>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} md={6}>
             <TextField
               fullWidth
               label="Owner Name"
               value={ownerName}
               onChange={(e) => setOwnerName(e.target.value)}
+              size="small"
               sx={{
                 '& .MuiInputLabel-root': { color: '#999' },
                 '& .MuiOutlinedInput-root': {
@@ -300,13 +326,14 @@ const SearchPage = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={6} md={3}>
             <TextField
               fullWidth
               label="Min Stars"
               type="number"
               value={minStars}
               onChange={(e) => setMinStars(e.target.value)}
+              size="small"
               sx={{
                 '& .MuiInputLabel-root': { color: '#999' },
                 '& .MuiOutlinedInput-root': {
@@ -317,13 +344,14 @@ const SearchPage = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={6} md={3}>
             <TextField
               fullWidth
               label="Max Stars"
               type="number"
               value={maxStars}
               onChange={(e) => setMaxStars(e.target.value)}
+              size="small"
               sx={{
                 '& .MuiInputLabel-root': { color: '#999' },
                 '& .MuiOutlinedInput-root': {
@@ -339,7 +367,11 @@ const SearchPage = () => {
         {/* Advanced Filters Toggle */}
         <Button
           onClick={() => setShowAdvanced(!showAdvanced)}
-          sx={{ color: '#E34714', mb: 2 }}
+          sx={{ 
+            color: '#E34714', 
+            mb: 2,
+            fontSize: { xs: '0.875rem', sm: '1rem' }
+          }}
           endIcon={showAdvanced ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         >
           Advanced Filters
@@ -349,78 +381,168 @@ const SearchPage = () => {
         <Collapse in={showAdvanced}>
           <Box sx={{ mb: 3 }}>
             {/* Languages */}
-            <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-              <CodeIcon sx={{ mr: 1 }} /> Programming Languages
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
-              {availableLanguages.map((language) => (
-                <Chip
-                  key={language}
-                  label={language}
-                  clickable
-                  onClick={() => handleTagToggle(language, selectedLanguages, setSelectedLanguages)}
-                  color={selectedLanguages.includes(language) ? 'primary' : 'default'}
-                  variant={selectedLanguages.includes(language) ? 'filled' : 'outlined'}
-                  sx={{
-                    borderColor: '#E34714',
-                    color: selectedLanguages.includes(language) ? 'white' : '#E34714',
-                    backgroundColor: selectedLanguages.includes(language) ? '#E34714' : 'transparent'
-                  }}
-                />
-              ))}
+            <Box sx={{ mb: 3 }}>
+              <Button
+                onClick={() => setShowLanguages(!showLanguages)}
+                sx={{ 
+                  color: '#E34714', 
+                  p: 0, 
+                  justifyContent: 'flex-start',
+                  '&:hover': { backgroundColor: 'transparent' }
+                }}
+                endIcon={showLanguages ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                fullWidth
+              >
+                <Typography variant="h6" sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center',
+                  fontSize: { xs: '1rem', sm: '1.25rem' }
+                }}>
+                  <CodeIcon sx={{ mr: 1 }} /> Programming Languages
+                </Typography>
+              </Button>
+              <Collapse in={showLanguages}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  flexWrap: 'wrap', 
+                  gap: { xs: 0.5, sm: 1 }, 
+                  mt: 2 
+                }}>
+                  {availableLanguages.map((language) => (
+                    <Chip
+                      key={language}
+                      label={language}
+                      clickable
+                      onClick={() => handleTagToggle(language, selectedLanguages, setSelectedLanguages)}
+                      color={selectedLanguages.includes(language) ? 'primary' : 'default'}
+                      variant={selectedLanguages.includes(language) ? 'filled' : 'outlined'}
+                      size={window.innerWidth < 600 ? 'small' : 'medium'}
+                      sx={{
+                        borderColor: '#E34714',
+                        color: selectedLanguages.includes(language) ? 'white' : '#E34714',
+                        backgroundColor: selectedLanguages.includes(language) ? '#E34714' : 'transparent',
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                      }}
+                    />
+                  ))}
+                </Box>
+              </Collapse>
             </Box>
 
             {/* Tags */}
-            <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-              <TagIcon sx={{ mr: 1 }} /> Topics & Tags
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
-              {availableTags.map((tag) => (
-                <Chip
-                  key={tag}
-                  label={tag}
-                  clickable
-                  onClick={() => handleTagToggle(tag, selectedTags, setSelectedTags)}
-                  color={selectedTags.includes(tag) ? 'secondary' : 'default'}
-                  variant={selectedTags.includes(tag) ? 'filled' : 'outlined'}
-                  sx={{
-                    borderColor: '#0ff',
-                    color: selectedTags.includes(tag) ? 'black' : '#0ff',
-                    backgroundColor: selectedTags.includes(tag) ? '#0ff' : 'transparent'
-                  }}
-                />
-              ))}
+            <Box sx={{ mb: 3 }}>
+              <Button
+                onClick={() => setShowTags(!showTags)}
+                sx={{ 
+                  color: '#E34714', 
+                  p: 0, 
+                  justifyContent: 'flex-start',
+                  '&:hover': { backgroundColor: 'transparent' }
+                }}
+                endIcon={showTags ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                fullWidth
+              >
+                <Typography variant="h6" sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center',
+                  fontSize: { xs: '1rem', sm: '1.25rem' }
+                }}>
+                  <TagIcon sx={{ mr: 1 }} /> Topics & Tags
+                </Typography>
+              </Button>
+              <Collapse in={showTags}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  flexWrap: 'wrap', 
+                  gap: { xs: 0.5, sm: 1 }, 
+                  mt: 2 
+                }}>
+                  {availableTags.map((tag) => (
+                    <Chip
+                      key={tag}
+                      label={tag}
+                      clickable
+                      onClick={() => handleTagToggle(tag, selectedTags, setSelectedTags)}
+                      color={selectedTags.includes(tag) ? 'secondary' : 'default'}
+                      variant={selectedTags.includes(tag) ? 'filled' : 'outlined'}
+                      size={window.innerWidth < 600 ? 'small' : 'medium'}
+                      sx={{
+                        borderColor: '#0ff',
+                        color: selectedTags.includes(tag) ? 'black' : '#0ff',
+                        backgroundColor: selectedTags.includes(tag) ? '#0ff' : 'transparent',
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                      }}
+                    />
+                  ))}
+                </Box>
+              </Collapse>
             </Box>
 
             {/* Skill Level */}
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Skill Level
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-              {SKILL_LEVELS.map((level) => (
-                <Chip
-                  key={level.value}
-                  label={level.label}
-                  clickable
-                  onClick={() => setSelectedSkillLevel(
-                    selectedSkillLevel === level.value ? '' : level.value
-                  )}
-                  color={selectedSkillLevel === level.value ? 'success' : 'default'}
-                  variant={selectedSkillLevel === level.value ? 'filled' : 'outlined'}
-                  sx={{
-                    borderColor: '#daa7e2',
-                    color: selectedSkillLevel === level.value ? 'black' : '#daa7e2',
-                    backgroundColor: selectedSkillLevel === level.value ? '#daa7e2' : 'transparent'
-                  }}
-                />
-              ))}
+            <Box sx={{ mb: 2 }}>
+              <Button
+                onClick={() => setShowSkillLevel(!showSkillLevel)}
+                sx={{ 
+                  color: '#E34714', 
+                  p: 0, 
+                  justifyContent: 'flex-start',
+                  '&:hover': { backgroundColor: 'transparent' }
+                }}
+                endIcon={showSkillLevel ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                fullWidth
+              >
+                <Typography variant="h6" sx={{ 
+                  fontSize: { xs: '1rem', sm: '1.25rem' }
+                }}>
+                  <ScoreIcon sx={{ mr: 1 }} />Skill Level
+                </Typography>
+              </Button>
+              <Collapse in={showSkillLevel}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  flexWrap: 'wrap',
+                  gap: { xs: 0.5, sm: 1 }, 
+                  mt: 2 
+                }}>
+                  {SKILL_LEVELS.map((level) => (
+                    <Chip
+                      key={level.value}
+                      label={level.label}
+                      clickable
+                      onClick={() => setSelectedSkillLevel(
+                        selectedSkillLevel === level.value ? '' : level.value
+                      )}
+                      color={selectedSkillLevel === level.value ? 'success' : 'default'}
+                      variant={selectedSkillLevel === level.value ? 'filled' : 'outlined'}
+                      size={window.innerWidth < 600 ? 'small' : 'medium'}
+                      sx={{
+                        borderColor: '#daa7e2',
+                        color: selectedSkillLevel === level.value ? 'black' : '#daa7e2',
+                        backgroundColor: selectedSkillLevel === level.value ? '#daa7e2' : 'transparent',
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                      }}
+                    />
+                  ))}
+                </Box>
+              </Collapse>
             </Box>
           </Box>
         </Collapse>
 
         {/* Action Buttons */}
-        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-          <Button onClick={clearFilters} sx={{ color: '#999' }}>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', sm: 'row' },
+          gap: 2, 
+          justifyContent: 'flex-end' 
+        }}>
+          <Button 
+            onClick={clearFilters} 
+            sx={{ 
+              color: '#999',
+              order: { xs: 2, sm: 1 }
+            }}
+          >
             Clear All
           </Button>
           <Button
@@ -429,7 +551,8 @@ const SearchPage = () => {
             disabled={loading}
             sx={{
               backgroundColor: '#E34714',
-              '&:hover': { backgroundColor: '#d63919' }
+              '&:hover': { backgroundColor: '#d63919' },
+              order: { xs: 1, sm: 2 }
             }}
           >
             Apply Filters
@@ -439,7 +562,7 @@ const SearchPage = () => {
 
       {/* Error Message */}
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity="error" sx={{ mb: { xs: 2, md: 3 } }}>
           {error}
         </Alert>
       )}
@@ -447,7 +570,11 @@ const SearchPage = () => {
       {/* Search Results */}
       {searchResults.length > 0 && (
         <Box>
-          <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
+          <Typography variant="h5" sx={{ 
+            mb: { xs: 2, md: 3 }, 
+            fontWeight: 'bold',
+            fontSize: { xs: '1.25rem', sm: '1.5rem' }
+          }}>
             Search Results ({searchResults.length})
           </Typography>
 
@@ -465,30 +592,55 @@ const SearchPage = () => {
                 }
               }}
             >
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  justifyContent: 'space-between', 
+                  alignItems: { xs: 'stretch', sm: 'flex-start' },
+                  gap: { xs: 2, sm: 0 }
+                }}>
                   <Box sx={{ flex: 1 }}>
                     {/* Repo Name and Owner */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                      <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#E34714' }}>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      flexDirection: { xs: 'column', sm: 'row' },
+                      alignItems: { xs: 'flex-start', sm: 'center' }, 
+                      mb: 1,
+                      gap: { xs: 0.5, sm: 1 }
+                    }}>
+                      <Typography variant="h6" sx={{ 
+                        fontWeight: 'bold', 
+                        color: '#E34714',
+                        fontSize: { xs: '1rem', sm: '1.25rem' }
+                      }}>
                         {repo.name}
                       </Typography>
-                      <Typography variant="body2" sx={{ ml: 1, color: '#999' }}>
+                      <Typography variant="body2" sx={{ color: '#999' }}>
                         by {repo.owner}
                       </Typography>
-                      <Box sx={{ ml: 2, display: 'flex', alignItems: 'center' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <StarIcon sx={{ fontSize: 16, color: '#ffd700', mr: 0.5 }} />
                         <Typography variant="body2">{repo.stars?.toLocaleString()}</Typography>
                       </Box>
                     </Box>
 
                     {/* Description */}
-                    <Typography variant="body2" sx={{ mb: 2, color: '#ccc' }}>
+                    <Typography variant="body2" sx={{ 
+                      mb: 2, 
+                      color: '#ccc',
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    }}>
                       {repo.description}
                     </Typography>
 
                     {/* Languages and Tags */}
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      flexWrap: 'wrap', 
+                      gap: { xs: 0.5, sm: 1 }, 
+                      mb: 2 
+                    }}>
                       {repo.languages?.map((lang) => (
                         <Chip
                           key={lang}
@@ -497,7 +649,7 @@ const SearchPage = () => {
                           sx={{
                             backgroundColor: '#E34714',
                             color: 'white',
-                            fontSize: '0.75rem'
+                            fontSize: { xs: '0.625rem', sm: '0.75rem' }
                           }}
                         />
                       ))}
@@ -510,7 +662,7 @@ const SearchPage = () => {
                           sx={{
                             borderColor: '#0ff',
                             color: '#0ff',
-                            fontSize: '0.75rem'
+                            fontSize: { xs: '0.625rem', sm: '0.75rem' }
                           }}
                         />
                       ))}
@@ -521,7 +673,7 @@ const SearchPage = () => {
                           sx={{
                             backgroundColor: '#daa7e2',
                             color: 'black',
-                            fontSize: '0.75rem'
+                            fontSize: { xs: '0.625rem', sm: '0.75rem' }
                           }}
                         />
                       )}
@@ -529,7 +681,13 @@ const SearchPage = () => {
                   </Box>
 
                   {/* Action Buttons */}
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, ml: 2 }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: { xs: 'row', sm: 'column' },
+                    justifyContent: { xs: 'center', sm: 'flex-start' },
+                    gap: 1,
+                    ml: { sm: 2 }
+                  }}>
                     <IconButton
                       onClick={() => window.open(repo.repoLink, '_blank')}
                       sx={{ color: '#E34714' }}
@@ -556,17 +714,28 @@ const SearchPage = () => {
 
       {/* No Results */}
       {!loading && searchResults.length === 0 && (searchQuery || selectedLanguages.length > 0 || selectedTags.length > 0 || ownerName) && (
-        <Paper sx={{ p: 4, textAlign: 'center', backgroundColor: '#111', color: 'white' }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
+        <Paper sx={{ 
+          p: { xs: 3, sm: 4 }, 
+          textAlign: 'center', 
+          backgroundColor: '#111', 
+          color: 'white' 
+        }}>
+          <Typography variant="h6" sx={{ 
+            mb: 2,
+            fontSize: { xs: '1rem', sm: '1.25rem' }
+          }}>
             No repositories found
           </Typography>
-          <Typography variant="body2" sx={{ color: '#999' }}>
+          <Typography variant="body2" sx={{ 
+            color: '#999',
+            fontSize: { xs: '0.875rem', sm: '1rem' }
+          }}>
             Try adjusting your search criteria or clearing some filters
           </Typography>
         </Paper>
       )}
     </Box>
   );
-};
+}
 
 export default SearchPage;
