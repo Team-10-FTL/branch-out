@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ClerkProvider } from '@clerk/clerk-react'
 import App from './components/App/App'
-import { CustomThemeProvider } from './components/UISwitch/ThemeContext.jsx';
+import CustomThemeProvider from "./components/UISwitch/ThemeContext";
 import './index.css'
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY

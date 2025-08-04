@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useUser, useClerk } from "@clerk/clerk-react";
+import React, { useEffect, useState} from "react";
+import { useUser, useClerk} from "@clerk/clerk-react";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from 'react-router-dom';
 import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useContext } from "react";
+import { ThemeContext } from "../../components/UISwitch/ThemeContext";
+import { useTheme } from "@mui/material/styles";
+import { Switch, FormControlLabel } from '@mui/material';
 
 
 import {
@@ -37,6 +41,8 @@ const ProfilePage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [saveError, setSaveError] = useState("");
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const theme = useTheme();
 
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
@@ -96,7 +102,7 @@ const ProfilePage = () => {
 
       // Sign out from Clerk if using OAuth
       if (clerkUser) {
-        await signOut();
+        await signOut({redirectUrl: "/home"});
       }   
 
       setTimeout(() => {
@@ -170,8 +176,7 @@ const ProfilePage = () => {
       <Paper
         className="profile-container"
         sx={{
-          background: "#111",
-          color: "#fff",
+          background: theme.palette.background.default,
           borderRadius: 4,
           p: 4,
           position: "relative",
@@ -182,12 +187,6 @@ const ProfilePage = () => {
           },
         }}
       >
-
-
-        {/* <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, letterSpacing: 1 }}>
-          Profile
-        </Typography>
-        <Divider className="profile-divider" sx={{ borderColor: "#4c1255", mb: 2 }} /> */}
 
         {saveError && (
           <Alert severity="error" className="profile-alert" sx={{ background: "#222", color: "#fff" }}>
@@ -206,7 +205,7 @@ const ProfilePage = () => {
             sx={{
               width: 200,
               height: 200,
-              bgcolor: "#daa7e2",
+              bgcolor: theme.palette.secondary.main,
               fontSize: "80pt",
             }}
           >
@@ -231,8 +230,8 @@ const ProfilePage = () => {
                   fullWidth
                   sx={{
                     mb: 2,
-                    input: { color: "#fff" },
-                    label: { color: "#aaa" },
+                    input: { color: theme.palette.text.main },
+                    label: { color: theme.palette.secondary.main },
                     "& .MuiOutlinedInput-root": {
                       "& fieldset": { borderColor: "#333" },
                       "&:hover fieldset": { borderColor: "#0ff" },
@@ -246,8 +245,8 @@ const ProfilePage = () => {
                   fullWidth
                   sx={{
                     mb: 2,
-                    input: { color: "#fff" },
-                    label: { color: "#aaa" },
+                    input: { color: theme.palette.text.main },
+                    label: { color: theme.palette.secondary.main },
                     "& .MuiOutlinedInput-root": {
                       "& fieldset": { borderColor: "#333" },
                       "&:hover fieldset": { borderColor: "#0ff" },
@@ -265,10 +264,10 @@ const ProfilePage = () => {
               </>
             ) : (
               <>
-                <Typography variant="body1" className="profile-section" sx={{ color: "#fff" }}>
+                <Typography variant="body1" className="profile-section" sx={{ color: theme.palette.text.primary }}>
                   <strong style = {{}}>Username:</strong> {display.username || display.firstName || display.email || "User"}
                 </Typography>
-                <Typography variant="body1" className="profile-section" sx={{ color: "#fff" }}>
+                <Typography variant="body1" className="profile-section" sx={{ color: theme.palette.text.primary }}>
                   <strong>Email:</strong> {display.email || "N/A"}
                 </Typography>
                         {!editMode && (
@@ -320,7 +319,7 @@ const ProfilePage = () => {
         sx={{
           backgroundColor:"transparent",
           background:"none",
-          color: "#fff",
+          color:theme.palette.text.primary,
           borderRadius: 2,
           boxShadow: "none",
           mt:2,
@@ -328,12 +327,12 @@ const ProfilePage = () => {
           "&:before": { display: "none" },
         }}
       >
-        <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: "#fff" }} />}>
-          <Typography sx={{ fontWeight: 600 }}>Preferences</Typography>
+        <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color:theme.palette.text.primary }} />}>
+          <Typography sx={{ fontWeight: 600}}>Preferences</Typography>
         </AccordionSummary>
         <AccordionDetails>
 
-           <Typography variant="subtitle1" sx={{  color: "",  mt:-1, fontWeight:"500", paddingBottom:"10px", fontSize:"10pt" }}>Skill Level</Typography>
+           <Typography variant="subtitle1" sx={{  mt:-1, fontWeight:"500", paddingBottom:"10px", fontSize:"10pt" }}>Skill Level</Typography>
             <Stack
               direction="row"
               spacing={2}
@@ -353,16 +352,18 @@ const ProfilePage = () => {
                   className="profile-skill-chip"
                   variant="outlined"
                   sx={{
-                    color: "#fff",
                     border: "1.5px solid #E83F25",
                     fontWeight: 500,
                     background: "transparent",
                     borderRadius: "8px",
                     width: "100px",
+                    "& .MuiChip-label": {
+                    color: theme.palette.text.primary,
+                  }
                   }}
                 />
               ))
-            : <Chip label="None" color="default" variant="outlined" sx={{ color: "#fff", border: "1.5px solid gray", background: "transparent", borderRadius: "8px"}} />}
+            : <Chip label="None" color="default" variant="outlined" sx={{ color: theme.palette.text.primary, border: "1.5px solid gray", background: "transparent", borderRadius: "8px"}} />}
         </Stack>
         <Divider className="profile-divider" sx={{mb: 2 }} />
         <Typography variant="subtitle1" sx={{ color: "", mt: 2, fontWeight:"500", paddingBottom:"10px", fontSize:"10pt"}}>Languages</Typography>
@@ -383,14 +384,16 @@ const ProfilePage = () => {
                   color="primary"
                   variant="outlined"
                   sx={{
-                    color: "#fff",
                     border: "1.5px solid #E83F25",
                     fontWeight: 500,
                     background: "transparent",
-                    borderRadius: "0px", // <-- Change this value as you like
+                    borderRadius: "5px", // <-- Change this value as you like
                     width: "100px",
                     justifyContent:"center",
                     textAlign:"center",
+                    "& .MuiChip-label": {
+                    color: theme.palette.text.primary,
+                  }
                   }}
                 />
               ))
@@ -418,7 +421,6 @@ const ProfilePage = () => {
                   color="success"
                   variant="outlined"
                   sx={{
-                    color: "#fff",
                     border: "1.5px solid #E83F25",
                     fontWeight: 500,
                     background: "transparent",
@@ -426,6 +428,9 @@ const ProfilePage = () => {
                     width: "135px",
                     justifyContent:"center",
                     textAlign:"center",
+                    "& .MuiChip-label": {
+                    color: theme.palette.text.primary,
+                  }
                   }}
                 />
               ))
@@ -435,12 +440,38 @@ const ProfilePage = () => {
         </AccordionDetails>
       </Accordion>
 
+      {/* dark and light mode toggle */}
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <FormControlLabel
+            control={
+              <Switch 
+                checked={isDarkMode}
+                onChange={toggleTheme}
+                sx={{
+                  '& .MuiSwitch-thumb': {
+                    backgroundColor: theme.palette.primary.main,
+                  },
+                  '& .MuiSwitch-track': {
+                    backgroundColor: theme.palette.primary.light, // optional
+                  },
+                  '&.Mui-checked .MuiSwitch-thumb': {
+                    backgroundColor: theme.palette.primary.main,
+                  },
+                  '&.Mui-checked .MuiSwitch-track': {
+                    backgroundColor: theme.palette.primary.light,
+                  },
+                }}
+              />
+            }
+            label={isDarkMode ? "Dark Mode" : "Light Mode"}
+          />
+        </Box>
+
         <Box sx={{ p: 2, mt: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <ListItemButton className = "settingsButton"
             onClick={handleOpenModal}
             sx={{
               color: 'white',
-              // borderColor: 'rgba(255, 255, 255, 0.3)',
               backgroundColor: '#e34714',
               display: 'flex',
               justifyContent: 'center',

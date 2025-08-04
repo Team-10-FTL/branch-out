@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
-import { Box, Chip, useTheme, useMediaQuery } from "@mui/material";
+import { Box, Chip, useMediaQuery } from "@mui/material";
 import "./RepoCard.css";
 import RepoCardModal from "../RepoCardModal/RepoCardModal";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -12,6 +12,8 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import { useTheme } from "@mui/material/styles";
+
 
 export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight }) {
   const [startX, setStartX] = useState(0);
@@ -23,6 +25,7 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
+  
 
   const handleClose = () => setOpen(false);
   const handleCardClick = () => {
@@ -129,7 +132,6 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
     onSwipeRight?.(repo);
   };
 
-
   return (
     <Box
       sx={{
@@ -174,10 +176,9 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
             ? "none"
             : "transform 0.3s cubic-bezier(.4,2,.6,1), opacity 0.3s",
           touchAction: "pan-y",
-          background: "#111", 
-          color: "#fff",
+          background: theme.palette.background.paper, 
+          color: theme.palette.text.primary,
           "&:hover": {
-            background: "#111", 
             boxShadow: "0 0 24px 4px rgba(232,63,37,0.10)", 
             transform: "scale(1.015)",          
           },
@@ -243,17 +244,17 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
                     xs:12,
                     md:16
                   },
-                  color: "#fff",
+                  color: theme.palette.text.primary,
                   zIndex: 2,
                 }}
               >
                 <Typography variant= {isSmall ? "h6": "h5"} sx={{ fontWeight: 700, letterSpacing: 1, fontSize:{xs:"1.1rem", sm:"1.3rem", md:"1.5rem"}}}>
                   {repo.name}
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#ddd", mt: 0.5, fontSize:{xs:".8rem", md:".875rem"} }}>
+                <Typography variant="body2" sx={{ color: theme.palette.text.primary, mt: 0.5, fontSize:{xs:".8rem", md:".875rem"} }}>
                 ☆ {repo.stars || "N/A"}
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#ddd", mt: 0.5, fontSize:{xs:".8rem", md:".875rem"} }}>
+                <Typography variant="body2" sx={{ color: theme.palette.text.primary, mt: 0.5, fontSize:{xs:".8rem", md:".875rem"} }}>
                   {confidence ? `Confidence: ${Math.round(confidence.toFixed(2)*100)}%` : "Confidence: N/A"}
                 </Typography>
               </Box>
@@ -304,7 +305,7 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
               </Typography>
               <Typography variant="body2"
                 sx={{ 
-                color: "text.secondary",
+                color: theme.palette.text.primary,
                 fontSize: {
                   xs: '0.6rem',
                   md: '0.7rem'

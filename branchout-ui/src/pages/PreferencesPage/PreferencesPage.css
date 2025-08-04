@@ -10,7 +10,6 @@
   margin: 64px auto 0 auto;
   padding: 32px;
   border-radius: 24px;
-  color: #fff;
 }
 
 .preferences-divider {
@@ -22,27 +21,9 @@
   margin-bottom: 16px;
 }
 
-/* Accent color for selected chips */
-.MuiChip-filledSecondary,
-.MuiChip-filledPrimary,
-.MuiChip-filledSuccess {
-  background: #E83F25 !important;
-  color: #fff !important;
-  border: 1px solid #E83F25 !important;
-}
-
 /* Outlined chips border */
 .MuiChip-outlined {
   border: 1px solid #E83F25 !important;
-  color: #fff !important;
-}
-
-/* Headings accent */
-.preferences-container h4,
-.preferences-container h6,
-.preferences-container .MuiTypography-h4,
-.preferences-container .MuiTypography-h6 {
-  color: #fff !important;
 }
 
 /* Save button */

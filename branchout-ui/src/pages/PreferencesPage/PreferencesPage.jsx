@@ -4,6 +4,7 @@ import { Container, Divider, Chip, Box, Paper, Typography, Stack, Accordion, Acc
 import './PreferencesPage.css';
 import ToolTip from '../../components/ToolTip/ToolTip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useTheme } from "@mui/material/styles";
 
 const LEVELS = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
 const LEVEL_TO_ENUM = {
@@ -31,6 +32,7 @@ function PreferencesPage() {
   const [selectedTags, setSelectedTags] = useState([]);
   const isMobile = useMediaQuery('(max-width:430px)');
   const { user: clerkUser } = useUser();
+  const theme = useTheme();
 
   const localUser = (() => {
     try {
@@ -113,6 +115,7 @@ return (
           p: isMobile ? 2 : 4,
           boxShadow:"none",
           position: "relative",
+          color: theme.palette.text.primary
         }}
       >
         <Typography 
@@ -122,7 +125,8 @@ return (
             fontFamily: "Inter, sans-serif",
             fontWeight: 700, 
             letterSpacing: 1, 
-            textAlign: "left"
+            textAlign: "left",
+            color:theme.palette.text.primary
           }}
         > 
         {!isMobile ? (
@@ -145,11 +149,11 @@ return (
             <Accordion 
               sx={{ 
                 background: "transparent", 
-                color: "#fff",
+                color: theme.palette.text.primary,
                 mb: 2,
               }}
             >
-              <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: "#fff" }} />}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: theme.palette.text.primary }} />}>
                 <Typography variant = {isMobile ? "h6":"h5"} sx={{ fontFamily: "Inter, sans-serif", fontWeight: 600 }}>
                   Skill Level
                   <div style={{fontSize:"10px"}}>
@@ -194,13 +198,13 @@ return (
             <Accordion 
               sx={{ 
                 background: "transparent", 
-                color: "#fff",
                 mb: 2,
+                color:theme.palette.text.primary,
                 borderRadius: "8px !important",
                 "&:before": { display: "none" }
               }}
             >
-              <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: "#fff" }} />}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon  sx={{ color:theme.palette.text.primary }}/>}>
                 <Typography variant = {isMobile ? "h6":"h5"} sx={{ fontFamily: "Inter, sans-serif", fontWeight: 600 }}>
                   Languages
                   <div style={{fontSize:"10px"}}>
@@ -242,13 +246,13 @@ return (
             <Accordion 
               sx={{ 
                 background: "transparent", 
-                color: "#fff",
+                color:theme.palette.text.primary,
                 mb: 3,
                 borderRadius: "8px !important",
                 "&:before": { display: "none" }
               }}
             >
-              <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: "#fff" }} />}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color:theme.palette.text.primary }} />}>
                 <Typography variant = {isMobile ? "h6":"h5"} sx={{ fontFamily: "Inter, sans-serif", fontWeight: 600 }}>
                   Tags
                   <div style={{fontSize:"10px"}}>
@@ -288,26 +292,21 @@ return (
         ) : (
           // Desktop Layout - Keep your existing code here
           <>
-            <Typography variant="h6" sx={{ color: "white", mt: 2, mb:1, fontFamily: "Inter, sans-serif"}}>
+            <Typography variant="h6" sx={{ color: theme.palette.text.primary, mt: 2, mb:1, fontFamily: "Inter, sans-serif"}}>
               Skill Level <ToolTip className="ToolTip" information={"Set your school level - think of 1st as freshman and 4th as senior! This will correlate to the level repositories you get in your feed."}/>
             </Typography>
             <Stack direction="row" gap = "8px" flexWrap="wrap" className="preferences-stack" justifyContent="left" alignItems="center">
               {LEVELS.map((level) => (
                 <Chip
-                  key={level}
+                  key = {level}
                   label={level}
-                  onClick={() => handleToggle(level, selectedLevels, setSelectedLevels)}
-                  color={selectedLevels.includes(level) ? "secondary" : "default"}
-                  variant={selectedLevels.includes(level) ? "filled" : "outlined"}
-                  clickable
+                  onClick={() => handleToggle(level, selectedLanguages, setSelectedLanguages)}
+                  variant={selectedLanguages.includes(level) ? "filled" : "outlined"}
                   sx={{
-                    background: selectedLevels.includes(level) ? "#222" : "#111",
-                    fontWeight: 500,
-                    marginRight: 1,
-                    marginBottom: 1,
-                    borderRadius: "10px",
-                    width: "100px",
-                    textAlign: "left",
+                    backgroundColor: selectedLanguages.includes(level) ? theme.palette.primary.main : "transparent",
+                    color: selectedLanguages.includes(level) ? theme.palette.primary.contrastText : theme.palette.text.primary,
+                    border: `1px solid ${selectedLanguages.includes(level) ? theme.palette.primary.main : "#0ff"}`,
+                    borderRadius:"5px",
                   }}
                 />
               ))}
@@ -315,7 +314,7 @@ return (
 
             <Divider sx={{ borderColor: "#222", my: 2 }} />
 
-            <Typography variant="h6" sx={{ color: "#0ff", mt: 2, mb:1, fontFamily: "Inter, sans-serif" }}>
+            <Typography variant="h6" sx={{ color: theme.palette.text.primary, mt: 2, mb:1, fontFamily: "Inter, sans-serif" }}>
               Languages <ToolTip className="ToolTip" information={"Set any languages you know (or want to know) here"} />
             </Typography>
             <Stack direction="row"rowGap={.5} flexWrap="wrap" className="preferences-stack" justifyContent="left" alignItems="center">         
@@ -324,17 +323,15 @@ return (
                   key={lang}
                   label={lang}
                   onClick={() => handleToggle(lang, selectedLanguages, setSelectedLanguages)}
-                  color={selectedLanguages.includes(lang) ? "primary" : "default"}
                   variant={selectedLanguages.includes(lang) ? "filled" : "outlined"}
-                  clickable
                   sx={{
-                    background: selectedLanguages.includes(lang) ? "#222" : "#111",
-                    color: "#fff",
-                    border: "1px solid #0ff",
+                    backgroundColor: selectedLanguages.includes(lang) ? theme.palette.primary.main : "transparent",
+                    color: selectedLanguages.includes(lang) ? theme.palette.primary.contrastText : theme.palette.text.primary,
+                    border: `1px solid ${selectedLanguages.includes(lang) ? theme.palette.primary.main : "#0ff"}`,
                     fontWeight: 500,
                     marginRight: 1,
                     marginBottom: 1,
-                    borderRadius: "10px",
+                    borderRadius: "5px",
                     width: "100px",
                     justifyContent: "center",
                     textAlign: "center",
@@ -345,7 +342,7 @@ return (
 
             <Divider sx={{ borderColor: "#222", my: 2 }} />
 
-            <Typography variant="h6" sx={{ color: "#0ff", mt: 2, mb:1, fontFamily: "Inter, sans-serif" }}>
+            <Typography variant="h6" sx={{ color: theme.palette.text.primary, mt: 2, mb:1, fontFamily: "Inter, sans-serif" }}>
               Tags <ToolTip className="ToolTip" information={"Set any tags of topics that you know or want to know here"} />
             </Typography>
             <Stack direction="row" rowGap={.5} flexWrap="wrap" className="preferences-stack" justifyContent="left" alignItems="center"> 
@@ -353,18 +350,16 @@ return (
                 <Chip
                   key={tag}
                   label={tag}
-                  onClick={() => handleToggle(tag, selectedTags, setSelectedTags)}
-                  color={selectedTags.includes(tag) ? "success" : "default"}
-                  variant={selectedTags.includes(tag) ? "filled" : "outlined"}
-                  clickable
+                  onClick={() => handleToggle(tag, selectedLanguages, setSelectedLanguages)}
+                  variant={selectedLanguages.includes(tag) ? "filled" : "outlined"}
                   sx={{
-                    background: selectedTags.includes(tag) ? "#222" : "#111",
-                    color: "#fff",
-                    border: "1px solid #0ff",
+                    backgroundColor: selectedLanguages.includes(tag) ? theme.palette.primary.main : "transparent",
+                    color: selectedLanguages.includes(tag) ? theme.palette.primary.contrastText : theme.palette.text.primary,
+                    border: `1px solid ${selectedLanguages.includes(tag) ? theme.palette.primary.main : "#0ff"}`,
                     fontWeight: 500,
                     marginRight: 1,
                     marginBottom: 1,
-                    borderRadius: "10px",
+                    borderRadius: "5px",
                     width: "135px",
                     justifyContent: "center",
                     textAlign: "center",
