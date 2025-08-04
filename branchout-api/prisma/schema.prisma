@@ -35,10 +35,10 @@ model Repo {
   languages    String[]
   tags         String[]
   topics       String[]
-  summary      String?
+  summary      String
   description  String
   repoLink     String
-  skill        SkillLevel[]
+  skill        SkillLevel[]  @default([FOURTHYEAR])
   githubId     Int          @unique
   summaryTitle String
   feedBack     FeedBack[]
