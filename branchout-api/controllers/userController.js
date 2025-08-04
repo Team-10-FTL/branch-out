@@ -2,6 +2,7 @@ const prisma = require("../models/prismaClient");
 const axios = require("axios");
 
 const FASTAPI_URL = process.env.FASTAPI_URL || "http://localhost:8000";
+
 exports.getRecommendations = async (req, res) => {
   try {
     let userId = req.user?.userId || req.auth?.userId || req.params.userId || req.query.userId;
@@ -21,6 +22,7 @@ exports.getRecommendations = async (req, res) => {
       }
       userId = userObj.id; // Use the actual numeric ID for further queries
     }
+
     const user = await prisma.user.findUnique({
       where: { id: Number(userId) },
       select: {
@@ -42,11 +44,21 @@ exports.getRecommendations = async (req, res) => {
     });
     const dislikedIds = new Set(dislikes.map(d => String(d.repoId)));
 
-    // Fetch all repos and filter out disliked ones
+    // Fetch saved repo IDs to exclude them too
+    const savedRepos = await prisma.user.findUnique({
+      where: { id: Number(userId) },
+      select: { savedRepos: { select: { id: true } } }
+    });
+    const savedRepoIds = new Set(savedRepos?.savedRepos?.map(repo => String(repo.id)) || []);
+
+    // Combine excluded IDs
+    const excludedIds = new Set([...dislikedIds, ...savedRepoIds]);
+
+    // Fetch all repos and filter out excluded ones
     const repos = await prisma.repo.findMany({
       where: {
         id: {
-          notIn: Array.from(dislikedIds).map(id => Number(id))
+          notIn: Array.from(excludedIds).map(id => Number(id))
         }
       },
       select: {
@@ -57,9 +69,6 @@ exports.getRecommendations = async (req, res) => {
         tags: true
       }
     });
-
-    // console.log("repos:", repos)
-
 
     if (!repos.length) {
       return res.json({ recommendations: [] });
@@ -79,41 +88,51 @@ exports.getRecommendations = async (req, res) => {
       text: [
         repo.name,
         repo.description || '',
-        ...(repo.languages || []), // <-- spread the array!
+        ...(repo.languages || []),
         ...(repo.tags || [])
       ].join(' ')
     }));
-    // console.log("repo payload", repoPayload)
+
     // Send to FastAPI for on-the-fly embedding and scoring
     const fastapiRes = await axios.post(`${process.env.FASTAPI_URL}/recommend`, {
       user_profile: userProfile,
       repos: repoPayload
     });
-    console.log("fast api", fastapiRes.data)
+
     const recommendedRepoIds = fastapiRes.data.recommendations || [];
     const confidenceScores = fastapiRes.data.confidence || [];
 
+    // Get the top 10 recommendations
+    const top10RepoIds = recommendedRepoIds.slice(0, 10);
+    const top10Confidence = confidenceScores.slice(0, 10);
 
-    // After getting recommendedRepoIds
-    const recommendedRepos = recommendedRepoIds.length
+    // From those 10, select the top 3 for the discovery page
+    const displayRepoIds = top10RepoIds.slice(0, 3);
+    const displayConfidence = top10Confidence.slice(0, 3);
+
+    // Fetch the full repo data for display
+    const displayRepos = displayRepoIds.length
       ? await prisma.repo.findMany({
-          where: { id: { in: recommendedRepoIds.map(id => Number(id)) } }
+          where: { id: { in: displayRepoIds.map(id => Number(id)) } }
         })
       : [];
 
-    const orderedRepos = recommendedRepoIds.map(id =>
-      recommendedRepos.find(repo => repo.id === Number(id))
+    // Order them according to the recommendation ranking
+    const orderedRepos = displayRepoIds.map(id =>
+      displayRepos.find(repo => repo.id === Number(id))
     ).filter(Boolean);
 
-
-
-    res.json({ recommendations: orderedRepos , confidence: confidenceScores });
+    res.json({ 
+      recommendations: orderedRepos,
+      confidence: displayConfidence 
+    });
   } catch (error) {
     console.error("Recommendation error:", error.message);
     res.status(500).json({ recommendations: [], error: error.message });
   }
 };
 
+// Keep all other existing exports unchanged
 exports.getAllUsers = async (req, res) => {
   try {
     // This endpoint is already protected by the middleware
@@ -226,7 +245,6 @@ exports.updateProfile = async (req, res) => {
     res.status(500).json({ error: "Failed to update profile" });
   }
 };
-
 
 exports.getPreferences = async (req, res) => {
   console.log("🧪 getPreferences accessed by role:", req.user?.role);
