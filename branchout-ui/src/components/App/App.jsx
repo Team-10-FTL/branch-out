@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useTheme } from "../UISwitch/ThemeContext.jsx";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -11,7 +10,7 @@ import AuthComponent from "../../components/Auth/Auth";
 import AdminDashboard from "../../pages/AdminDashboard/AdminDashboard"; // Fixed import path
 import ProfilePage  from "../../pages/ProfilePage/ProfilePage";
 import "./App.css";
-import { ProtectedRoute, AdminRoute } from '../ProtectedRoute/ProtectedRoute';
+import { ProtectedRoute, AdminRoute, useAuth } from '../ProtectedRoute/ProtectedRoute';
 import SideBar from "../../components/SideBar/SideBar";
 import Footer from "../../components/Footer/Footer";
 import SavedReposPage from "../../pages/SavedReposPage/SavedReposPage"; // Fixed import path
@@ -43,9 +42,10 @@ const ProtectedLayout = ({ children }) => (
 );
 function AppContent() {
   const { isDarkMode } = useTheme();
-
+  const { isAuthenticated, isLoading } = useAuth();
   
-  // Create theme based on the context
+  if (isLoading) return <div>Loading...</div>;
+
   const theme = createTheme({
     palette: {
       mode: isDarkMode ? 'dark' : 'light',
@@ -93,11 +93,8 @@ function AppContent() {
         <Route 
           path="/home" 
           element={
-            <ProtectedRoute>
-              <ProtectedLayout>
-                <HomePage />
-              </ProtectedLayout>
-            </ProtectedRoute>
+            // no protected route bc anyone can access
+            !isAuthenticated ? <HomePage/> : <Navigate to = "/discovery" replace />
           }   
         />
         <Route 
@@ -154,7 +151,7 @@ function AppContent() {
         />
         
         {/* Default redirects */}
-        <Route path="/" element={<Navigate to="/discovery" replace />} />
+        <Route path="/" element={!isAuthenticated ? (<HomePage/>) : (<Navigate to="/discovery" replace />)}/>
         <Route path="*" element={<PageNotFound />} />
         </Routes>
     </ThemeProvider>
