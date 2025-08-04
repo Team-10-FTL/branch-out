@@ -1,48 +1,60 @@
-// src/contexts/ThemeContext.jsx
-import { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
-const ThemeContext = createContext();
+export const ThemeContext = createContext();
 
-export const useTheme = () => {
-    const context = useContext(ThemeContext);
-    if (!context) {
-        throw new Error('useTheme must be used within a ThemeProvider');
-    }
-    return context;
-};
+const CustomThemeProvider = ({ children }) => {
+  const getInitialMode = () => {
+    const saved = localStorage.getItem('darkMode');
+    return saved !== null ? JSON.parse(saved) : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  };
 
-export const CustomThemeProvider = ({ children }) => {
-    const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(getInitialMode);
 
-    // Load theme from localStorage on mount
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('darkMode');
-        if (savedTheme) {
-        setIsDarkMode(JSON.parse(savedTheme));
-    }
-}, []);
-
-// Save theme to localStorage when it changes
-useEffect(() => {
+  useEffect(() => {
     localStorage.setItem('darkMode', JSON.stringify(isDarkMode));
-    
-    // Apply theme to body element
-    if (isDarkMode) {
-    document.body.classList.add('dark-mode');
-    document.body.classList.remove('light-mode');
-    } else {
-    document.body.classList.add('light-mode');
-    document.body.classList.remove('dark-mode');
-    }
-}, [isDarkMode]);
+    document.body.classList.toggle('dark-mode', isDarkMode);
+    document.body.classList.toggle('light-mode', !isDarkMode);
+  }, [isDarkMode]);
 
-const toggleTheme = () => {
-    setIsDarkMode(prev => !prev);
-};
+  const toggleTheme = () => setIsDarkMode((prev) => !prev);
 
-return (
+  const muiTheme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: isDarkMode ? 'dark' : 'light',
+          ...(isDarkMode
+            ? {
+                background: { default: '#0f0e0eff', paper: '#111', sideBar:"black" },
+                text: { primary: '#fff', secondary: "#827b82ff" },
+                primary: { main: '#e34714' },
+                secondary: { main: '#daa7e2' },
+                warning: { main: '#e34714' },
+                savedRepo:{main: "#252525ff"}
+              }
+            : {
+                background: { default: '#ffffff', paper: '#f5f5f5', sideBar:"#ffffffff" },
+                text: { primary: '#000000', secondary: "#524c52ff" },
+                primary: { main: '#e37106' },
+                secondary: { main: '#4c1255' },
+                warning: { main: '#e34714' },
+                savedRepo:{main: "#d1cfcfff"}
+              }),
+        },
+      }),
+    [isDarkMode]
+  );
+
+  return (
     <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
-    {children}
+      <MuiThemeProvider theme={muiTheme}>
+        <CssBaseline />
+        {children}
+      </MuiThemeProvider>
     </ThemeContext.Provider>
-);
+  );
 };
+
+export default CustomThemeProvider;

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useTheme } from "../UISwitch/ThemeContext.jsx";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useContext } from "react";
+import { ThemeContext } from "../UISwitch/ThemeContext.jsx";
 import { Box, CssBaseline } from "@mui/material";
 import PreferencesPage from "/src/pages/PreferencesPage/PreferencesPage";
 import DiscoveryPage from "/src/pages/DiscoveryPage/DiscoveryPage";
@@ -41,29 +41,12 @@ const ProtectedLayout = ({ children }) => (
   </ProtectedRoute>
 );
 function AppContent() {
-  const { isDarkMode } = useTheme();
+  const { isDarkMode } = useContext(ThemeContext);
   const { isAuthenticated, isLoading } = useAuth();
   
   if (isLoading) return <div>Loading...</div>;
 
-  const theme = createTheme({
-    palette: {
-      mode: isDarkMode ? 'dark' : 'light',
-      primary: {
-        main: '#4C1255',
-      },
-      secondary: {
-        main: '#E34714',
-      },
-      background: {
-        default: isDarkMode ? '#121212' : '#ffffff',
-        paper: isDarkMode ? '#1e1e1e' : '#ffffff',
-      },
-    },
-  });
-
   return (
-    <ThemeProvider theme={theme}>
       <Routes>
         {/* Public routes - no sidebar */}
         <Route path="/login" element={<AuthComponent />} />
@@ -154,7 +137,6 @@ function AppContent() {
         <Route path="/" element={!isAuthenticated ? (<HomePage/>) : (<Navigate to="/discovery" replace />)}/>
         <Route path="*" element={<PageNotFound />} />
         </Routes>
-    </ThemeProvider>
   );
 }
 

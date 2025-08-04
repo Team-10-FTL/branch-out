@@ -8,10 +8,12 @@ import { Box } from "@mui/material";
 import RepoCardModal from "../RepoCardModal/RepoCardModal";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
+import { useTheme } from "@mui/material/styles";
 
 export default function SavedRepoCard({ repo }) {
 const [open, setOpen] = useState(false);
 const handleClose = () => setOpen(false);
+const theme = useTheme();
 
 return (
     <>
@@ -22,12 +24,12 @@ return (
           width: 300,
           height:130,
           borderRadius: 2,
-          border: "1px solid #292629ff",
+          border: `1px solid ${theme.palette.savedRepo.main}`,
           // Force override MUI's default background
-          backgroundColor: "#1c1b1e",
+          backgroundColor: theme.palette.background.paper,
           backgroundImage: "none",
-          color: "white",
-          boxShadow: "0 0 6px rgba(255, 255, 255, 0.3)",
+          color: theme.palette.text.primary,
+          boxShadow: "0 0 6px rgba(255, 255, 255, 0.1)",
           // Override the Paper component's CSS variables
           "--Paper-shadow": "0 4px 12px rgba(100, 83, 83, 0.04)",
           "--Paper-overlay": "none",
@@ -72,7 +74,7 @@ return (
             </Typography>
             <Typography
             variant="body2"
-            sx={{ fontFamily: "Inter, sans-serif", fontSize:"12px", color: "#b3aaaaff", mb: 1, display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden", lineHeight:1.3, fontWeight:300
+            sx={{ fontFamily: "Inter, sans-serif", fontSize:"12px", color: theme.palette.text.secondary, mb: 1, display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden", lineHeight:1.3, fontWeight:300
             }}
             >
             {repo.description || "No description available"}
@@ -83,7 +85,7 @@ return (
                 <Typography 
                   variant="caption" 
                   sx={{ 
-                    color: "#b3aaaaff",
+                    color: theme.palette.text.secondary,
                     fontSize: "11px",
                     fontWeight: 400,
                     position:"relative",
@@ -117,7 +119,7 @@ return (
             e.target.src = 'https://avatars.githubusercontent.com/u/31138227?v=4';
             }}
         />
-        <TrendingFlatIcon sx = {{color:"#a4a2a2ff", fontSize:"30px", marginRight:"15px", mb:"9px", "&:hover":{color:"white"}}}/>
+        <TrendingFlatIcon sx = {{color:theme.palette.secondary.main, fontSize:"30px", marginRight:"15px", mb:"9px", "&:hover":{color:theme.palette.text.primary}}}/>
         </Box>
         </Box>
         </CardActionArea>

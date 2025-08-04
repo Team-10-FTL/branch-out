@@ -7,7 +7,7 @@ import fullLogo from "../../assets/logo/fullLogo.png";
 import nathan from "../../assets/portraits/nathan.jpg";
 import jackie from "../../assets/portraits/jackie.jpg";
 import taliyah from "../../assets/portraits/taliyah.jpg"
-
+import { useTheme } from "@mui/material/styles";
 
 function HomePage(){
 
@@ -15,6 +15,7 @@ function HomePage(){
     const hideSidebar = location.pathname === '/' || location.pathname === "/home";
     const [activeTab, setActiveTab] = useState('home');
     const navigate = useNavigate();
+    const theme = useTheme();
 
     useEffect(() => {
     const homeSection = document.getElementById('homeHome');
@@ -151,7 +152,7 @@ function HomePage(){
         <section id = "homeFeatures">
 
              <div className="features-container">
-                <div className="features-header">
+                <div className="features-header" style = {{color: theme.palette.text.primary}}>
                     <h1>Helping You Branch Out, 
                     One Repo at a Time</h1>
                     <p>
@@ -213,28 +214,28 @@ function HomePage(){
         </section>
         <hr className = "aboutLine"/>
 
-        <section id = "homeFounders">
+        <section id = "homeFounders" style = {{color: theme.palette.text.primary}}>
              <div className = "meetFounders">Meet the Founders</div>
                     <div className = "founderContent">
                         <a href = "https://www.linkedin.com/in/jackiejurado" target = "_blank">
                         <div className = "jackie">
                             <img src = {jackie} alt = "Jackie's Portrait"></img>
-                            <h2>Jaqueline Jurado</h2>
-                            <p>CS @ UF</p>
+                            <h2 style = {{color: theme.palette.secondary.main}}>Jaqueline Jurado</h2>
+                            <p style = {{color: theme.palette.secondary.main}}>CS @ UF</p>
                         </div>
                         </a>
                         <div className = "nathan">
                             <a href = "https://www.linkedin.com/in/nathan-kenmognie-5541a4291" target = "_blank">
                             <img src = {nathan} alt = "Nathan's Portrait"></img>
-                            <h2>Nathan Kenmognie</h2>
-                            <p>CS @ UT San Antonio</p>
+                            <h2 style = {{color: theme.palette.secondary.main}}>Nathan Kenmognie</h2>
+                            <p style = {{color: theme.palette.secondary.main}}>CS @ UT San Antonio</p>
                              </a>
                         </div>
                         <div className = "taliyah">
                             <a href = "https://www.linkedin.com/in/taliyah-harvey" target = "_blank">
                             <img src = {taliyah} alt = "Taliyah's Portrait"></img>
-                            <h2>Taliyah Harvey</h2>
-                            <p>CS @ USC</p>
+                            <h2 style = {{color: theme.palette.secondary.main}}>Taliyah Harvey</h2>
+                            <p style = {{color: theme.palette.secondary.main}}>CS @ USC</p>
                             </a>
                         </div>
                     </div>

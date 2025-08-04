@@ -36,10 +36,9 @@ export default function RepoCardModal({ open, handleClose, repo }) {
           maxWidth:"500px",
           maxHeight:"80vh",
           overflow:"auto",
-          // bgcolor: theme.palette.background.paper,
-          bgcolor:"black",
+          bgcolor:theme.palette.background.paper,
           border:"1px solid #979796",
-          color: 'white',
+          color: theme.palette.text.primary,
           borderRadius: '10px',
           p: {
             xs:2,
@@ -67,10 +66,10 @@ export default function RepoCardModal({ open, handleClose, repo }) {
             cursor: 'pointer',
             fontSize: '1.4rem',
             fontWeight: 'bold',
-            color: 'white',
+            color:theme.palette.text.primary,
             zIndex:10,
             '&:hover': {
-              color: 'white',
+              color:theme.palette.text.primary,
             }
           }}
         >
@@ -94,7 +93,7 @@ export default function RepoCardModal({ open, handleClose, repo }) {
             }}
           />
 
-          <Typography variant="h5" sx={{ color: "white", fontWeight: 500, mb: 1, px:1, textAlign:"center" }}>
+          <Typography variant="h5" sx={{ color:theme.palette.text.primary, fontWeight: 500, mb: 1, px:1, textAlign:"center" }}>
             {repo.name}
           </Typography>
 
@@ -108,7 +107,7 @@ export default function RepoCardModal({ open, handleClose, repo }) {
             flexWrap: 'wrap',
             justifyContent: 'center',
             alignItems: 'center',
-            color: 'white',
+            color:theme.palette.text.primary,
             fontWeight: 500,
             fontSize: {
               xs:".85rem",
@@ -122,17 +121,17 @@ export default function RepoCardModal({ open, handleClose, repo }) {
             gap: 1,
             width:"100%"
           }}>
-            <Typography component="span" sx={{ color: "white", fontWeight: 600, textAlign:"center" }}>
+            <Typography component="span" sx={{ color:theme.palette.text.primary, fontWeight: 600, textAlign:"center" }}>
               by {repo.owner || "Unknown Owner"}
             </Typography>
 
-            <Typography component="span" sx={{ mx: 1, color: "white", display: {xs:"none", sm:"inline"} }}>| |</Typography>
+            <Typography component="span" sx={{ mx: 1, color:theme.palette.text.primary, display: {xs:"none", sm:"inline"} }}>| |</Typography>
 
-            <Typography component="span" sx={{ color: "white", fontWeight: 600  }}>
+            <Typography component="span" sx={{ color:theme.palette.text.primary, fontWeight: 600  }}>
               ☆ {repo.stars || "N/A"}
             </Typography>
 
-            <Typography component="span" sx={{ mx: 1, color: "white", display: {xs:"none", sm:"inline"} }}>| |</Typography>
+            <Typography component="span" sx={{ mx: 1, color:theme.palette.text.primary, display: {xs:"none", sm:"inline"} }}>| |</Typography>
 
             <Link href={repo.repoLink} target="_blank" underline="always" sx={{ color: "#e37106", fontWeight: 600 }}>
               View Repository
@@ -142,21 +141,21 @@ export default function RepoCardModal({ open, handleClose, repo }) {
 
           {/* Description */}
           <Box sx={{ width: "100%", textAlign: "left" }}>
-          <Typography variant="subtitle1" sx={{ color: "white", fontWeight: 600, mb: 1, alignItems:"left !important"}}>
+          <Typography variant="subtitle1" sx={{ color:theme.palette.text.primary, fontWeight: 600, mb: 1, alignItems:"left !important"}}>
             Description
           </Typography>
           </Box>
-        <Typography variant="body2" sx={{ color: "#fff", mb: 2}}>
+        <Typography variant="body2" sx={{ color:theme.palette.text.primary, mb: 2}}>
           {repo.description || "No description available"}
         </Typography>
         
-          <Box sx={{ width: '100%', height: '1px', backgroundColor: '#444', opacity: 0.3}} />
+          <Box sx={{ width: '100%', height: '1px', backgroundColor: theme.palette.background.default, opacity: 0.3}} />
 
         {/* Topics */}
         {repo.topics?.length > 0 && (
           <>
             <Box sx={{ width: "100%", textAlign: "left" }}>
-              <Typography variant="subtitle1" sx={{ color: "white", fontWeight: 600, mb: 1 }}>
+              <Typography variant="subtitle1" sx={{ color:theme.palette.text.primary, fontWeight: 600, mb: 1 }}>
               Topics
             </Typography>
               {repo.topics.map((topic) => (
@@ -166,7 +165,7 @@ export default function RepoCardModal({ open, handleClose, repo }) {
                   variant="outlined"
                   sx={{
                     m: 0.2,
-                    color: "#fff",
+                    color:theme.palette.text.primary,
                     borderColor: "black",
                     borderWidth: "2px",
                     backgroundColor: "transparent",
@@ -186,7 +185,7 @@ export default function RepoCardModal({ open, handleClose, repo }) {
         {repo.tags?.length > 0 && (
           <>
             <Box sx={{ width: "100%", textAlign: "left" }}>
-              <Typography variant="subtitle1" sx={{ color: "white", fontWeight: 600, mb: 1 }}>
+              <Typography variant="subtitle1" sx={{ color:theme.palette.text.primary, fontWeight: 600, mb: 1 }}>
               Tags
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', mb: 2 }}>
@@ -197,7 +196,7 @@ export default function RepoCardModal({ open, handleClose, repo }) {
                   variant="outlined"
                   sx={{
                     m: 0.2,
-                    color: "#fff",
+                    color:theme.palette.text.primary,
                     borderColor: "#E37106",
                     borderWidth: "2px",
                     backgroundColor: "transparent",
@@ -218,7 +217,7 @@ export default function RepoCardModal({ open, handleClose, repo }) {
         {repo.languages?.length > 0 && (
           <>
             <Box sx={{ width: "100%", textAlign: "left" }}>
-              <Typography variant="subtitle1" sx={{ color: "white", fontWeight: 600, mb: 1 }}>
+              <Typography variant="subtitle1" sx={{ color:theme.palette.text.primary, fontWeight: 600, mb: 1 }}>
               Languages
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', mb: 2}}>
@@ -229,7 +228,7 @@ export default function RepoCardModal({ open, handleClose, repo }) {
                   variant="outlined"
                   sx={{
                     m: 0.2,
-                    color: "#fff",
+                    color:theme.palette.text.primary,
                     borderColor: "#E37106",
                     borderWidth: "2px",
                     backgroundColor: "transparent",
@@ -243,7 +242,7 @@ export default function RepoCardModal({ open, handleClose, repo }) {
           </>
         )}
         <Box sx={{ width: "100%", textAlign: "left" }}>
-          <Typography variant="subtitle1" sx={{ color: "white", fontWeight: 600, mb: 1 }}>
+          <Typography variant="subtitle1" sx={{ color:theme.palette.text.primary, fontWeight: 600, mb: 1 }}>
             Level
           </Typography>
           {/* Stars & Level */}
@@ -251,8 +250,8 @@ export default function RepoCardModal({ open, handleClose, repo }) {
             label={repo.skill || "Unknown"}
             // variant="outlined"
             sx={{
-              color: "#fff",
-              backgroundColor: '#2E2E2E',
+              color:theme.palette.background.default,
+              backgroundColor: theme.palette.text.secondary,
               border: 'n',
               borderRadius: '12px',
               fontWeight: 500,
