@@ -43,7 +43,7 @@ const repoFetcher = async () => {
     
     try {
         // Get last pulled information (you should store this in DB or config)
-        const lastPulled = '2025-01-01'; // Use a more recent date
+        const lastPulled = '2010-01-01'; // Use a more recent date
         const currentDate = new Date().toISOString().slice(0, 10);
         
         console.log(`Fetching repos from ${lastPulled} to ${currentDate}`);
@@ -144,7 +144,7 @@ const repoFetcher = async () => {
     } finally {
         // Always disconnect Prisma
         await prisma.$disconnect();
-        console.log('🔌 Prisma disconnected');
+        console.log('Prisma disconnected');
     }
 };
 
@@ -180,8 +180,8 @@ console.log('Starting manual execution...');
 runRepoFetcher();
 
 // Uncomment to enable scheduled execution
-// cron.schedule('0 */6 * * *', () => { // Run every 6 hours instead of every hour
-//     console.log('\nStarting scheduled repo fetch...');
-//     logMessage();
-//     runRepoFetcher();
-// });
+cron.schedule('0 * * * *', () => { // Run every 1 hours instead of every hour
+    console.log('\nStarting scheduled repo fetch...');
+    logMessage();
+    runRepoFetcher();
+});
