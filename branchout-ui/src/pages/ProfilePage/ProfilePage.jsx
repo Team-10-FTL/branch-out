@@ -88,22 +88,29 @@ const ProfilePage = () => {
   }, []);
 
   const handleLogout = async () => {
-    try {
-      // Sign out from Clerk if using OAuth
-      if (clerkUser) {
-        await signOut();
-      }      
+    try {   
 
       // Clear local storage
       localStorage.removeItem('authToken');
       localStorage.removeItem('userData');
-      
-      // Redirect to login
-      navigate('/login');
+
+      // Sign out from Clerk if using OAuth
+      if (clerkUser) {
+        await signOut();
+      }   
+
+      setTimeout(() => {
+        navigate('/home');
+      }, 100);
+
     } catch (error) {
       console.error('Error during logout:', error);
-      // Force redirect even if there's an error
-      navigate('/login');
+      // Clear storage and force redirect even if there's an error
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userData');
+      setTimeout(() => {
+        navigate('/home');
+      }, 100);
     }
   };
 

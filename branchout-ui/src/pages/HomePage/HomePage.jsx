@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import {Menu, MenuItem, IconButton} from '@mui/material';
+import SideBar from "../../components/SideBar/SideBar";
 import {useState, useEffect} from 'react';
 import "./HomePage.css"
 import fullLogo from "../../assets/logo/fullLogo.png";
@@ -11,7 +12,7 @@ import taliyah from "../../assets/portraits/taliyah.jpg"
 function HomePage(){
 
     const location = useLocation();
-    const hideSidebar = location.pathname === '/home';
+    const hideSidebar = location.pathname === '/' || location.pathname === "/home";
     const [activeTab, setActiveTab] = useState('home');
     const navigate = useNavigate();
 
@@ -35,7 +36,7 @@ function HomePage(){
     return (
         <>
         <div className="home-container">
-        {!hideSidebar && <Sidebar />}
+        {!hideSidebar && <SideBar />}
         <div id = "homeMenu">
                 <div
                     className = "homeTab"

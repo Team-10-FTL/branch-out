@@ -87,7 +87,6 @@ export default function SideBar() {
                 src={miniLogo} 
                 alt="logo" 
                 style={{ width: 30, cursor: 'pointer' }}
-                onClick={() => navigate('/home')}
               />
               <IconButton onClick={handleMenuOpen} sx={{ color: 'white'}}>
                 <MenuIcon />
@@ -193,7 +192,6 @@ export default function SideBar() {
               position: 'absolute',
               pointerEvents: isTablet ? 'auto' : 'none',
             }}
-            onClick={() => navigate('/home')}
           />
           ) : (
           <img
@@ -203,7 +201,6 @@ export default function SideBar() {
               width: '150px',
               cursor:"pointer"
             }}
-            onClick={() => navigate('/home')}
           />
           )}
         </Box>

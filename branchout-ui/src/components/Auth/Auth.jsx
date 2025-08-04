@@ -82,7 +82,7 @@ function AuthComponent() {
           if (user) await signOut();
           localStorage.clear();
           setLocalUser(null);
-          navigate("/login");
+          navigate("/home");
         }}>
           Sign Out
         </button>
@@ -119,7 +119,7 @@ function AuthComponent() {
         setLocalUser(userData);
         localStorage.setItem("authToken", result.token);
         localStorage.setItem("userData", JSON.stringify(userData));
-        navigate("/");
+        navigate("/discovery");
       } else {
         setError(`Authentication failed: ${result.message || "Try again."}`);
       }
