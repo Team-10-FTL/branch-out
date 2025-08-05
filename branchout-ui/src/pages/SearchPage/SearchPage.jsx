@@ -29,6 +29,7 @@ import {
   Bookmark as BookmarkIcon,
   BookmarkBorder as BookmarkBorderIcon
 } from '@mui/icons-material';
+import { useTheme } from "@mui/material/styles"; // Add this import
 
 const SKILL_LEVELS = [
   { value: "FIRSTYEAR", label: "1st Year" },
@@ -38,6 +39,8 @@ const SKILL_LEVELS = [
 ];
 
 const SearchPage = () => {
+  const theme = useTheme(); // Add this line
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [availableLanguages, setAvailableLanguages] = useState([]);
   const [availableTags, setAvailableTags] = useState([]);
@@ -232,9 +235,17 @@ const SearchPage = () => {
 
   if (dataLoading) {
     return (
-      <Box sx={{ maxWidth: 1200, mx: 'auto', p: 3, textAlign: 'center' }}>
+      <Box sx={{ 
+        maxWidth: 1200, 
+        mx: 'auto', 
+        p: 3, 
+        textAlign: 'center',
+        color: theme.palette.text.primary
+      }}>
         <CircularProgress size={48} sx={{ color: '#E34714' }} />
-        <Typography variant="h6" sx={{ mt: 2 }}>Loading search options...</Typography>
+        <Typography variant="h6" sx={{ mt: 2, color: theme.palette.text.primary }}>
+          Loading search options...
+        </Typography>
       </Box>
     );
   }
@@ -244,14 +255,17 @@ return (
       maxWidth: { xs: '100%', sm: 600, md: 800, lg: 1200 }, 
       mx: 'auto', 
       p: { xs: 1, sm: 2, md: 3 },
-      minHeight: '100vh'
+      minHeight: '100vh',
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.text.primary
     }}>
       {/* Header */}
       <Typography variant="h4" sx={{ 
         mb: { xs: 2, md: 3 }, 
         fontWeight: 'bold', 
         textAlign: 'center',
-        fontSize: { xs: '1.75rem', sm: '2rem', md: '2.125rem' }
+        fontSize: { xs: '1.75rem', sm: '2rem', md: '2.125rem' },
+        color: theme.palette.text.primary
       }}>
         Repository Search
       </Typography>
@@ -260,8 +274,9 @@ return (
       <Paper sx={{ 
         p: { xs: 2, sm: 3 }, 
         mb: { xs: 2, md: 3 }, 
-        backgroundColor: '#111', 
-        color: 'white' 
+        backgroundColor: theme.palette.background.paper,
+        color: theme.palette.text.primary,
+        border: `1px solid ${theme.palette.divider}`
       }}>
         {/* Main Search Bar */}
         <Box sx={{ 
@@ -278,15 +293,28 @@ return (
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             sx={{
+              '& .MuiInputLabel-root': {
+                color: theme.palette.text.secondary
+              },
               '& .MuiOutlinedInput-root': {
-                color: 'white',
-                '& fieldset': { borderColor: '#333' },
-                '&:hover fieldset': { borderColor: '#E34714' },
-                '&.Mui-focused fieldset': { borderColor: '#E34714' }
+                color: theme.palette.text.primary,
+                '& fieldset': { 
+                  borderColor: theme.palette.divider 
+                },
+                '&:hover fieldset': { 
+                  borderColor: '#E34714' 
+                },
+                '&.Mui-focused fieldset': { 
+                  borderColor: '#E34714' 
+                }
+              },
+              '& .MuiInputBase-input::placeholder': {
+                color: theme.palette.text.secondary,
+                opacity: 0.7
               }
             }}
             InputProps={{
-              startAdornment: <SearchIcon sx={{ color: '#999', mr: 1 }} />
+              startAdornment: <SearchIcon sx={{ color: theme.palette.text.secondary, mr: 1 }} />
             }}
           />
           <Button
@@ -314,15 +342,21 @@ return (
               onChange={(e) => setOwnerName(e.target.value)}
               size="small"
               sx={{
-                '& .MuiInputLabel-root': { color: '#999' },
+                '& .MuiInputLabel-root': { 
+                  color: theme.palette.text.secondary 
+                },
                 '& .MuiOutlinedInput-root': {
-                  color: 'white',
-                  '& fieldset': { borderColor: '#333' },
-                  '&:hover fieldset': { borderColor: '#E34714' }
+                  color: theme.palette.text.primary,
+                  '& fieldset': { 
+                    borderColor: theme.palette.divider 
+                  },
+                  '&:hover fieldset': { 
+                    borderColor: '#E34714' 
+                  }
                 }
               }}
               InputProps={{
-                startAdornment: <PersonIcon sx={{ color: '#999', mr: 1 }} />
+                startAdornment: <PersonIcon sx={{ color: theme.palette.text.secondary, mr: 1 }} />
               }}
             />
           </Grid>
@@ -335,11 +369,17 @@ return (
               onChange={(e) => setMinStars(e.target.value)}
               size="small"
               sx={{
-                '& .MuiInputLabel-root': { color: '#999' },
+                '& .MuiInputLabel-root': { 
+                  color: theme.palette.text.secondary 
+                },
                 '& .MuiOutlinedInput-root': {
-                  color: 'white',
-                  '& fieldset': { borderColor: '#333' },
-                  '&:hover fieldset': { borderColor: '#E34714' }
+                  color: theme.palette.text.primary,
+                  '& fieldset': { 
+                    borderColor: theme.palette.divider 
+                  },
+                  '&:hover fieldset': { 
+                    borderColor: '#E34714' 
+                  }
                 }
               }}
             />
@@ -353,11 +393,17 @@ return (
               onChange={(e) => setMaxStars(e.target.value)}
               size="small"
               sx={{
-                '& .MuiInputLabel-root': { color: '#999' },
+                '& .MuiInputLabel-root': { 
+                  color: theme.palette.text.secondary 
+                },
                 '& .MuiOutlinedInput-root': {
-                  color: 'white',
-                  '& fieldset': { borderColor: '#333' },
-                  '&:hover fieldset': { borderColor: '#E34714' }
+                  color: theme.palette.text.primary,
+                  '& fieldset': { 
+                    borderColor: theme.palette.divider 
+                  },
+                  '&:hover fieldset': { 
+                    borderColor: '#E34714' 
+                  }
                 }
               }}
             />
@@ -396,7 +442,8 @@ return (
                 <Typography variant="h6" sx={{ 
                   display: 'flex', 
                   alignItems: 'center',
-                  fontSize: { xs: '1rem', sm: '1.25rem' }
+                  fontSize: { xs: '1rem', sm: '1.25rem' },
+                  color: theme.palette.text.primary
                 }}>
                   <CodeIcon sx={{ mr: 1 }} /> Programming Languages
                 </Typography>
@@ -421,7 +468,10 @@ return (
                         borderColor: '#E34714',
                         color: selectedLanguages.includes(language) ? 'white' : '#E34714',
                         backgroundColor: selectedLanguages.includes(language) ? '#E34714' : 'transparent',
-                        fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                        '&:hover': {
+                          backgroundColor: selectedLanguages.includes(language) ? '#d63919' : 'rgba(227, 71, 20, 0.1)'
+                        }
                       }}
                     />
                   ))}
@@ -445,7 +495,8 @@ return (
                 <Typography variant="h6" sx={{ 
                   display: 'flex', 
                   alignItems: 'center',
-                  fontSize: { xs: '1rem', sm: '1.25rem' }
+                  fontSize: { xs: '1rem', sm: '1.25rem' },
+                  color: theme.palette.text.primary
                 }}>
                   <TagIcon sx={{ mr: 1 }} /> Topics & Tags
                 </Typography>
@@ -467,10 +518,13 @@ return (
                       variant={selectedTags.includes(tag) ? 'filled' : 'outlined'}
                       size={window.innerWidth < 600 ? 'small' : 'medium'}
                       sx={{
-                        borderColor: '#0ff',
-                        color: selectedTags.includes(tag) ? 'black' : '#0ff',
-                        backgroundColor: selectedTags.includes(tag) ? '#0ff' : 'transparent',
-                        fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                        borderColor: theme.palette.secondary.main,
+                        color: selectedTags.includes(tag) ? 'white' : theme.palette.secondary.main,
+                        backgroundColor: selectedTags.includes(tag) ? theme.palette.secondary.main : 'transparent',
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                        '&:hover': {
+                          backgroundColor: selectedTags.includes(tag) ? theme.palette.secondary.dark : `${theme.palette.secondary.main}20`
+                        }
                       }}
                     />
                   ))}
@@ -492,7 +546,8 @@ return (
                 fullWidth
               >
                 <Typography variant="h6" sx={{ 
-                  fontSize: { xs: '1rem', sm: '1.25rem' }
+                  fontSize: { xs: '1rem', sm: '1.25rem' },
+                  color: theme.palette.text.primary
                 }}>
                   <ScoreIcon sx={{ mr: 1 }} />Skill Level
                 </Typography>
@@ -519,7 +574,10 @@ return (
                         borderColor: '#daa7e2',
                         color: selectedSkillLevel === level.value ? 'black' : '#daa7e2',
                         backgroundColor: selectedSkillLevel === level.value ? '#daa7e2' : 'transparent',
-                        fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                        '&:hover': {
+                          backgroundColor: selectedSkillLevel === level.value ? '#c89bd6' : 'rgba(218, 167, 226, 0.1)'
+                        }
                       }}
                     />
                   ))}
@@ -539,8 +597,11 @@ return (
           <Button 
             onClick={clearFilters} 
             sx={{ 
-              color: '#999',
-              order: { xs: 2, sm: 1 }
+              color: theme.palette.text.secondary,
+              order: { xs: 2, sm: 1 },
+              '&:hover': {
+                backgroundColor: theme.palette.action.hover
+              }
             }}
           >
             Clear All
@@ -573,7 +634,8 @@ return (
           <Typography variant="h5" sx={{ 
             mb: { xs: 2, md: 3 }, 
             fontWeight: 'bold',
-            fontSize: { xs: '1.25rem', sm: '1.5rem' }
+            fontSize: { xs: '1.25rem', sm: '1.5rem' },
+            color: theme.palette.text.primary
           }}>
             Search Results ({searchResults.length})
           </Typography>
@@ -583,11 +645,11 @@ return (
               key={repo.id}
               sx={{
                 mb: 2,
-                backgroundColor: '#111',
-                color: 'white',
-                border: '1px solid #333',
+                backgroundColor: theme.palette.background.paper,
+                color: theme.palette.text.primary,
+                border: `1px solid ${theme.palette.divider}`,
                 '&:hover': {
-                  backgroundColor: '#1a1a1a',
+                  backgroundColor: theme.palette.action.hover,
                   borderColor: '#E34714'
                 }
               }}
@@ -616,19 +678,21 @@ return (
                       }}>
                         {repo.name}
                       </Typography>
-                      <Typography variant="body2" sx={{ color: '#999' }}>
+                      <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
                         by {repo.owner}
                       </Typography>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <StarIcon sx={{ fontSize: 16, color: '#ffd700', mr: 0.5 }} />
-                        <Typography variant="body2">{repo.stars?.toLocaleString()}</Typography>
+                        <Typography variant="body2" sx={{ color: theme.palette.text.primary }}>
+                          {repo.stars?.toLocaleString()}
+                        </Typography>
                       </Box>
                     </Box>
 
                     {/* Description */}
                     <Typography variant="body2" sx={{ 
                       mb: 2, 
-                      color: '#ccc',
+                      color: theme.palette.text.secondary,
                       fontSize: { xs: '0.875rem', sm: '1rem' }
                     }}>
                       {repo.description}
@@ -660,8 +724,8 @@ return (
                           size="small"
                           variant="outlined"
                           sx={{
-                            borderColor: '#0ff',
-                            color: '#0ff',
+                            borderColor: theme.palette.secondary.main,
+                            color: theme.palette.secondary.main,
                             fontSize: { xs: '0.625rem', sm: '0.75rem' }
                           }}
                         />
@@ -698,7 +762,7 @@ return (
                     {user && (
                       <IconButton
                         onClick={() => handleSaveRepo(repo)}
-                        sx={{ color: savedRepos.has(repo.id) ? '#ffd700' : '#999' }}
+                        sx={{ color: savedRepos.has(repo.id) ? '#ffd700' : theme.palette.text.secondary }}
                         title={savedRepos.has(repo.id) ? 'Saved' : 'Save Repository'}
                       >
                         {savedRepos.has(repo.id) ? <BookmarkIcon /> : <BookmarkBorderIcon />}
@@ -717,17 +781,19 @@ return (
         <Paper sx={{ 
           p: { xs: 3, sm: 4 }, 
           textAlign: 'center', 
-          backgroundColor: '#111', 
-          color: 'white' 
+          backgroundColor: theme.palette.background.paper,
+          color: theme.palette.text.primary,
+          border: `1px solid ${theme.palette.divider}`
         }}>
           <Typography variant="h6" sx={{ 
             mb: 2,
-            fontSize: { xs: '1rem', sm: '1.25rem' }
+            fontSize: { xs: '1rem', sm: '1.25rem' },
+            color: theme.palette.text.primary
           }}>
             No repositories found
           </Typography>
           <Typography variant="body2" sx={{ 
-            color: '#999',
+            color: theme.palette.text.secondary,
             fontSize: { xs: '0.875rem', sm: '1rem' }
           }}>
             Try adjusting your search criteria or clearing some filters

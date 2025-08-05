@@ -161,9 +161,11 @@ exports.searchRepos = async (req, res) => {
             };
         }
 
-        // Skill level filter
+        // Skill level filter - FIXED: Use 'has' for array field
         if (skillLevel) {
-            filter.skill = skillLevel;
+            filter.skill = { 
+                has: skillLevel 
+            };
         }
 
         // Stars range filter
