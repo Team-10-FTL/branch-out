@@ -4,7 +4,7 @@ import {Paper, Grid, Divider, TextField, Typography, List, ListItem, ListItemTex
 import SendIcon from '@mui/icons-material/Send';
 import ChatIcon from '@mui/icons-material/Chat';
 import CloseIcon from '@mui/icons-material/Close';
-require('dotenv').config(); // Load environment variables
+// require('dotenv').config(); // Load environment variables
 
 const Chat = () => {
     const [message, setMessage] = useState('');
@@ -42,7 +42,7 @@ const Chat = () => {
     </style>
 
     useEffect(() => {
-        wsRef.current = new WebSocket(`ws://${MCP_SERVER_URL}/ws/chat`);
+        wsRef.current = new WebSocket(`wss://${MCP_SERVER_URL}/ws/chat`);
 
         wsRef.current.onopen = () => {
             console.log('WebSocket Connected');
