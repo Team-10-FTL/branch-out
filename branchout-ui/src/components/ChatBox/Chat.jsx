@@ -4,7 +4,6 @@ import {Paper, Grid, Divider, TextField, Typography, List, ListItem, ListItemTex
 import SendIcon from '@mui/icons-material/Send';
 import ChatIcon from '@mui/icons-material/Chat';
 import CloseIcon from '@mui/icons-material/Close';
-require('dotenv').config(); // Load environment variables
 
 const Chat = () => {
     const [message, setMessage] = useState('');
