@@ -12,6 +12,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { useTheme } from "@mui/material/styles";
 
 
@@ -131,6 +132,33 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
     e.preventDefault();
     onSwipeRight?.(repo);
   };
+
+  // function that makes the summary only show 50 words of the whole thing.
+  const truncateSummary = (text, wordLimit = 50) => { 
+    if (!text) return "No summary available";
+
+    const words = text.split(" ");
+    if (words.length <= wordLimit) {
+      return text;
+    }
+    return words.slice(0, wordLimit).join(" ") + "...";
+  };
+  
+  const FloatingIcon = ({ sx }) => (
+    <Box
+      sx={{
+        position: "absolute",
+        top: 0,
+        right: 0,
+        opacity: 0.7,
+        zIndex: 10,
+        p: 0.5,
+        ...sx
+      }}
+    >
+      <AutoAwesomeIcon sx={{ fontSize: { xs: 18, md: 22 }, color: '#DAA7E2' }} />
+    </Box>
+  );
 
   return (
     <Box
@@ -261,12 +289,13 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
             </Box>
 
             <CardContent  sx={{ padding: {xs:1, md:1.5, display:"flex", flexDirection:"column", overflow:"hidden"}}}>
-            {/* <Typography gutterBottom variant="h5" sx={{ fontWeight: 700, letterSpacing: 1 }}>
-            {repo.name}
-            </Typography> */}
               <div className="repo-card-labels">
+              <Box sx={{ position: 'relative', mb: 2 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                  Related Tags:
+                </Typography>
                 <div className="repo-card-tags">
-                  <AutoFixHighIcon sx = {{width:{xs:"16px", md:"20px"}, paddingTop:"5px", maxHeight: 'calc(600px - 280px)' }}/>
+                  {/* <FloatingIcon/> */}
                   {repo.tags?.map((tag) => (
                     <Chip
                       size={isSmall ? "small": "medium"}
@@ -277,13 +306,14 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
                         margin: "2px",
                         borderRadius: "10px", 
                         fontSize:{
-                          xs:".7rem",
-                          md:".82rem"
+                          xs:".5rem",
+                          md:".7rem"
                         }
                       }}
                     />
                   ))}
                 </div>
+              </Box>
                 <div className="repo-card-rating">
                 </div>
               </div>
@@ -301,7 +331,10 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
                 whiteSpace: "nowrap"
               }}
               >
+              <Box sx={{ position: 'relative', mb: 2 }}>
               {repo.summaryTitle}
+                {/* <FloatingIcon /> */}
+              </Box>
               </Typography>
               <Typography variant="body2"
                 sx={{ 
@@ -324,46 +357,37 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
                 WebkitBoxOrient:"vertical"
               }}
               >
-                <AutoFixHighIcon 
-                  sx={{
-                  width: {
-                    xs: "14px",
-                    md: "20px"
-                  },
-                  flexShrink: 0,
-                  mt: 0.1
-                }}
-                />
-                <span>{ repo.summary || "No summary available"}</span>
+              <Box sx={{ position: 'relative', mb: 1 }}>
+                {/* <span>{ repo.summary || "No summary available"}</span> */}
+              <Box sx={{ mb: 2 }}>
+                <span> {truncateSummary(repo.summary)} </span>
+                <span style={{ color: '#DAA7E2', fontWeight: 'bold', marginLeft: '4px', opacity: 0.8 }}>Read More</span>
+              </Box>
+              </Box>
+
               </Typography>
-              <div className="repo-card-languages" style = {{marginTop:"auto"}}>
-                  <AutoFixHighIcon 
-                    sx={{
-                    width: {
-                      xs: "16px",
-                      md: "20px"
-                    },
-                    paddingBottom: "5px"
-                  }}
-                  />
+              <Box className="repo-card-languages" sx={{ mt: 2 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                  Languages Used:
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+                <FloatingIcon />
                   {repo.languages?.map((language) => (
                     <Chip
-                      size={isSmall ? "small": "medium"}
+                      size={isSmall ? "small" : "medium"}
                       key={language}
                       label={language}
-                      variant="filled" 
-                      sx={{ 
+                      variant="filled"
+                      sx={{
                         margin: "2px",
                         borderRadius: "10px",
-                        borderColor: "#90caf9",
-                        fontSize: {
-                          xs: '0.7rem',
-                          md: '0.8125rem'
-                        }
+                        fontSize: { xs: '0.7rem', md: '0.8125rem' }
                       }}
                     />
                   ))}
-                </div>
+                </Box>
+              </Box>
+
             </CardContent>
         </CardActionArea>
       </Card>
