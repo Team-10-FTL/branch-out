@@ -4,6 +4,7 @@ import {Paper, Grid, Divider, TextField, Typography, List, ListItem, ListItemTex
 import SendIcon from '@mui/icons-material/Send';
 import ChatIcon from '@mui/icons-material/Chat';
 import CloseIcon from '@mui/icons-material/Close';
+require('dotenv').config(); // Load environment variables
 
 const Chat = () => {
     const [message, setMessage] = useState('');
@@ -13,6 +14,7 @@ const Chat = () => {
     const [isTyping, setIsTyping] = useState(false);
     const bottomRef = useRef(null);
     const [showLoadingDots, setShowLoadingDots] = useState(false);
+    const MCP_SERVER_URL = import.meta.env.VITE_MCP_SERVER_URL || 'localhost:8001'; // Use environment variable or default value
 
     const [chat, setChat] = useState([
         { from: 'Octocat', msg: 'Hey dev, whats up! Ask me more about a repository like stats, and how you can contribute, or ask about open issues & code snippets! Learn how to commit to what matters.', time: '10:00' },
@@ -40,7 +42,7 @@ const Chat = () => {
     </style>
 
     useEffect(() => {
-        wsRef.current = new WebSocket('ws://localhost:8001/ws/chat');
+        wsRef.current = new WebSocket(`ws://${MCP_SERVER_URL}/ws/chat`);
 
         wsRef.current.onopen = () => {
             console.log('WebSocket Connected');

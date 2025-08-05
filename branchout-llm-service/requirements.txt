@@ -1,5 +1,7 @@
-fastmcp
-pydantic
-httpx
+fastapi
 uvicorn
 python-dotenv
+requests
+pydantic
+google-generativeai
+fastmcp
