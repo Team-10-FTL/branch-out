@@ -93,20 +93,9 @@ export default function SideBar() {
                 alt="logo" 
                 style={{ width: 30, cursor: 'pointer' }}
               />
-<<<<<<< Updated upstream
-            <IconButton 
-              onClick={handleMenuOpen} 
-              sx={{ color: 'white'}}
-              aria-label="menu" // This helps with onboarding targeting
-              className="mobile-menu-button" // Add this class for onboarding
-            >
-              <MenuIcon />
-            </IconButton>
-=======
               <IconButton onClick={handleMenuOpen} sx={{ color: theme.palette.text.primary}}>
                 <MenuIcon />
               </IconButton>
->>>>>>> Stashed changes
           </Toolbar>
         </AppBar>
 
@@ -130,80 +119,31 @@ export default function SideBar() {
             }
           }}
         >
-<<<<<<< Updated upstream
-          <MenuItem 
-            onClick={() => { handleMenuClose(); navigate('/profile')}} 
-            sx = {{color: isActive("/profile") ? "#e34714" : "white"}}
-            className="nav-item-profile" // Add this class
-            data-nav="profile" // Add this attribute
-          >
-=======
           <MenuItem onClick={() => { handleMenuClose(); navigate('/profile')}} sx = {{color: isActive("/profile") ? "#e34714" : theme.palette.text.primary}}>
->>>>>>> Stashed changes
             <PersonIcon sx={{ mr: 2}} />
             Profile
           </MenuItem>
           
           <Divider />
-<<<<<<< Updated upstream
-          
-          <MenuItem 
-            onClick={() => { handleMenuClose(); navigate('/discovery'); }}
-            sx = {{color: isActive("/discovery") ? "#e34714" : "white"}}
-            className="nav-item-discovery" // Add this class
-            data-nav="discovery" // Add this attribute
-          >
-=======
           <MenuItem onClick={() => { handleMenuClose(); navigate('/discovery'); }}sx = {{color: isActive("/discovery") ? "#e34714" : theme.palette.text.primary}}>
->>>>>>> Stashed changes
             <ExploreIcon sx={{ mr: 2}} />
             Discovery
           </MenuItem>
           
           <Divider />
-<<<<<<< Updated upstream
-          
-          <MenuItem 
-            onClick={() => { handleMenuClose(); navigate('/search'); }}
-            sx = {{color: isActive("/search") ? "#e34714" : "white"}}
-            className="nav-item-search" // Add this class
-            data-nav="search" // Add this attribute
-          >
-=======
           <MenuItem onClick={() => { handleMenuClose(); navigate('/search'); }}sx = {{color: isActive("/search") ? "#e34714" : theme.palette.text.primary}}>
->>>>>>> Stashed changes
             <ManageSearchIcon sx={{ mr: 2}} />
             Search
           </MenuItem>
           
           <Divider />
-<<<<<<< Updated upstream
-          
-          <MenuItem 
-            onClick={() => { handleMenuClose(); navigate('/preferences'); }}
-            sx = {{color: isActive("/preferences") ? "#e34714" : "white"}}
-            className="nav-item-preferences" // Add this class
-            data-nav="preferences" // Add this attribute
-          >
-=======
           <MenuItem onClick={() => { handleMenuClose(); navigate('/preferences'); }}sx = {{color: isActive("/preferences") ? "#e34714" : theme.palette.text.primary}}>
->>>>>>> Stashed changes
             <SettingsAccessibilityIcon sx={{ mr: 2}} />
             Preferences
           </MenuItem>
           
           <Divider />
-<<<<<<< Updated upstream
-          
-          <MenuItem 
-            onClick={() => { handleMenuClose(); navigate('/savedrepos'); }}
-            sx = {{color: isActive("/savedrepos") ? "#e34714" : "white"}}
-            className="nav-item-saved" // Add this class
-            data-nav="saved" // Add this attribute
-          >
-=======
           <MenuItem onClick={() => { handleMenuClose(); navigate('/savedrepos'); }}sx = {{color: isActive("/savedrepos") ? "#e34714" : theme.palette.text.primary}}>
->>>>>>> Stashed changes
             <ChatIcon sx={{ mr: 2}} />
             Saved Repos
           </MenuItem>
@@ -291,14 +231,7 @@ export default function SideBar() {
         }}
       >
         {/* Logo */}
-<<<<<<< Updated upstream
-        <Avatar 
-          className="profile-avatar" // Keep this class - it's already correct
-          sx={{ width: 32, height: 32, bgcolor: '#daa7e2' }}
-        >
-=======
         <Avatar className="profile-avatar" sx={{ width: 32, height: 32, bgcolor: theme.palette.secondary.main }}>
->>>>>>> Stashed changes
           {(clerkUser?.firstName?.charAt(0) ||
             currentUser?.username?.charAt(0) ||
             currentUser?.email?.charAt(0) ||
