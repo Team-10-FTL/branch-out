@@ -93,32 +93,17 @@ const ProfilePage = () => {
       });
   }, []);
 
-  const handleLogout = async () => {
-    try {   
+  const handleLogout = () => {
+  try {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
 
-      // Clear local storage
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userData');
-
-      // Sign out from Clerk if using OAuth
-      if (clerkUser) {
-        await signOut({redirectUrl: "/home"});
-      }   
-
-      setTimeout(() => {
-        navigate('/home');
-      }, 100);
-
-    } catch (error) {
-      console.error('Error during logout:', error);
-      // Clear storage and force redirect even if there's an error
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userData');
-      setTimeout(() => {
-        navigate('/home');
-      }, 100);
-    }
-  };
+    navigate('/home'); // instant redirect
+  } catch (error) {
+    console.error('Error during logout:', error);
+    navigate('/home');
+  }
+};
 
   function mapSkillLevel(level) {
     const mapping = {

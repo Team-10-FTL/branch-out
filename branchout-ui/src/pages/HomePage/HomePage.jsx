@@ -7,6 +7,12 @@ import fullLogo from "../../assets/logo/fullLogo.png";
 import nathan from "../../assets/portraits/nathan.jpg";
 import jackie from "../../assets/portraits/jackie.jpg";
 import taliyah from "../../assets/portraits/taliyah.jpg"
+import preferences from "../../assets/gifs/preferences.gif";
+import octocat from "../../assets/gifs/octocat.gif";
+import branchoutGif from "../../assets/gifs/branchout.gif";
+import swipe from "../../assets/gifs/swipe.gif";
+import search from "../../assets/gifs/search.gif"
+
 import { useTheme } from "@mui/material/styles";
 
 function HomePage(){
@@ -25,14 +31,39 @@ function HomePage(){
     }, []);
 
     const imageMap = {
-        discovery: nathan,
-        summarization: jackie,
-        filtering: jackie,
-        protocol: nathan,
+        discovery: swipe,
+        summarization: preferences,
+        filtering: search,
+        protocol: octocat
     };
     const [activeImage, setActiveImage] = useState(imageMap.discovery);
     const [activeFeature, setActiveFeature] = useState('discovery');
 
+    useEffect(() => {
+    const handleScroll = () => {
+        const sections = [
+        { id: 'homeHome', tab: 'home' },
+        { id: 'homeAbout', tab: 'about' },
+        { id: 'homeWhy', tab: 'why' },
+        { id: 'homeFeatures', tab: 'features' },
+        { id: 'homeFounders', tab: 'founders' }
+        ];
+
+        for (let section of sections) {
+        const el = document.getElementById(section.id);
+        if (el) {
+            const rect = el.getBoundingClientRect();
+            if (rect.top <= 150 && rect.bottom >= 150) {
+            setActiveTab(section.tab);
+            break;
+            }
+        }
+        }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     return (
         <>
@@ -113,13 +144,13 @@ function HomePage(){
         </div>
 
         <section id = "homeHome">
+        <img src = {branchoutGif}/>
         </section>
         {/* <div className = "homeLogo">
             <img src = {fullLogo}/>
         </div> */}
         <section id = "homeAbout">
             <div className="about-grid">
-            
             <div className="top-left">
                 <h1>Our Mission</h1>
             </div>
@@ -129,8 +160,10 @@ function HomePage(){
                 </p>
             </div>
         </div>
+        </section>
         <hr className = "aboutLine"/>
-        <div className="about-grid" id = "homeWHY">
+        <section id = "homeWhy">
+            <div className="about-grid">
             <div className="bottom-right">
                 <h1>Why Branch Out?</h1>
             </div>
@@ -143,9 +176,8 @@ function HomePage(){
                 </p>
             </div>
         </div>
-        <hr className = "aboutLine"/>
-
         </section>
+        <hr className = "aboutLine"/>
         {/* <section id = "homeWhy"> */}
 
         {/* </section> */}
@@ -183,8 +215,8 @@ function HomePage(){
                                 setActiveFeature('summarization');
                             }}
                         >
-                            <h3>AI Generated Summaries</h3>
-                            <p>Get clear, concise overviews of GitHub repositories using large language models to save time and improve understanding.</p>
+                            <h3>Customized Preferences</h3>
+                            <p>Tailor your experience by selecting your school year, preferred languages, and interests to get smarter recommendations.</p>
                         </div>
 
                         <div
@@ -194,8 +226,8 @@ function HomePage(){
                                 setActiveFeature('filtering');
                             }}
                         >
-                            <h3>Repo Feedback Filtering</h3>
-                            <p>Refine your recommendations by marking projects as too easy, too complex, or irrelevant for smarter future suggestions.</p>
+                            <h3>Repo Search Filtering</h3>
+                            <p>Refine your results by filtering open source repositories within our database based to find your perfect match faster.</p>
                         </div>
 
                         <div
@@ -206,7 +238,7 @@ function HomePage(){
                             }}
                         >
                             <h3>Model Context Protocol</h3>
-                            <p>Ensure accurate AI recommendations by dynamically passing relevant user preferences and context into every model call.</p>
+                            <p> Dive into GitHub API data to understand, compare, and evaluate projects through custom queries with our Octocat MCP Chatbot.</p>
                         </div>
                     </div>
                 </div>
