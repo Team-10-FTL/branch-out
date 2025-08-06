@@ -125,8 +125,12 @@
 
 
 .loginSignupLogo{
-  width: 400px;
-  margin-bottom: 20px;
+  width: 100%;
+  margin-bottom: 0 auto;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  
 }
 
 @media (max-width: 600px) {
@@ -140,8 +144,5 @@
   .auth-container {
     width: 95%; 
     padding: 20px;
-  }
-  .loginSignupLogo{
-    width: 250px;
   }
 }
