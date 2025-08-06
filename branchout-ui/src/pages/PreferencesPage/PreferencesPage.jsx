@@ -82,6 +82,7 @@ function PreferencesPage() {
       skill: selectedLevels.map((label) => LEVEL_TO_ENUM[label]),
       languages: selectedLanguages,
       preferenceTags: selectedTags,
+      hasCompetedOnboarding: true, // Assuming this is always true for now
     };
     const token = localStorage.getItem("authToken");
     try {
