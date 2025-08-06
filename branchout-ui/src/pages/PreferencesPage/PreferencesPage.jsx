@@ -5,6 +5,7 @@ import './PreferencesPage.css';
 import ToolTip from '../../components/ToolTip/ToolTip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTheme } from "@mui/material/styles";
+import { Snackbar, Alert } from '@mui/material';
 
 const LEVELS = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
 const LEVEL_TO_ENUM = {
@@ -33,6 +34,7 @@ function PreferencesPage() {
   const isMobile = useMediaQuery('(max-width:430px)');
   const { user: clerkUser } = useUser();
   const theme = useTheme();
+  const [showSnackbar, setShowSnackbar] = useState(false);
 
   const localUser = (() => {
     try {
@@ -96,6 +98,7 @@ function PreferencesPage() {
       });
       if (res.ok) {
         console.log("Preferences saved successfully");
+        setShowSnackbar(true);
       }
     } catch (error) {
       console.log("Failed to save preferences, ", error);
@@ -385,7 +388,17 @@ return (
           <div className='preferences-save-btn-content'>Save Preferences</div>
         </button>
       </Paper>
-    </Box>
+      <Snackbar
+        open={showSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setShowSnackbar(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setShowSnackbar(false)} severity="success" sx={{ width: '100%' }}>
+          Preferences saved successfully!
+        </Alert>
+      </Snackbar>
+      </Box>
   );
 }
 
