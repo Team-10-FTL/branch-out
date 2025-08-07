@@ -364,7 +364,6 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
                 <span style={{ color: '#DAA7E2', fontWeight: 'bold', marginLeft: '4px', opacity: 0.8 }}>Read More</span>
               </Box>
               </Box>
-
               </Typography>
               <Box className="repo-card-languages" sx={{ mt: 2 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
@@ -387,7 +386,6 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
                   ))}
                 </Box>
               </Box>
-
             </CardContent>
         </CardActionArea>
       </Card>

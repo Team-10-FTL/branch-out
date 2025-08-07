@@ -4,7 +4,7 @@ import {Paper, Grid, Divider, TextField, Typography, List, ListItem, ListItemTex
 import SendIcon from '@mui/icons-material/Send';
 import ChatIcon from '@mui/icons-material/Chat';
 import CloseIcon from '@mui/icons-material/Close';
-// require('dotenv').config(); // Load environment variables
+import { Link as MuiLink } from '@mui/material';
 
 const Chat = () => {
     const [message, setMessage] = useState('');
@@ -111,7 +111,6 @@ const Chat = () => {
             }, 20);
         }
     }
-    
 
     async function sendMessageToBackend(message) { // handle communication w websocket
         return new Promise((resolve, reject) => {
@@ -154,61 +153,138 @@ const Chat = () => {
 
             {/* Slide-in Drawer from Right */}
             <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-            <Box sx={{ width: 420, height: '100vh', display: 'flex', flexDirection: 'column', p: 0, m: 0 }}>
+                <Box sx={{
+                    width: { xs: '100%', sm: 420 },
+                    height: { xs: '100vh', sm: '80vh' },
+                    display: 'flex',
+                    flexDirection: 'column',
+                }} >
                     <Grid container alignItems="center" justifyContent="space-between" sx={{ m: 2 }}>
                         <Typography variant="h5">Ask Octocat!</Typography>
                         <Fab size="small" color="error" onClick={toggleDrawer(false)}>
-                            <CloseIcon color='primary'/>
+                            <CloseIcon color='primary.main'/>
                         </Fab>
                     </Grid>
 
-                    <Grid container component={Paper} sx={{ width: '100%' }}>
+                    <Grid container component={Paper} sx={{ flexGrow: 1, flexDirection: 'column', width: '100%' }}>
                         <Grid item xs={12}>
-                            <List sx={{ height: '88vh', overflowY: 'auto' }}>
+                            <List sx={{ height: '85vh', overflowY: 'auto' }}>
                                 {chat.map((c, i) => (
                                     <ListItem key={i} sx={{ justifyContent: c.from === 'Octocat' ? 'flex-start' : 'flex-end' }}>
                                         <Paper elevation={3} sx={{
-                                            p: 1.5,
+                                            p: 1, 
+                                            bgcolor: c.from === 'ME' ? 'primary.main' : (theme) => theme.palette.grey,
                                             maxWidth: '70%',
-                                            bgcolor: c.from === 'Octocat' ? 'linear-gradient(135deg, #f3f3f3 0%, #e0e0e0 100%)' : 'primary.main',
-                                            color: c.from === 'Octocat' ? 'white' : 'white',
-                                            borderRadius: c.from === 'Octocat' ? '12px' : '20px',
+                                            color: 'white',
+                                            borderRadius: '12px', 
+                                            textAlign: 'left',
+                                            wordBreak: 'break-word',
+                                            overflowWrap: 'break-word',
+                                            fontSize: '0.95rem',  
+                                            lineHeight: 1.2,    
                                         }}>
                                             {c.from === 'Octocat' ? (
-                                                <ReactMarkdown>{c.msg}</ReactMarkdown>
+                                                <ReactMarkdown
+                                                    components={{
+                                                        a: ({ node, ...props }) => (
+                                                            <MuiLink
+                                                                {...props}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                sx={{
+                                                                    wordBreak: 'break-word',
+                                                                    overflowWrap: 'break-word',
+                                                                    color: 'inherit',
+                                                                    textDecoration: 'underline'
+                                                                }}
+                                                            />
+                                                        )
+                                                    }}
+                                                >
+                                                    {c.msg}
+                                            </ReactMarkdown>
                                             ) : (
-                                                <ReactMarkdown >{c.msg}</ReactMarkdown>
+                                                    <ReactMarkdown
+                                                        components={{
+                                                            a: ({ node, ...props }) => (
+                                                                <MuiLink
+                                                                    {...props}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    sx={{
+                                                                        wordBreak: 'break-word',
+                                                                        overflowWrap: 'break-word',
+                                                                        color: 'inherit',
+                                                                        textDecoration: 'underline'
+                                                                    }}
+                                                                />
+                                                            )
+                                                        }}
+                                                    >
+                                                        {c.msg}
+                                                    </ReactMarkdown>
                                             )}
-                                            <Typography variant="caption" sx={{ display: 'block', textAlign: c.from === 'Octocat' ? 'left' : 'right' }}>
+                                            <Typography variant="caption" sx={{
+                                                display: 'block',
+                                                textAlign: c.from === 'Octocat' ? 'left' : 'right',
+                                                mt: 0.5, // reduce margin-top
+                                                fontSize: '0.7rem', // smaller timestamp text
+                                                lineHeight: 1,
+                                            }}>
                                                 {c.from} at {c.time}
                                             </Typography>
                                         </Paper>
                                     </ListItem>
                                 ))}
+
                                 {isTyping && (
                                     <ListItem sx={{ justifyContent: 'flex-start' }}>
                                         <Paper elevation={3} sx={{
-                                            p: 1.5,
+                                            p: 1,
                                             maxWidth: '70%',
-                                            bgcolor: 'linear-gradient(135deg, #f3f3f3 0%, #e0e0e0 100%)',
                                             color: 'white',
-                                            borderRadius: '12px',
+                                            borderRadius: '12px', 
+                                            wordBreak: 'break-word',
+                                            overflowWrap: 'break-word',
+                                            fontSize: '0.95rem',
+                                            lineHeight: 1.2,
                                         }}>
-                                            <ReactMarkdown>{displayedMsg}</ReactMarkdown>
+                                            <ReactMarkdown
+                                                components={{
+                                                    a: ({ node, ...props }) => (
+                                                        <MuiLink
+                                                            {...props}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            sx={{
+                                                                wordBreak: 'break-word',
+                                                                overflowWrap: 'break-word',
+                                                                color: 'inherit',
+                                                                textDecoration: 'underline'
+                                                            }}
+                                                        />
+                                                    )
+                                                }}
+                                            >
+                                                {displayedMsg}
+                                            </ReactMarkdown>
                                             <Typography variant="caption" sx={{ display: 'block', textAlign: 'left' }}>
                                                 Octocat is typing...
                                             </Typography>
                                         </Paper>
                                     </ListItem>
                                 )}
+
                                 {showLoadingDots && (
                                     <ListItem sx={{ justifyContent: 'flex-start' }}>
                                         <Paper elevation={3} sx={{
-                                            p: 1.5,
+                                            p: 1,
                                             maxWidth: '70%',
-                                            bgcolor: 'gray',
+                                            bgcolor: 'gray', 
                                             color: 'white',
-                                            borderRadius: '12px',
+                                            borderRadius: '12px', 
+                                            wordBreak: 'break-word',
+                                            overflowWrap: 'break-word',
                                         }}>
                                             <Typography variant="body1">
                                                 <span className="dot">.</span>
@@ -218,6 +294,7 @@ const Chat = () => {
                                         </Paper>
                                     </ListItem>
                                 )}
+
                                 <div ref={bottomRef} />
                             </List>
                             <Divider />
@@ -239,6 +316,18 @@ const Chat = () => {
                                             boxShadow: 1,
                                             '& .MuiInputBase-root': {
                                                 padding: '8px 16px'
+                                            },
+                                            '& .MuiOutlinedInput-root': {
+                                                '& fieldset': {
+                                                    borderColor: 'transparent',
+                                                },
+                                                '&:hover fieldset': {
+                                                    borderColor: 'transparent',
+                                                },
+                                                '&.Mui-focused fieldset': {
+                                                    borderColor: 'transparent',
+                                                    boxShadow: 'none'
+                                                }
                                             }
                                         }}
                                     />
@@ -255,7 +344,6 @@ const Chat = () => {
                                     </Fab>
                                 </Box>
                             </Grid>
-
                         </Grid>
                     </Grid>
                 </Box>
