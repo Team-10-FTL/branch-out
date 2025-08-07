@@ -155,13 +155,20 @@ const Chat = () => {
             <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
                 <Box sx={{
                     width: { xs: '100%', sm: 420 },
-                    height: { xs: '100vh', sm: '80vh' },
+                    height: { xs: '100dvh', sm: '80vh' },
                     display: 'flex',
                     flexDirection: 'column',
                 }} >
-                    <Grid container alignItems="center" justifyContent="space-between" sx={{ m: 2 }}>
+                    <Grid container alignItems="center" justifyContent="space-between" sx={{
+                        m: 1,
+                        flexWrap: 'nowrap',
+                        minHeight: '56px', // Give room on small screens
+                    }}>
                         <Typography variant="h5">Ask Octocat!</Typography>
-                        <Fab size="small" color="error" onClick={toggleDrawer(false)}>
+                        <Fab size="small" color="error" onClick={toggleDrawer(false)} sx={{
+                            zIndex: 1500, 
+                            position: 'relative' 
+                        }}>
                             <CloseIcon color='primary.main'/>
                         </Fab>
                     </Grid>

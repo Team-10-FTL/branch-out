@@ -291,7 +291,7 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
             <CardContent  sx={{ padding: {xs:1, md:1.5, display:"flex", flexDirection:"column", overflow:"hidden"}}}>
               <div className="repo-card-labels">
               <Box sx={{ position: 'relative', mb: 2 }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, textAlign: 'left', alignContent: 'left', width: '100%' }}>
                   Related Tags:
                 </Typography>
                 <div className="repo-card-tags">
@@ -303,6 +303,8 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
                       label={tag}
                       variant="outlined"
                       sx={{ 
+                        textAlign: 'left',
+                        alignContent: 'left',
                         margin: "2px",
                         borderRadius: "10px", 
                         fontSize:{
@@ -364,12 +366,13 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
                 <span style={{ color: '#DAA7E2', fontWeight: 'bold', marginLeft: '4px', opacity: 0.8 }}>Read More</span>
               </Box>
               </Box>
+
               </Typography>
               <Box className="repo-card-languages" sx={{ mt: 2 }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, textAlign: 'left', width: '100%' }}>
                   Languages Used:
                 </Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'left', width:'100%' }}>
                 <FloatingIcon />
                   {repo.languages?.map((language) => (
                     <Chip
@@ -386,6 +389,7 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
                   ))}
                 </Box>
               </Box>
+
             </CardContent>
         </CardActionArea>
       </Card>
@@ -398,8 +402,8 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
               position: "absolute",
               top: "50%",
               left: {
-                xs:"20px",
-                md:"24px"
+                xs:"-8px",
+                md:"-10px"
               },
               transform: "translateY(-50%)",
               color: "#E34714",
@@ -429,8 +433,8 @@ export default function RepoCard({ repo, confidence , onSwipeLeft, onSwipeRight 
               position: "absolute",
               top: "50%",
               right: {
-                xs: "-20px",
-                md: "24px"
+                xs: "-25px",
+                md: "-20px"
               },
               transform: "translateY(-50%)",
               color: "green",
