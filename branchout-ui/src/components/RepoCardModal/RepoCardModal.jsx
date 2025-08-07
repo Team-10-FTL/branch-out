@@ -148,6 +148,16 @@ export default function RepoCardModal({ open, handleClose, repo }) {
         <Typography variant="body2" sx={{ color:theme.palette.text.primary, mb: 2}}>
           {repo.description || "No description available"}
         </Typography>
+
+          {/* Summary */}
+          <Box sx={{ width: "100%", textAlign: "left" }}>
+            <Typography variant="subtitle1" sx={{ color: theme.palette.text.primary, fontWeight: 600, mb: 1, alignItems: "left !important" }}>
+              Summary
+            </Typography>
+          </Box>
+          <Typography variant="body2" sx={{ color: theme.palette.text.primary, mb: 2 }}>
+            {repo.summary|| "No summary available"}
+          </Typography>
         
           <Box sx={{ width: '100%', height: '1px', backgroundColor: theme.palette.background.default, opacity: 0.3}} />
 
