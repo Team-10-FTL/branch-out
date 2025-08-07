@@ -13,7 +13,7 @@ const DESKTOP_ONBOARDING_STEPS = [
     target: null,
     position: 'center'
   },
-    {
+  {
     id: 'profile',
     title: 'Your Profile',
     content: 'Click here to manage your account information and view your current preferences.',
@@ -42,6 +42,13 @@ const DESKTOP_ONBOARDING_STEPS = [
     position: 'right'
   },
   {
+    id: 'chatbot',
+    title: 'Meet Octocat - Your AI Assistant!',
+    content: 'Click the chat button to ask Octocat about repositories, get coding help, learn about contribution opportunities, or ask about open issues. Your AI coding companion is here to help!',
+    target: '.MuiFab-root[aria-label="chat"], button[aria-label="chat"]',
+    position: 'left'
+  },
+  {
     id: 'repo-interaction',
     title: 'Repository Cards',
     content: 'Swipe left to dislike, right to save. Click on cards for detailed information. Use keyboard arrows or A/D keys too!',
@@ -67,7 +74,7 @@ const MOBILE_ONBOARDING_STEPS = [
     requiresMenuOpen: false,
     action: 'openMenu'
   },
-    {
+  {
     id: 'profile-mobile',
     title: 'Your Profile',
     content: 'Manage your account information and view your current preferences.',
@@ -106,6 +113,14 @@ const MOBILE_ONBOARDING_STEPS = [
     target: '.nav-item-saved, [data-nav="saved"]',
     position: 'left',
     requiresMenuOpen: true
+  },
+  {
+    id: 'chatbot-mobile',
+    title: 'Meet Octocat - Your AI Assistant!',
+    content: 'Tap the chat button (bottom-right corner) to ask Octocat about repositories, get coding help, or learn about contributing to projects. Your AI coding companion is always ready to help!',
+    target: '.MuiFab-root[aria-label="chat"], button[aria-label="chat"]',
+    position: 'top',
+    requiresMenuOpen: false
   },
   {
     id: 'repo-interaction-mobile',
@@ -175,6 +190,13 @@ const handleMenuAction = (action) => {
       setTimeout(() => {
         handleMenuAction(currentStep.action);
       }, 500);
+    }
+
+    // For chatbot step, ensure menu is closed so chat button is visible
+    if (currentStep.id.includes('chatbot') && menuIsOpen) {
+      setTimeout(() => {
+        handleMenuAction('closeMenu');
+      }, 300);
     }
 
     // For steps that require menu to be open, ensure it's open
@@ -268,9 +290,10 @@ const handleMenuAction = (action) => {
   }, [isActive, currentStepIndex, isMobile]);
 
 const handleNext = () => {
-  // Close menu before showing repo card step
+  // Close menu before showing repo card step or when finishing chatbot step
   if (currentStep?.id === 'close-menu' || 
-      (currentStepIndex === ONBOARDING_STEPS.length - 2 && isMobile)) {
+      (currentStepIndex === ONBOARDING_STEPS.length - 2 && isMobile) ||
+      currentStep?.id.includes('chatbot')) {
     handleMenuAction('closeMenu');
   }
   
@@ -393,7 +416,7 @@ const handleNext = () => {
           gap: '8px',
           flexDirection: isMobile ? 'column' : 'row'
         }}>
-          {/* <button
+          <button
             onClick={startOnboarding}
             style={{
               padding: '12px 16px',
@@ -407,7 +430,7 @@ const handleNext = () => {
             }}
           >
             Start {isMobile ? 'Mobile' : 'Desktop'} Tour
-          </button> */}
+          </button>
           {/* <button
             onClick={resetOnboarding}
             style={{

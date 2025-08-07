@@ -4,9 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./Auth.css";
 import fullLogo from "../../assets/logo/fullLogo.png"
 
-
-// ...imports remain unchanged
-
 function AuthComponent() {
   const { user, isLoaded } = useUser();
   const { openSignIn, openSignUp } = useClerk();
@@ -18,12 +15,17 @@ function AuthComponent() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({}); // For error messages
   const [localUser, setLocalUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const from = location.state?.from?.pathname || "/discovery";
 
   const VITE_URL = import.meta.env.VITE_DATABASE_URL
+
+  // Clear errors when switching between login/signup
+  useEffect(() => {
+    setErrors({});
+  }, [isSignUp]);
 
   useEffect(() => {
     const restoreSession = () => {
@@ -93,13 +95,13 @@ function AuthComponent() {
   const handleLocalAuth = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setErrors({}); // Clear previous errors
 
     try {
       const endpoint = isSignUp ? "/auth/signup" : "/auth/login";
       const requestBody = isSignUp
-        ? { username, email, password }
-        : { username, password };
+        ? { username: username.trim(), email: email.trim(), password }
+        : { username: username.trim(), password };
 
       const response = await fetch(`${VITE_URL}${endpoint}`, {
         method: "POST",
@@ -121,108 +123,113 @@ function AuthComponent() {
         localStorage.setItem("userData", JSON.stringify(userData));
         navigate("/discovery");
       } else {
-        setError(`Authentication failed: ${result.message || "Try again."}`);
+        // Show the specific error message from the backend
+        setErrors({ general: result.error || "Authentication failed. Please try again." });
       }
-    } catch {
-      setError("Authentication failed. Please try again.");
+    } catch (error) {
+      console.error("Auth error:", error);
+      setErrors({ general: "Network error. Please check your connection and try again." });
     } finally {
       setLoading(false);
     }
   };
 
+
+
   return (
-    <div className = "auth-wrapper">
-    <div className="auth-container">
-        <img src = {fullLogo} className = "loginSignupLogo"/>
-      {authMode === "local" ? (
-        <form onSubmit={handleLocalAuth} className="auth-form">
+    <div className="auth-wrapper">
+      <div className="auth-container">
+        <img src={fullLogo} className="loginSignupLogo" alt="BranchOut Logo" />
+        
+        {authMode === "local" ? (
+          <form onSubmit={handleLocalAuth} className="auth-form">
+            
+            {/* Show error message */}
+            {errors.general && (
+              <div className="error-box">
+                {errors.general}
+              </div>
+            )}
 
-          {error && <div className="error-box">{error}</div>}
-
-          {isSignUp && (
+            {isSignUp && (
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                required
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            )}
+            
             <input
-              type="email"
-              placeholder="Email"
-              value={email}
+              type="text"
+              placeholder="Username"
+              value={username}
               required
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
             />
-          )}
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            required
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password (min 8 chars)"
-            value={password}
-            required
-            minLength={8}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            
+            <input
+              type="password"
+              placeholder="Password (min 8 chars)"
+              value={password}
+              required
+              minLength={8}
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={loading}
-          >
-            {loading
-              ? "⏳ Processing..."
-              : isSignUp
-              ? "Create Account"
-              : "Login"}
-          </button>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={loading}
+            >
+              {loading
+                ? "⏳ Processing..."
+                : isSignUp
+                ? "Create Account"
+                : "Login"}
+            </button>
 
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={() => {
-              setError("");
-              setEmail("");
-              setPassword("");
-              setUsername("");
-              navigate(isSignUp ? "/login" : "/signup");
-            }}
-          >
-            {isSignUp
-              ? "Already have an account? Login"
-              : "Need an account? Sign Up"}
-          </button>
-        </form>
-      ) : (
-        <div className="auth-form">
-          {/* <h2 style={{ textAlign: "center" }}>🔗 OAuth Registration</h2> */}
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => {
+                setErrors({});
+                navigate(isSignUp ? "/login" : "/signup");
+              }}
+            >
+              {isSignUp
+                ? "Already have an account? Login"
+                : "Need an account? Sign Up"}
+            </button>
+          </form>
+        ) : (
+          <div className="auth-form">
+            <button className="btn btn-primary" onClick={() => {
+              navigate("/signup");
+              openSignUp();
+            }}>
+            Sign Up with OAuth 🚀
+            </button>
 
-          <button className="btn btn-primary" onClick={() => {
-            navigate("/signup");
-            openSignUp();
-          }}>
-          Sign Up with OAuth 🚀
-          </button>
+            <button className="btn btn-secondary" onClick={() => {
+              navigate("/login");
+              openSignIn();
+            }}>
+            Login with OAuth 🔑
+            </button>
 
-          <button className="btn btn-secondary" onClick={() => {
-            navigate("/login");
-            openSignIn();
-          }}>
-          Login with OAuth 🔑
-          </button>
-
-          <div className="info-box">
-            <p>
-              OAuth will open a popup for Google, GitHub, or other providers.
-              Your account is securely managed by Clerk.
-            </p>
+            <div className="info-box">
+              <p>
+                OAuth will open a popup for Google, GitHub, or other providers.
+                Your account is securely managed by Clerk.
+              </p>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
     </div>
   );
 }
 
 export default AuthComponent;
-
-

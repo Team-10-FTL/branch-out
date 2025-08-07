@@ -145,6 +145,7 @@ const Chat = () => {
                 <Fab
                     color="secondary"
                     onClick={toggleDrawer(true)}
+                    aria-label="chat"   
                     sx={{ position: 'fixed', bottom: 16, right: 16, zIndex: 1300 }}
                 >
                     <ChatIcon />
